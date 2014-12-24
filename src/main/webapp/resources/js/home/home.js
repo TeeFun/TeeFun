@@ -1,10 +1,10 @@
 // Refresh content every X seconds
 var refreshQueues = function () {
-$.get( "refreshQueues.do", function( data ) {
+	$.get( "refreshQueues.do", function( data ) {
 		$("#queues").html( data );
 	});
 };
-setTimeout(function(){
+setInterval(function(){
 	refreshQueues();
 }, 15000);
 
