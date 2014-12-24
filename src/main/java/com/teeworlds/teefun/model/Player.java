@@ -1,61 +1,73 @@
 package com.teeworlds.teefun.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.Serializable;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
-import org.springframework.stereotype.Component;
-import org.springframework.web.context.WebApplicationContext;
+/**
+ * A player for matchmaking.
+ *
+ * @author Rajh
+ *
+ */
+public class Player implements Serializable {
 
-@Component
-@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
-public class Player {
+	/**
+	 * SUID.
+	 */
+	private static final long serialVersionUID = 1L;
 
-	private long lastKeepAlive = 0;
-	private final List<String> queues = new ArrayList<String>();
-	private String name = "Nameless Tee";
+	/**
+	 * Time in ms before the player becomes inactive.
+	 */
+	private static final int INACTIVE_TIME_LIMIT = 15000;
 
+	/**
+	 * Player default name.
+	 */
+	private static String DEFAULT_NAME = "nameless tee";
+
+	/**
+	 * Player name.
+	 */
+	private String name;
+
+	/**
+	 * Last time the player was active.
+	 */
+	private long lastActiveTime;
+
+	/**
+	 * Keep alive packet in order to let the player active.
+	 */
 	public void keepAlive() {
-		this.lastKeepAlive = System.currentTimeMillis();
+		this.lastActiveTime = System.currentTimeMillis();
 	}
 
-	public long getLastKeepAlive() {
-		return this.lastKeepAlive;
+	/**
+	 * @return true if the player is still active
+	 */
+	public boolean isActive() {
+		return System.currentTimeMillis() - this.lastActiveTime > INACTIVE_TIME_LIMIT;
 	}
 
-	public void addToQueue(final String queue) {
-		this.keepAlive();
-		if (this.queues.contains(queue)) {
-			return;
-		}
-		this.queues.add(queue);
-	}
-
-	public void removeFromQueue(final String queue) {
-		this.keepAlive();
-		if (!this.queues.contains(queue)) {
-			return;
-		}
-		this.queues.remove(queue);
-	}
-
+	/**
+	 * @return the {@link #name}
+	 */
 	public String getName() {
 		return this.name;
 	}
 
+	/**
+	 * @param name the {@link #name} to set
+	 */
 	public void setName(final String name) {
 		this.keepAlive();
 		this.name = name;
 	}
 
+	/**
+	 * Reset player to default values.
+	 */
 	public void reset() {
-		this.queues.clear();
-		this.name = "Nameless Tee";
+		this.name = DEFAULT_NAME;
 	}
-
-	public boolean isInQueue(final String queue) {
-		return this.queues.contains(queue);
-	}
-
 }
