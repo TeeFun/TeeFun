@@ -18,7 +18,7 @@ public class Player implements Serializable {
 	/**
 	 * Time in ms before the player becomes inactive.
 	 */
-	private static final int INACTIVE_TIME_LIMIT = 15000;
+	private static final int INACTIVE_TIME_LIMIT = 10000;
 
 	/**
 	 * Player name.
@@ -48,7 +48,7 @@ public class Player implements Serializable {
 	 * @return true if the player is still active
 	 */
 	public boolean isActive() {
-		return System.currentTimeMillis() - this.lastActiveTime > INACTIVE_TIME_LIMIT;
+		return System.currentTimeMillis() - this.lastActiveTime < INACTIVE_TIME_LIMIT;
 	}
 
 	/**

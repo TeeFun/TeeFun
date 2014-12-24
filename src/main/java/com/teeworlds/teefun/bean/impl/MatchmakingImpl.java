@@ -26,30 +26,24 @@ public class MatchmakingImpl implements Matchmaking {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MatchmakingImpl.class);
 
 	/**
-	 * List of active players.
-	 */
-	private final List<Player> activePlayers = new ArrayList<Player>();
-
-	/**
 	 * List of available queues.
 	 */
 	private final List<Queue> availableQueues = new ArrayList<Queue>();
 
 	@Override
 	public void removeInactivePlayers() {
-		final Iterator<Player> iter = this.activePlayers.iterator();
-		while (iter.hasNext()) {
-			final Player player = iter.next();
-			if (!player.isActive()) {
-				LOGGER.debug(String.format("Player '%s' is inactive, removing it.", player.getName()));
-				iter.remove();
+		LOGGER.trace("Removing inactive players ...");
+		for (final Queue queue : this.availableQueues) {
+			final Iterator<Player> playerIter = queue.getPlayers().iterator();
+			while (playerIter.hasNext()) {
+				final Player player = playerIter.next();
+				if (!player.isActive()) {
+					LOGGER.debug(String.format("Player '%s' is inactive, removing it.", player.getName()));
+					playerIter.remove();
+				}
 			}
 		}
-	}
 
-	@Override
-	public List<Player> activePlayers() {
-		return this.activePlayers;
 	}
 
 	@Override

@@ -18,11 +18,6 @@ public interface Matchmaking {
 	void removeInactivePlayers();
 
 	/**
-	 * @return the list of active players
-	 */
-	List<Player> activePlayers();
-
-	/**
 	 * @return the list of available queues
 	 */
 	List<Queue> getQueues();
