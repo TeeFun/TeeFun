@@ -21,15 +21,15 @@
 			<fieldset class="nickname">
 				Nickname:
 				<input type="text" name="nickname" value="nameless tee"/>
-				<input type="button" value="Confirm"/><br/>
+				<input type="submit" value="Confirm"/><br/>
 			</fieldset>
 		</form>
 
-		<form method=post action="remove.do">
+		<form method=post action="leaveAllQueues.do">
 			<fieldset class="queues">
 				<div>
 					Currently in queues: ctf3<br/>
-					<input type="button" value="Leave every queue"/>
+					<input type="submit" value="Leave every queue"/>
 				</div>
 			</fieldset>
 		</form>
@@ -43,16 +43,16 @@
 							<caption>${queueName} (3/10)</caption>
 							<tbody>
 							<c:forEach var="player" items="${players}">
-								<c:if test="${player.isInQueue("${queueName}")}">
+								<c:if test='${player.isInQueue("${queueName}")}'>
 								<tr><td>${player.name}</td></tr>
 								</c:if>
 							</c:forEach>
 							<c:choose>
-							<c:when test="${currentPlayer.isInQueue("${queueName}")}">
+							<c:when test='${currentPlayer.isInQueue("${queueName}")}'>
 								<tr><td>
-									<form method=post action="removeQueue.do">
+									<form method=post action="leaveQueue.do">
 										<input type="hidden" name="queue" value="${queueName}">
-										<input type="button" value="Leave"/>
+										<input type="submit" value="Leave"/>
 									</form>
 								</td></tr>
 							</c:when>
@@ -60,72 +60,11 @@
 								<tr><td>
 									<form method=post action="joinQueue.do">
 										<input type="hidden" name="queue" value="${queueName}">
-										<input type="button" value="Join"/>
+										<input type="submit" value="Join"/>
 									</form>
 								</td></tr>
 							</c:otherwise>
-							</tbody>
-						</table>
-					</td>
-
-					<td>
-						<table class="queue">
-						<c:set var="queueName" value="ctf2"/>
-							<caption>${queueName} (3/10)</caption>
-							<tbody>
-							<c:forEach var="player" items="${players}">
-								<c:if test="${player.isInQueue("${queueName}")}">
-								<tr><td>${player.name}</td></tr>
-								</c:if>
-							</c:forEach>
-							<c:choose>
-							<c:when test="${currentPlayer.isInQueue("${queueName}")}">
-								<tr><td>
-									<form method=post action="removeQueue.do">
-										<input type="hidden" name="queue" value="${queueName}">
-										<input type="button" value="Leave"/>
-									</form>
-								</td></tr>
-							</c:when>
-							<c:otherwise>
-								<tr><td>
-									<form method=post action="joinQueue.do">
-										<input type="hidden" name="queue" value="${queueName}">
-										<input type="button" value="Join"/>
-									</form>
-								</td></tr>
-							</c:otherwise>
-							</tbody>
-						</table>
-					</td>
-
-					<td>
-						<table class="queue">
-						<c:set var="queueName" value="ctf3"/>
-							<caption>${queueName} (3/10)</caption>
-							<tbody>
-							<c:forEach var="player" items="${players}">
-								<c:if test="${player.isInQueue("${queueName}")}">
-								<tr><td>${player.name}</td></tr>
-								</c:if>
-							</c:forEach>
-							<c:choose>
-							<c:when test="${currentPlayer.isInQueue("${queueName}")}">
-								<tr><td>
-									<form method=post action="removeQueue.do">
-										<input type="hidden" name="queue" value="${queueName}">
-										<input type="button" value="Leave"/>
-									</form>
-								</td></tr>
-							</c:when>
-							<c:otherwise>
-								<tr><td>
-									<form method=post action="joinQueue.do">
-										<input type="hidden" name="queue" value="${queueName}">
-										<input type="button" value="Join"/>
-									</form>
-								</td></tr>
-							</c:otherwise>
+							</c:choose>
 							</tbody>
 						</table>
 					</td>

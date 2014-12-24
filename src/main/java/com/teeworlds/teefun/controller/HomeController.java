@@ -42,8 +42,8 @@ public class HomeController {
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public ModelAndView register(@RequestParam final String name, final HttpSession session) {
-		final String escapedName = StringEscapeUtils.escapeHtml4(name);
+	public ModelAndView register(@RequestParam final String nickname, final HttpSession session) {
+		final String escapedName = StringEscapeUtils.escapeHtml4(nickname);
 
 		this.currentPlayer.setName(escapedName);
 		if (!this.players.contains(this.currentPlayer)) {
@@ -62,27 +62,25 @@ public class HomeController {
 		return new ModelAndView("redirect:/home.do");
 	}
 
-	@RequestMapping(value = "/removeQueue", method = RequestMethod.POST)
-	public ModelAndView removeQueue(@RequestParam final String queue, final HttpSession session) {
+	@RequestMapping(value = "/leaveQueue", method = RequestMethod.POST)
+	public ModelAndView leaveQueue(@RequestParam final String queue, final HttpSession session) {
 		final String escapedQueue = StringEscapeUtils.escapeHtml4(queue);
 		this.currentPlayer.removeFromQueue(escapedQueue);
 		LOGGER.debug("Remove queue " + queue);
 		return new ModelAndView("redirect:/home.do");
 	}
 
-	@RequestMapping(value = "/remove", method = RequestMethod.POST)
-	public ModelAndView remove(final HttpSession session) {
-		if (!this.players.contains(this.currentPlayer)) {
-			this.currentPlayer.reset();
-			this.players.remove(this.currentPlayer);
-		}
-		LOGGER.debug("Removed " + this.currentPlayer.getName());
+	@RequestMapping(value = "/leaveAllQueues", method = RequestMethod.POST)
+	public ModelAndView leaveAllQueues(@RequestParam final String queue, final HttpSession session) {
+		final String escapedQueue = StringEscapeUtils.escapeHtml4(queue);
+		this.currentPlayer.removeFromQueue(escapedQueue);
+		LOGGER.debug("Remove queue " + queue);
 		return new ModelAndView("redirect:/home.do");
 	}
 
 	@RequestMapping(value = "/changeName", method = RequestMethod.POST)
-	public ModelAndView changeName(@RequestParam final String name, final HttpSession session) {
-		final String escapedName = StringEscapeUtils.escapeHtml4(name);
+	public ModelAndView changeName(@RequestParam final String nickname, final HttpSession session) {
+		final String escapedName = StringEscapeUtils.escapeHtml4(nickname);
 		this.currentPlayer.setName(escapedName);
 		return new ModelAndView("redirect:/home.do");
 	}
