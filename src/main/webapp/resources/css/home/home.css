@@ -1,26 +1,31 @@
-fieldset {
+div.normal {
 	width: 400px;
-	margin-left: auto;
-	margin-right: auto;
-}
-p {
-	width: 400px;
-	margin-left: auto;
-	margin-right: auto;
-	border: 1px solid #AA0000;
 	padding: 5px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	border: 1px solid #000000;
 }
+
+div.highlight {
+	border: 1px solid #AA0000;
+}
+
 table.main {
 	margin-left: auto;
 	margin-right: auto;
 }
+
 table.main > tbody > tr > td {
 	padding: 10px;
 }
+
 table.queue {
 	width: 200px;
 	border: 1px solid black;
 }
+
 table.queue > caption {
 	font-weight: bold;
 	border: 1px solid black;
@@ -29,13 +34,16 @@ table.queue > caption {
 	padding: 0px;
 	color: black;
 }
+
 table.queue > tbody > tr > td {
 	text-align: center;
 	width: 80px;
 }
+
 table.queue > tbody > tr > td.user {
 	color: red;
 }
+
 span.queue {
 	font-weight: bold;
 }

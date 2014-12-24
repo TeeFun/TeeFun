@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
-
 	<head>
+		<!-- Title -->
 		<title>Teeworlds Matchmaking System</title>
 
 		<!-- CSS -->
