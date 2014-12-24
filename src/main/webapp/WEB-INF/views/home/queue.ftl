@@ -13,15 +13,11 @@
 	</#list>
 	<#if queue.containsPlayer(currentPlayer)>
 		<tr><td>
-			<form id="quitQueueForm${queue.getName()}">
-				<button type="button" class="btn btn-xs btn-primary" onClick="quitQueue('${queue.getName()}')">Leave</button>
-			</form>
+			button type="button" class="btn btn-xs btn-primary" onClick="quitQueue('${queue.getName()}')">Leave</button>
 		</td></tr>
 	<#else>
 		<tr><td>
-			<form id="joinQueueForm${queue.getName()}">
-				<button type="button" class="btn btn-xs btn-primary" onClick="joinQueue('${queue.getName()}')">Join</button>
-			</form>
+			<button type="button" class="btn btn-xs btn-primary" onClick="joinQueue('${queue.getName()}')">Join</button>
 		</td></tr>
 	</#if>
 	</tbody>
