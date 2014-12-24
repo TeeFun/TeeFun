@@ -1,0 +1,47 @@
+fieldset {
+	width: 400px;
+	margin-left: auto;
+	margin-right: auto;
+}
+p {
+	width: 400px;
+	margin-left: auto;
+	margin-right: auto;
+	border: 1px solid #AA0000;
+	padding: 5px;
+}
+table.main {
+	margin-left: auto;
+	margin-right: auto;
+}
+table.main > tbody > tr > td {
+	padding: 10px;
+}
+table.queue {
+	width: 200px;
+	border: 1px solid black;
+}
+table.queue > caption {
+	font-weight: bold;
+	border: 1px solid black;
+	border-bottom: none;
+	text-align: center;
+	padding: 0px;
+	color: black;
+}
+table.queue > tbody > tr > td {
+	text-align: center;
+	width: 80px;
+}
+table.queue > tbody > tr > td.user {
+	color: red;
+}
+span.queue {
+	font-weight: bold;
+}
+div.progress {
+	margin-left: auto;
+	margin-right: auto;
+	width: 120px;
+	margin-bottom: 8px;
+}

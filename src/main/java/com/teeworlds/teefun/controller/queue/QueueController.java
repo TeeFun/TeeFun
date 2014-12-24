@@ -37,7 +37,7 @@ public class QueueController extends AbstractController {
 	private UserContext userContext;
 
 	/**
-	 * Join the queue.
+	 * Join a queue.
 	 *
 	 * @param queue the queue name
 	 * @return the view
@@ -53,35 +53,35 @@ public class QueueController extends AbstractController {
 	}
 
 	/**
-	 * Leave the queue.
+	 * Quit a queue.
 	 *
 	 * @param queue the queue name
 	 * @return the view
 	 */
-	@RequestMapping(value = "/leaveQueue", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-	public ModelAndView leaveQueue(@RequestParam final String queueName) {
+	@RequestMapping(value = "/quitQueue", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+	public ModelAndView quitQueue(@RequestParam final String queueName) {
 		final Player player = this.userContext.getPlayer();
 		final Queue queue = this.matchmaking.getQueueByName(queueName);
 		if (queue != null) {
-			this.matchmaking.leaveQueue(player, queue);
+			this.matchmaking.quitQueue(player, queue);
 		}
 		return new ModelAndView("json/empty.json");
 	}
 
 	/**
-	 * Leaves all queues.
+	 * Quit all queues.
 	 *
 	 * @return the view
 	 */
-	@RequestMapping(value = "/leaveAllQueues", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-	public ModelAndView leaveAllQueues() {
+	@RequestMapping(value = "/quitAllQueues", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+	public ModelAndView quitAllQueues() {
 		final Player player = this.userContext.getPlayer();
-		this.matchmaking.leaveAllQueues(player);
+		this.matchmaking.quitAllQueues(player);
 		return new ModelAndView("json/empty.json");
 	}
 
 	/**
-	 * Leaves all queues.
+	 * Create a queue.
 	 *
 	 * @return the view
 	 */
@@ -92,7 +92,7 @@ public class QueueController extends AbstractController {
 	}
 
 	/**
-	 * Leaves all queues.
+	 * Delete a queue.
 	 *
 	 * @return the view
 	 */

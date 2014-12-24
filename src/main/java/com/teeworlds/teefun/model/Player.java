@@ -2,9 +2,6 @@ package com.teeworlds.teefun.model;
 
 import java.io.Serializable;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * A player for matchmaking.
  *
@@ -36,9 +33,8 @@ public class Player implements Serializable {
 	/**
 	 * Constructor.
 	 */
-	public Player(String name) {
+	public Player(final String name) {
 		this.name = name;
-		this.queues = new ArrayList<Queue>();
 	}
 
 	/**

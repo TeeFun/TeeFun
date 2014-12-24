@@ -5,6 +5,8 @@ package com.teeworlds.teefun.bean.impl;
 
 import java.io.Serializable;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
@@ -41,12 +43,13 @@ public class UserContextImpl implements UserContext, Serializable {
 	/**
 	 * The player.
 	 */
-	private final Player player;
+	private Player player;
 
 	/**
-	 * Constructor
+	 * Init bean.
 	 */
-	public UserContextImpl() {
+	@PostConstruct
+	public void initDefaultPlayer() {
 		this.player = new Player(getUniqueName());
 	}
 
@@ -54,7 +57,7 @@ public class UserContextImpl implements UserContext, Serializable {
 	 * Look for a unique name for the player.
 	 */
 	public static String getUniqueName() {
-		return DEFAULT_NAME + " " + (playerCount++).toString();
+		return DEFAULT_NAME + " " + String.valueOf(playerCount++);
 	}
 
 	/**

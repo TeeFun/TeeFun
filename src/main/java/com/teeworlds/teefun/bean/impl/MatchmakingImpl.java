@@ -53,24 +53,6 @@ public class MatchmakingImpl implements Matchmaking {
 	}
 
 	@Override
-	public void addPlayer(final Player player) {
-		if (this.activePlayers.contains(player)) {
-			return;
-		}
-		LOGGER.debug(String.format("Add player '%s' to active list.", player.getName()));
-		this.activePlayers.add(player);
-	}
-
-	@Override
-	public void removePlayer(final Player player) {
-		if (!this.activePlayers.contains(player)) {
-			return;
-		}
-		LOGGER.debug(String.format("Remove player '%s' from active list.", player.getName()));
-		this.activePlayers.remove(player);
-	}
-
-	@Override
 	public List<Queue> getQueues() {
 		return this.availableQueues;
 	}
