@@ -41,15 +41,17 @@
 </form>
 
 <!-- Delete queue -->
-<div class="normal">
-	<table style="margin: auto;"><tbody>
-		<tr>
-			<td class="form-label">Name:&nbsp;</td>
-			<td><input type="text" name="queueName" value=""/></td>
-			<td rowspan="2"><button type="button" class="btn btn-xs btn-primary" onClick="deleteQueue()">Delete queue</button></td>
-		</tr>
-	</tbody></table>
-</div>
+<form id="deleteQueueForm">
+	<div class="normal">
+		<table style="margin: auto;"><tbody>
+			<tr>
+				<td class="form-label">Name:&nbsp;</td>
+				<td><input type="text" name="queueName" value=""/></td>
+				<td rowspan="2"><button type="submit" class="btn btn-xs btn-primary" onClick="deleteQueue(); return false;">Delete queue</button></td>
+			</tr>
+		</tbody></table>
+	</div>
+</form>
 
 <!-- Highlight box (status 0) -->
 <div class="normal highlight">
