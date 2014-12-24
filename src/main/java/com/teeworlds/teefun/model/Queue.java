@@ -44,7 +44,7 @@ public class Queue {
 		}
 	}
 
-	public boolean contains(final Player player) {
+	public boolean containsPlayer(final Player player) {
 		return this.players.contains(player);
 	}
 

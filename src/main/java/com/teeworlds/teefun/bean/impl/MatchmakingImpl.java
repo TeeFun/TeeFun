@@ -82,13 +82,13 @@ public class MatchmakingImpl implements Matchmaking {
 	}
 
 	@Override
-	public void leaveQueue(final Player player, final Queue queue) {
+	public void quitQueue(final Player player, final Queue queue) {
 		LOGGER.debug(String.format("Remove player '%s' from queue '%s'.", player.getName(), queue.getName()));
 		queue.removePlayer(player);
 	}
 
 	@Override
-	public void leaveAllQueues(final Player player) {
+	public void quitAllQueues(final Player player) {
 		LOGGER.debug(String.format("Remove player '%s' from all queues.", player.getName()));
 		for (final Queue queue : this.availableQueues) {
 			queue.removePlayer(player);
