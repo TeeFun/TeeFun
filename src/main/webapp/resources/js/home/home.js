@@ -1,7 +1,7 @@
 // Refresh content every X seconds
 var refreshQueues = function () {
 $.get( "refreshQueues.do", function( data ) {
-		$("#main").html( data );
+		$("#queues").html( data );
 	});
 };
 setTimeout(function(){
@@ -27,7 +27,6 @@ var changeName = function() {
 };
 
 var joinQueue = function(queueName) {
-	var queueName = $form.find("input[name='queueName']").val();
 	var posting = $.post("queue/joinQueue.do?queueName=" + queueName);
 
 	posting.done(function() {
@@ -38,7 +37,6 @@ var joinQueue = function(queueName) {
 };
 
 var quitQueue = function(queueName) {
-	var queueName = $form.find("input[name='queueName']").val();
 	var posting = $.post("queue/quitQueue.do?queueName=" + queueName);
 
 	posting.done(function() {

@@ -1,5 +1,5 @@
 <!-- Detailed queues list -->
-<table class="main">
+<table id="queues" class="main">
 	<tbody>
 		<tr>
 			<td>

@@ -9,18 +9,18 @@
 	</caption>
 	<tbody>
 	<#list queue.getPlayers() as player>
-		<tr><td>${player}</td></tr>
+		<tr><td>${player.getName()}</td></tr>
 	</#list>
 	<#if queue.containsPlayer(currentPlayer)>
 		<tr><td>
 			<form id="quitQueueForm${queue.getName()}">
-				<button type="button" class="btn btn-xs btn-primary" onClick="quitQueue(${queue.getName()})">Leave</button>
+				<button type="button" class="btn btn-xs btn-primary" onClick="quitQueue('${queue.getName()}')">Leave</button>
 			</form>
 		</td></tr>
 	<#else>
 		<tr><td>
 			<form id="joinQueueForm${queue.getName()}">
-				<button type="button" class="btn btn-xs btn-primary" onClick="joinQueue(${queue.getName()})">Join</button>
+				<button type="button" class="btn btn-xs btn-primary" onClick="joinQueue('${queue.getName()}')">Join</button>
 			</form>
 		</td></tr>
 	</#if>
