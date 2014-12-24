@@ -46,7 +46,7 @@ var quitQueue = function(queueName) {
 	});
 };
 
-var leaveAllQueues = function() {
+var quitAllQueues = function() {
 	var posting = $.post("queue/quitAllQueues.do");
 
 	posting.done(function() {

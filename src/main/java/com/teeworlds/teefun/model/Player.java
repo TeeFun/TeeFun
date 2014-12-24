@@ -2,6 +2,9 @@ package com.teeworlds.teefun.model;
 
 import java.io.Serializable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * A player for matchmaking.
  *
@@ -11,6 +14,11 @@ import java.io.Serializable;
 public class Player implements Serializable {
 
 	/**
+	 * Class logger.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(Player.class);
+
+	/**
 	 * SUID.
 	 */
 	private static final long serialVersionUID = 1L;
@@ -18,7 +26,7 @@ public class Player implements Serializable {
 	/**
 	 * Time in ms before the player becomes inactive.
 	 */
-	private static final int INACTIVE_TIME_LIMIT = 10000;
+	private static final int INACTIVE_TIME_LIMIT = 11000;
 
 	/**
 	 * Player name.
@@ -48,6 +56,7 @@ public class Player implements Serializable {
 	 * @return true if the player is still active
 	 */
 	public boolean isActive() {
+		LOGGER.trace(String.format("Player '%s' %d - %d", this.name, System.currentTimeMillis(), this.lastActiveTime));
 		return System.currentTimeMillis() - this.lastActiveTime < INACTIVE_TIME_LIMIT;
 	}
 

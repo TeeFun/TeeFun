@@ -13,7 +13,7 @@
 	</#list>
 	<#if queue.containsPlayer(currentPlayer)>
 		<tr><td>
-			button type="button" class="btn btn-xs btn-primary" onClick="quitQueue('${queue.getName()}')">Leave</button>
+			<button type="button" class="btn btn-xs btn-primary" onClick="quitQueue('${queue.getName()}')">Leave</button>
 		</td></tr>
 	<#else>
 		<tr><td>

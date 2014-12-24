@@ -4,6 +4,15 @@
       version="3.0"> 
 
 	<display-name>TeeFun</display-name>
+	
+	<filter>
+		<filter-name>XSSFilter</filter-name>
+		<filter-class>com.teeworlds.teefun.filter.XSSFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>XSSFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 
 	<servlet>
 		<servlet-name>mvc-dispatcher</servlet-name>
