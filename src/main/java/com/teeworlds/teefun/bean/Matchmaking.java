@@ -23,20 +23,6 @@ public interface Matchmaking {
 	List<Player> activePlayers();
 
 	/**
-	 * Active a player.
-	 *
-	 * @param player the player
-	 */
-	void addPlayer(Player player);
-
-	/**
-	 * Disable a player.
-	 *
-	 * @param player the player
-	 */
-	void removePlayer(Player player);
-
-	/**
 	 * @return the list of available queues
 	 */
 	List<Queue> getQueues();

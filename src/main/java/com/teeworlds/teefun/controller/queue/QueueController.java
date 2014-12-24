@@ -85,12 +85,9 @@ public class QueueController extends AbstractController {
 	 *
 	 * @return the view
 	 */
-	@RequestMapping(value = "/deleteQueue", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-	public ModelAndView deleteQueue(@RequestParam final String queueName) {
-		final Queue queue = this.matchmaking.getQueueByName(queueName);
-		if (queue != null) {
-			this.matchmaking.removeQueue(queue);
-		}
+	@RequestMapping(value = "/createQueue", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+	public ModelAndView createQueue(@RequestParam final String queueName, @RequestParam final Integer maxSize) {
+		this.matchmaking.addQueue(new Queue(queueName, maxSize));
 		return new ModelAndView("json/empty.json");
 	}
 
@@ -99,9 +96,12 @@ public class QueueController extends AbstractController {
 	 *
 	 * @return the view
 	 */
-	@RequestMapping(value = "/createQueue", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-	public ModelAndView createQueue(@RequestParam final String queueName, @RequestParam final Integer maxSize) {
-		this.matchmaking.addQueue(new Queue(queueName, maxSize));
+	@RequestMapping(value = "/deleteQueue", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+	public ModelAndView deleteQueue(@RequestParam final String queueName) {
+		final Queue queue = this.matchmaking.getQueueByName(queueName);
+		if (queue != null) {
+			this.matchmaking.removeQueue(queue);
+		}
 		return new ModelAndView("json/empty.json");
 	}
 

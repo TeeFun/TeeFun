@@ -14,9 +14,9 @@ import com.teeworlds.teefun.controller.AbstractController;
 
 /**
  * Player controller.
- * 
+ *
  * @author Rajh
- * 
+ *
  */
 @Controller
 @RequestMapping("/player")
@@ -35,32 +35,8 @@ public class PlayerController extends AbstractController {
 	private Matchmaking matchmaking;
 
 	/**
-	 * Make this user active and save its name.
-	 * 
-	 * @param name the player name
-	 * @return the view
-	 */
-	@RequestMapping(value = "/active", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-	public ModelAndView active(@RequestParam final String name) {
-		this.userContext.getPlayer().setName(name);
-		this.matchmaking.addPlayer(this.userContext.getPlayer());
-		return new ModelAndView("empty.json");
-	}
-
-	/**
-	 * Make this user inactive.
-	 * 
-	 * @return the view
-	 */
-	@RequestMapping(value = "/inactive", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-	public ModelAndView inactive() {
-		this.matchmaking.removePlayer(this.userContext.getPlayer());
-		return new ModelAndView("json/empty.json");
-	}
-
-	/**
 	 * Change a player's name.
-	 * 
+	 *
 	 * @param name the new name
 	 * @return the view
 	 */
@@ -72,7 +48,7 @@ public class PlayerController extends AbstractController {
 
 	/**
 	 * Keep active a player.
-	 * 
+	 *
 	 * @return the view
 	 */
 	@RequestMapping(value = "/keepAlive", method = RequestMethod.GET)
