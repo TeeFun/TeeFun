@@ -51,12 +51,16 @@
 	Please accept or decline the game.<br/>
 	<tr><td><button type="button" class="btn btn-xs btn-success">Accept</button></td></tr>
 	<tr><td><button type="button" class="btn btn-xs btn-danger">Decline</button></td></tr><br/>
-	Players ready:
-	<div class="progress">
-		<div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 42%">
-			<span>6/12</span>
-		</div>
-	</div>
+	<table><tbody><tr style="height: 25px;">
+		<td>Players ready:&nbsp;</td>
+		<td>
+			<div class="progress" style="margin: auto;">
+				<div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 42%">
+					<span>5/12</span>
+				</div>
+			</div>
+		</td>
+	</tr></tbody></table>
 </p>
 
 <!-- Highlight box (status 2) -->
