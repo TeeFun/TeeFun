@@ -7,14 +7,12 @@
 		<!-- JQuery -->
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
-		
-		
 		<!-- CSS -->
 		<!-- Common -->
 		<link rel="stylesheet" type="text/css" href="resources/css/common.css">
 		<!-- Custom -->
 		<link rel="stylesheet" type="text/css" href="resources/css/home/home.css">
-		
+
 		<!-- Bootstrap -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
