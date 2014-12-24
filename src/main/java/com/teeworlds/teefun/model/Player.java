@@ -2,6 +2,9 @@ package com.teeworlds.teefun.model;
 
 import java.io.Serializable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * A player for matchmaking.
  *
@@ -21,11 +24,6 @@ public class Player implements Serializable {
 	private static final int INACTIVE_TIME_LIMIT = 15000;
 
 	/**
-	 * Player default name.
-	 */
-	private static String DEFAULT_NAME = "nameless tee";
-
-	/**
 	 * Player name.
 	 */
 	private String name;
@@ -34,6 +32,14 @@ public class Player implements Serializable {
 	 * Last time the player was active.
 	 */
 	private long lastActiveTime;
+
+	/**
+	 * Constructor.
+	 */
+	public Player(String name) {
+		this.name = name;
+		this.queues = new ArrayList<Queue>();
+	}
 
 	/**
 	 * Keep alive packet in order to let the player active.
@@ -62,12 +68,5 @@ public class Player implements Serializable {
 	public void setName(final String name) {
 		this.keepAlive();
 		this.name = name;
-	}
-
-	/**
-	 * Reset player to default values.
-	 */
-	public void reset() {
-		this.name = DEFAULT_NAME;
 	}
 }

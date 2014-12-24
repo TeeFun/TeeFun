@@ -29,10 +29,37 @@ public class UserContextImpl implements UserContext, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * Default player name.
+	 */
+	private static final String DEFAULT_NAME = "nameless tee";
+
+	/**
+	 * Player count.
+	 */
+	private static int playerCount = 0;
+
+	/**
 	 * The player.
 	 */
-	private final Player player = new Player();
+	private final Player player;
 
+	/**
+	 * Constructor
+	 */
+	public UserContextImpl() {
+		this.player = new Player(getUniqueName());
+	}
+
+	/**
+	 * Look for a unique name for the player.
+	 */
+	public static String getUniqueName() {
+		return DEFAULT_NAME + " " + (playerCount++).toString();
+	}
+
+	/**
+	 * Getter for player.
+	 */
 	@Override
 	public Player getPlayer() {
 		return this.player;

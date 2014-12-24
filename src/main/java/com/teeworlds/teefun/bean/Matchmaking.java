@@ -44,19 +44,19 @@ public interface Matchmaking {
 	void joinQueue(Player player, Queue queue);
 
 	/**
-	 * Leave a queue by its name.
+	 * Quit a queue by its name.
 	 *
 	 * @param player the player
 	 * @param queue the queue
 	 */
-	void leaveQueue(Player player, Queue queue);
+	void quitQueue(Player player, Queue queue);
 
 	/**
-	 * Leave all queues.
+	 * Quit all queues.
 	 *
 	 * @param player the player
 	 */
-	void leaveAllQueues(Player player);
+	void quitAllQueues(Player player);
 
 	/**
 	 * Add an available queue.
