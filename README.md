@@ -1,4 +1,4 @@
-teefun
+TeeFun
 ======
 
 Matchmaking for teeworlds game
