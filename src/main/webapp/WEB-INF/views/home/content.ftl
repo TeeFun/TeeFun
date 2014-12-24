@@ -1,52 +1,68 @@
 <!-- Nickname selection -->
 <form id="changeNameForm">
-	<div class="normal nickname">
-		Nickname:
-		<input type="text" name="nickname" value="${currentPlayer.getName()}"/>
-		<button type="button" class="btn btn-xs btn-primary" onClick="changeName()">Confirm</button><br/>
+	<div class="normal">
+		<table style="margin: auto;"><tbody>
+			<tr>
+				<td class="form-label">Nickname:&nbsp;</td>
+				<td><input type="text" name="nickname" value="${currentPlayer.getName()}"/></td>
+				<td><button type="button" class="btn btn-xs btn-primary" onClick="changeName()">Confirm</button></td>
+			</tr>
+		</tbody></table>
 	</div>
 </form>
 
 <!-- Queues list -->
 <form id="quitAllQueuesForm">
-	<div class="normal queues">
-		<div>
-			Currently in queues: TODO<br/>
-			<button type="button" class="btn btn-xs btn-danger" onClick="quitAllQueues()">Quit every queue</button>
-		</div>
+	<div class="normal">
+		<table style="margin: auto; text-align: center;"><tbody>
+			<tr>
+				<td>Currently in queues: TODO</td>
+			</tr>
+			<tr>
+				<td><button type="button" class="btn btn-xs btn-danger" onClick="quitAllQueues()">Quit every queue</button></td>
+			</tr>
+		</tbody></table>
 	</div>
 </form>
 
 <!-- Create queue -->
 <form id="createQueueForm">
-	<div class="normal createQueue">
-		<div>
-			Queue Name:
-			<input type="text" name="queueName" value="ctf2"/>
-			<button type="button" class="btn btn-xs btn-primary" onClick="createQueue()">Create queue</button>
-		</div>
+	<div class="normal">
+		<table style="margin: auto;"><tbody>
+			<tr>
+				<td class="form-label">Name:&nbsp;</td>
+				<td><input type="text" name="queueName" value=""/></td>
+				<td rowspan="2"><button type="button" class="btn btn-xs btn-primary" onClick="createQueue()">Create queue</button></td>
+			</tr>
+			<tr>
+				<td class="form-label">Max Size:&nbsp;</td>
+				<td><input type="text" name="queueMaxSize" value="8"/></td>
+			</tr>
+		</tbody></table>
 	</div>
 </form>
 
 <!-- Delete queue -->
 <form id="deleteQueueForm">
-	<div class="normal deleteQueue">
-		<div>
-			Queue Name:
-			<input type="text" name="queueName" value="ctf2"/>
-			<button type="button" class="btn btn-xs btn-primary" onClick="deleteQueue()">Delete queue</button>
-		</div>
+	<div class="normal">
+		<table style="margin: auto;"><tbody>
+			<tr>
+				<td class="form-label">Name:&nbsp;</td>
+				<td><input type="text" name="queueName" value=""/></td>
+				<td rowspan="2"><button type="button" class="btn btn-xs btn-primary" onClick="deleteQueue()">Delete queue</button></td>
+			</tr>
+		</tbody></table>
 	</div>
 </form>
 
 <!-- Highlight box (status 0) -->
-<p class="normal highlight">
+<div class="normal highlight">
 	Looking for match...<br/>
 	Please wait for other players...
-</p>
+</div>
 
 <!-- Highlight box (status 1) -->
-<p class="normal highlight">
+<div class="normal highlight">
 	Match found for queue <span class="queue">ctf5</span>!<br/>
 	Please accept or decline the game.<br/>
 	<tr><td><button type="button" class="btn btn-xs btn-success">Accept</button></td></tr>
@@ -61,10 +77,10 @@
 			</div>
 		</td>
 	</tr></tbody></table>
-</p>
+</div>
 
 <!-- Highlight box (status 2) -->
-<p class="normal highlight">
+<div class="normal highlight">
 	Match found for queue <span class="queue">ctf5</span>!<br/>
 	You have accepted the game.<br/>
 	<tr><td><button type="button" class="btn btn-xs btn-danger">Decline</button></td></tr><br/>
@@ -78,7 +94,7 @@
 			</div>
 		</td>
 	</tr></tbody></table>
-</p>
+</div>
 
 <!-- Detailed queues list -->
 <table class="main">
