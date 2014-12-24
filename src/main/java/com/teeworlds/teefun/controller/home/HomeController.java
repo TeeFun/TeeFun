@@ -53,11 +53,11 @@ public class HomeController extends AbstractController {
 	 * @param model the model
 	 * @return the view
 	 */
-	@RequestMapping(value = "/refreshQueues", method = RequestMethod.GET, consumes = "application/json", produces = "application/json")
+	@RequestMapping(value = "/refreshQueues", method = RequestMethod.GET)
 	public ModelAndView refreshQueues(final Model model) {
 		model.addAttribute("queues", this.matchmaking.getQueues());
 		model.addAttribute("currentPlayer", this.userContext.getPlayer());
-		return new ModelAndView("json/refreshQueues.json");
+		return new ModelAndView("/home/queues");
 	}
 
 }

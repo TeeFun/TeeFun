@@ -40,7 +40,7 @@ public class PlayerController extends AbstractController {
 	 * @param name the new name
 	 * @return the view
 	 */
-	@RequestMapping(value = "/changeName", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+	@RequestMapping(value = "/changeName", method = RequestMethod.POST)
 	public ModelAndView changeName(@RequestParam final String name) {
 		this.userContext.getPlayer().setName(name);
 		return new ModelAndView("json/empty.json");

@@ -42,7 +42,7 @@ public class QueueController extends AbstractController {
 	 * @param queue the queue name
 	 * @return the view
 	 */
-	@RequestMapping(value = "/joinQueue", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+	@RequestMapping(value = "/joinQueue", method = RequestMethod.POST)
 	public ModelAndView joinQueue(@RequestParam final String queueName) {
 		final Player player = this.userContext.getPlayer();
 		final Queue queue = this.matchmaking.getQueueByName(queueName);
@@ -58,7 +58,7 @@ public class QueueController extends AbstractController {
 	 * @param queue the queue name
 	 * @return the view
 	 */
-	@RequestMapping(value = "/quitQueue", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+	@RequestMapping(value = "/quitQueue", method = RequestMethod.POST)
 	public ModelAndView quitQueue(@RequestParam final String queueName) {
 		final Player player = this.userContext.getPlayer();
 		final Queue queue = this.matchmaking.getQueueByName(queueName);
@@ -73,7 +73,7 @@ public class QueueController extends AbstractController {
 	 *
 	 * @return the view
 	 */
-	@RequestMapping(value = "/quitAllQueues", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+	@RequestMapping(value = "/quitAllQueues", method = RequestMethod.POST)
 	public ModelAndView quitAllQueues() {
 		final Player player = this.userContext.getPlayer();
 		this.matchmaking.quitAllQueues(player);
@@ -85,7 +85,7 @@ public class QueueController extends AbstractController {
 	 *
 	 * @return the view
 	 */
-	@RequestMapping(value = "/createQueue", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+	@RequestMapping(value = "/createQueue", method = RequestMethod.POST)
 	public ModelAndView createQueue(@RequestParam final String queueName, @RequestParam final Integer maxSize) {
 		this.matchmaking.addQueue(new Queue(queueName, maxSize));
 		return new ModelAndView("json/empty.json");
@@ -96,7 +96,7 @@ public class QueueController extends AbstractController {
 	 *
 	 * @return the view
 	 */
-	@RequestMapping(value = "/deleteQueue", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+	@RequestMapping(value = "/deleteQueue", method = RequestMethod.POST)
 	public ModelAndView deleteQueue(@RequestParam final String queueName) {
 		final Queue queue = this.matchmaking.getQueueByName(queueName);
 		if (queue != null) {
