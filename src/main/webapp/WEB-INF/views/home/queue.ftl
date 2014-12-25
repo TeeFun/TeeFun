@@ -24,7 +24,7 @@
 			<tbody>
 				<#assign
 					cols = 4
-					rows = (queue.getMaxSize() / cols)?int
+					rows = ((queue.getMaxSize()+cols-1) / cols)?int
 				>
 				<!-- for each cell -->
 				<#list 0..cols*rows-1 as i>
