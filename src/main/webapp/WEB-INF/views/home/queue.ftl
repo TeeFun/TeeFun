@@ -22,9 +22,12 @@
 	<div class="panel-body">
 		<table class="table table-bordered players">
 			<tbody>
-				<#assign cols = 4 />
+				<#assign
+					cols = 4
+					rows = (queue.getMaxSize() / cols)?int
+				/>
 				<!-- for each cell -->
-				<#list 0..queue.getMaxSize() - 1 as i>
+				<#list 0..cols*rows-1 as i>
 					<!-- row begin -->
 					<#if i % cols == 0>
 						<tr>
