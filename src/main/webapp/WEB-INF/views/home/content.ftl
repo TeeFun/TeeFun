@@ -19,32 +19,15 @@
 		<div class="panel panel-default panel-last">
 			<div class="panel-heading">Queues you belong to</div>
 			<div class="panel-body">
-				<div class="input-group">
-					<span class="input-group-addon text-overflow" style="min-width: 150px; max-width: 150px;">ctf2</span>
-					<span class="input-group-addon" style="width: 100%;">
-						<div class="progress">
-							<span class="progress-value">5/12</span>
-							<div class="progress-bar progress-bar-info progress-bar-striped" style="width: 42%;"></div>
-						</div>
-					</span>
-					<span class="input-group-btn">
-						<button class="btn btn-danger" type="button">Quit</button>
-					</span>
-				</div>
-				<div class="input-group">
-					<span class="input-group-addon text-overflow" style="min-width: 150px; max-width: 150px;">ctf3</span>
-					<span class="input-group-addon" style="width: 100%;">
-						<div class="progress">
-							<span class="progress-value">8/10</span>
-							<div class="progress-bar progress-bar-info progress-bar-striped" style="width: 80%;"></div>
-						</div>
-					</span>
-					<span class="input-group-btn">
-						<button class="btn btn-danger" type="button">Quit</button>
-					</span>
+				<div id="queues">
+					<#include "queues.ftl"/>
 				</div>
 				<div style="text-align: center; margin-top: 10px;">
-					<button class="btn btn-danger" type="button" onClick="quitAllQueues();">Quit all queues</button>
+					<#if currentPlayer.isInQueue()>
+						<button class="btn btn-danger" type="button" onClick="quitAllQueues();">Quit all queues</button>
+					<#else>
+						<button class="btn btn-danger disabled" type="button" onClick="quitAllQueues();">Quit all queues</button>
+					</#if>
 				</div>
 			</div>
 		</div>
@@ -121,5 +104,3 @@
 		</div>
 	</div>
 </div>
-
-<#include "queues.ftl"/>

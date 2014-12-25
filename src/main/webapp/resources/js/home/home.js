@@ -26,6 +26,20 @@ var changeName = function() {
 	});
 };
 
+var expandQueue = function(queueName) {
+	var button = $("#expand-" + queueName + "-button");
+	var content = $("#expand-" + queueName + "-content");
+
+	if(content.css("display") == "block") {
+		button.html("<span class=\"caret\"></span>");
+		content.css("display", "none");
+	}
+	else {
+		button.html("<span class=\"dropup\"><span class=\"caret\"></span></span>");
+		content.css("display", "block");
+	}
+};
+
 var joinQueue = function(queueName) {
 	var posting = $.post("queue/joinQueue.do?queueName=" + queueName);
 

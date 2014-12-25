@@ -1,24 +1,57 @@
-<table class="queue">
-	<caption>
-		${queue.getName()}
+<div class="input-group">
+	<span class="input-group-btn">
+		<#if queue.containsPlayer(currentPlayer)>
+			<button class="btn btn-danger" type="button" onClick="quitQueue('${queue.getName()}');">Quit</button>
+		<#else>
+			<button class="btn btn-success" type="button" onClick="joinQueue('${queue.getName()}');">Join</button>
+		</#if>
+	</span>
+	<span class="input-group-addon text-overflow queue-name">${queue.getName()}</span>
+	<span class="input-group-addon queue-progress">
 		<div class="progress">
-			<div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%; text-align: center;">
-				<span>${queue.getSize()}/${queue.getMaxSize()}</span>
-			</div>
+			<span class="progress-value">${queue.getSize()}/${queue.getMaxSize()}</span>
+			<div class="progress-bar progress-bar-info progress-bar-striped" style="width: ${100*queue.getSize()/queue.getMaxSize()}%;"></div>
 		</div>
-	</caption>
-	<tbody>
-	<#list queue.getPlayers() as player>
-		<tr><td>${player.getName()}</td></tr>
-	</#list>
-	<#if queue.containsPlayer(currentPlayer)>
-		<tr><td>
-			<button type="button" class="btn btn-xs btn-primary" onClick="quitQueue('${queue.getName()}')">Leave</button>
-		</td></tr>
-	<#else>
-		<tr><td>
-			<button type="button" class="btn btn-xs btn-primary" onClick="joinQueue('${queue.getName()}')">Join</button>
-		</td></tr>
-	</#if>
-	</tbody>
-</table>
+	</span>
+	<span class="input-group-btn">
+		<button class="btn btn-primary" id="expand-${queue.getName()}-button" type="button" onClick="expandQueue('${queue.getName()}');"><span class="caret"></span></button>
+	</span>
+</div>
+
+<div class="panel panel-default" id="expand-${queue.getName()}-content" style="display: none;">
+	<div class="panel-body">
+		<table class="table table-bordered players">
+			<tbody>
+				<#assign
+					cols = 4
+					rows = queue.getMaxSize() / cols
+				>
+				<!-- for each cell -->
+				<#list 0..cols*rows-1 as i>
+					<!-- row begin -->
+					<#if i % cols == 0>
+						<tr>
+					</#if>
+
+					<#if i gte queue.getSize()>
+						<!-- empty cell -->
+						<td class="disabled"></td>
+					<#else>
+						<!-- player cell -->
+						<#assign cellPlayer = queue.getPlayers().get(i)>
+						<#if cellPlayer == currentPlayer>
+							<td class="user">${cellPlayer.getName()}</td>
+						<#else>
+							<td>${cellPlayer.getName()}</td>
+						</#if>
+					</#if>
+
+					<!-- row end -->
+					<#if i % cols == cols-1>
+						</tr>
+					</#if>
+				</#list>
+			</tbody>
+		</table>
+	</div>
+</div>
