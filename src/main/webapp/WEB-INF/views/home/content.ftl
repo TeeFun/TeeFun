@@ -1,5 +1,3 @@
-<a href="<@spring.url "/queue/home.do" />" >Secret link</a>
-
 <!-- Forms -->
 <div class="panel panel-default big">
 	<div class="panel-body">

@@ -1,5 +1,3 @@
-<a href="<@spring.url "/home.do" />" >Back</a>
-
 <!-- Admin -->
 <div class="panel panel-info big">
 	<div class="panel-body">
