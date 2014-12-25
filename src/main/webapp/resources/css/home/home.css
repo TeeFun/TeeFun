@@ -49,6 +49,8 @@ table.players {
 }
 
 table.players td {
+	height: 34px;
+	padding: 6px;
 	text-align: center;
 	overflow: hidden;
 	text-overflow: ellipsis;
