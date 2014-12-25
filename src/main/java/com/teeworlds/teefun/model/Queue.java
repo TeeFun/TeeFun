@@ -16,11 +16,33 @@ import com.teeworlds.teefun.util.TeeworldsConfigUtil;
  *
  */
 public class Queue {
+
+	/**
+	 * Queue name.
+	 */
 	private final String name;
+
+	/**
+	 * Queue capacity.
+	 */
 	private final int maxSize;
+
+	/**
+	 * List of players which joined the queue.
+	 */
 	private final List<Player> players;
+
+	/**
+	 * Server config associated to this queue.
+	 */
 	private final TeeworldsConfig serverConfig;
 
+	/**
+	 * Default constructor.
+	 *
+	 * @param name queue name
+	 * @param maxSize queue capacity
+	 */
 	public Queue(final String name, final int maxSize) {
 		this.name = name;
 		this.maxSize = maxSize;
@@ -28,30 +50,55 @@ public class Queue {
 		this.serverConfig = TeeworldsConfigUtil.getDefaultConfig();
 	}
 
+	/**
+	 * @return the {@link #name}
+	 */
 	public String getName() {
 		return this.name;
 	}
 
+	/**
+	 * @return the {@link #maxSize}
+	 */
 	public int getMaxSize() {
 		return this.maxSize;
 	}
 
+	/**
+	 * @return the current size
+	 */
 	public int getSize() {
 		return this.players.size();
 	}
 
+	/**
+	 * Add a player to queue.
+	 *
+	 * @param player the player to be added
+	 */
 	public void addPlayer(final Player player) {
 		if (this.players.size() < this.maxSize && !this.players.contains(player)) {
 			this.players.add(player);
 		}
 	}
 
+	/**
+	 * Remove a player from queue.
+	 *
+	 * @param player the player to be removed
+	 */
 	public void removePlayer(final Player player) {
 		if (this.players.contains(player)) {
 			this.players.remove(player);
 		}
 	}
 
+	/**
+	 * Is the player in this queue ?
+	 *
+	 * @param player the player
+	 * @return true if the player is in this queue
+	 */
 	public boolean containsPlayer(final Player player) {
 		return this.players.contains(player);
 	}
@@ -83,6 +130,13 @@ public class Queue {
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * @return true if the queue is full
+	 */
+	public boolean isFull() {
+		return this.players.size() == this.maxSize;
 	}
 
 }

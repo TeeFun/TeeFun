@@ -62,16 +62,21 @@ public class MatchmakingImpl implements Matchmaking {
 	}
 
 	@Override
+	public List<Queue> getQueues(final Player player) {
+		final List<Queue> queues = new ArrayList<Queue>();
+		for (final Queue queue : this.availableQueues) {
+			if (queue.containsPlayer(player)) {
+				queues.add(queue);
+			}
+		}
+		return queues;
+	}
+
+	@Override
 	public void joinQueue(final Player player, final Queue queue) {
 		LOGGER.debug(String.format("Add player '%s' to queue '%s'.", player.getName(), queue.getName()));
 		queue.addPlayer(player);
-		if (queue.getPlayers().size() == queue.getMaxSize()) {
-			LOGGER.debug(String.format("Queue '%s' ready. Starting the game.", queue.getName()));
-			final TeeworldsConfig serverConfig = queue.getServerConfig();
-			this.teeworldsServerHandler.createServer(serverConfig);
-			this.availableQueues.remove(queue);
-			// TODO send serverConfig.getPassword() to all players.
-		}
+		this.checkQueue(queue);
 	}
 
 	@Override
@@ -115,11 +120,26 @@ public class MatchmakingImpl implements Matchmaking {
 	@Override
 	public boolean isInQueue(final Player player) {
 		for (final Queue queue : this.availableQueues) {
-			if (queue.getPlayers().contains(player)) {
+			if (queue.containsPlayer(player)) {
 				return true;
 			}
 		}
 		return false;
 	}
 
+	/**
+	 * Check queue status.
+	 *
+	 * @param queue the queue
+	 */
+	private void checkQueue(final Queue queue) {
+		if (queue.isFull()) {
+			LOGGER.debug(String.format("Queue '%s' ready. Starting the game.", queue.getName()));
+			final TeeworldsConfig serverConfig = queue.getServerConfig();
+			this.teeworldsServerHandler.createServer(serverConfig);
+			// TODO What to do here ? removeQueue ? Wait it to be ready ? Who will handle ready timer ?
+			// this.availableQueues.remove(queue);
+			// TODO send serverConfig.getPassword() to all players.
+		}
+	}
 }

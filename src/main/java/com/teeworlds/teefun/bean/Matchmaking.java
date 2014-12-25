@@ -23,6 +23,14 @@ public interface Matchmaking {
 	List<Queue> getQueues();
 
 	/**
+	 * Get all queue which the player has join.
+	 *
+	 * @param player the player
+	 * @return the list of available queues
+	 */
+	List<Queue> getQueues(Player player);
+
+	/**
 	 * Get a queue by name.
 	 *
 	 * @param name the name

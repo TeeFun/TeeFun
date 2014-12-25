@@ -37,14 +37,16 @@ public class MvcConfigurer extends WebMvcConfigurerAdapter {
 		final FreeMarkerConfigurationFactory factory = new FreeMarkerConfigurationFactory();
 		factory.setTemplateLoaderPath("/WEB-INF/views/");
 		factory.setDefaultEncoding("UTF-8");
+		final Properties properties = new Properties();
+		properties.put("auto_import", "spring.ftl as spring");
+		factory.setFreemarkerSettings(properties);
 
 		final FreeMarkerConfigurer result = new FreeMarkerConfigurer();
 		// FIXME factory not working
 		// result.setConfiguration(factory.createConfiguration());
-		result.setTemplateLoaderPath("/WEB-INF/views/");
-		final Properties properties = new Properties();
-		properties.put("auto_import", "spring.ftl as spring");
+		result.setTemplateLoaderPath("//WEB-INF/views/");
 		result.setFreemarkerSettings(properties);
+		// result.getConfiguration().setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
 
 		return result;
 	}
