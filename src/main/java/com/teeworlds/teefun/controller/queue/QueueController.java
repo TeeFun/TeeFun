@@ -59,9 +59,18 @@ public class QueueController extends AbstractController {
 	public ModelAndView joinQueue(@RequestParam final String queueName) {
 		final Player player = this.userContext.getPlayer();
 		final Queue queue = this.matchmaking.getQueueByName(queueName);
-		if (queue != null) {
-			this.matchmaking.joinQueue(player, queue);
+		if (queue == null) {
+			// TODO queue doesnt exist error
 		}
+		if (queue.isFull()) {
+			// TODO "Queue is full"
+		}
+		if (queue.containsPlayer(player)) {
+			// TODO "Queue already contains this player"
+		}
+
+		this.matchmaking.joinQueue(player, queue);
+
 		return new ModelAndView("json/empty.json");
 	}
 
@@ -75,9 +84,15 @@ public class QueueController extends AbstractController {
 	public ModelAndView quitQueue(@RequestParam final String queueName) {
 		final Player player = this.userContext.getPlayer();
 		final Queue queue = this.matchmaking.getQueueByName(queueName);
-		if (queue != null) {
-			this.matchmaking.quitQueue(player, queue);
+
+		if (queue == null) {
+			// TODO queue doesnt exist error
 		}
+		if (!queue.containsPlayer(player)) {
+			// TODO "Player not in queue"
+		}
+
+		this.matchmaking.quitQueue(player, queue);
 		return new ModelAndView("json/empty.json");
 	}
 
@@ -100,7 +115,13 @@ public class QueueController extends AbstractController {
 	 */
 	@RequestMapping(value = "/createQueue", method = RequestMethod.POST)
 	public ModelAndView createQueue(@RequestParam final String queueName, @RequestParam final Integer maxSize) {
-		this.matchmaking.addQueue(new Queue(queueName, maxSize));
+		final Queue queue = new Queue(queueName, maxSize);
+
+		if (this.matchmaking.getQueues().contains(queue)) {
+			// TODO "Queue already exist";
+		}
+
+		this.matchmaking.addQueue(queue);
 		return new ModelAndView("json/empty.json");
 	}
 
@@ -112,9 +133,12 @@ public class QueueController extends AbstractController {
 	@RequestMapping(value = "/deleteQueue", method = RequestMethod.POST)
 	public ModelAndView deleteQueue(@RequestParam final String queueName) {
 		final Queue queue = this.matchmaking.getQueueByName(queueName);
-		if (queue != null) {
-			this.matchmaking.removeQueue(queue);
+
+		if (queue == null) {
+			// TODO "queue doesnt exist"
 		}
+
+		this.matchmaking.removeQueue(queue);
 		return new ModelAndView("json/empty.json");
 	}
 

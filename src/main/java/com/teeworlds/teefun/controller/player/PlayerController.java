@@ -54,7 +54,7 @@ public class PlayerController extends AbstractController {
 	@RequestMapping(value = "/keepAlive", method = RequestMethod.GET)
 	public ModelAndView keepAlive() {
 		this.userContext.getPlayer().keepAlive();
-		return new ModelAndView("json/empty.json");
+		return new ModelAndView(EMPTY_JSON_URL);
 	}
 
 }
