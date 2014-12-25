@@ -26,23 +26,23 @@
 					cols = 4
 					rows = ((queue.getMaxSize()+cols-1) / cols)?int
 				>
-				<!-- for each cell -->
+				<#-- for each cell -->
 				<#list 0..cols*rows-1 as i>
-					<!-- row begin -->
+					<#-- row begin -->
 					<#if i % cols == 0>
 						<tr>
 					</#if>
 
 					<#if i gte queue.getSize()>
 						<#if i gte queue.getMaxSize()>
-							<!-- disabled cell -->
+							<#-- disabled cell -->
 							<td class="disabled"></td>
 						<#else>
-							<!-- empty cell -->
+							<#-- empty cell -->
 							<td></td>
 						</#if>
 					<#else>
-						<!-- player cell -->
+						<#-- player cell -->
 						<#assign cellPlayer = queue.getPlayers()[i]>
 						<#if cellPlayer == currentPlayer>
 							<td class="user">${cellPlayer.getName()}</td>
@@ -51,7 +51,7 @@
 						</#if>
 					</#if>
 
-					<!-- row end -->
+					<#-- row end -->
 					<#if i % cols == cols-1>
 						</tr>
 					</#if>

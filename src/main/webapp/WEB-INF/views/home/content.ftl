@@ -4,14 +4,19 @@
 		<!-- Nickname selection -->
 		<div class="panel panel-default">
 			<div class="panel-heading">Select your nickname</div>
-			<div class="panel-body" id="changeNameForm">
-				<div class="input-group" style="width: 100%;">
-					<div class="input-group has-success has-feedback">
-						<span class="input-group-addon">Nickname</span>
-						<input type="text" name="nickname" class="form-control" value="${currentPlayer.getName()}">
-						<span class="glyphicon glyphicon-ok form-control-feedback"></span>
+			<div class="panel-body">
+				<form id="changeNameForm">
+					<div class="input-group" style="width: 100%;">
+						<div class="input-group has-success has-feedback">
+							<span class="input-group-addon">Nickname</span>
+							<input type="text" name="nickname" class="form-control" value="${currentPlayer.getName()}">
+							<span class="glyphicon glyphicon-ok form-control-feedback"></span>
+						</div>
 					</div>
-				</div>
+					<div style="text-align: center;">
+						<button class="btn btn-default" type="submit" onClick="changeName(); return false;">Create</button>
+					</div>
+				</form>
 			</div>
 		</div>
 
@@ -33,32 +38,36 @@
 		<!-- Create queue -->
 		<div class="panel panel-info">
 			<div class="panel-heading">Create a queue</div>
-			<div class="panel-body" id="createQueueForm">
-				<div class="input-group">
-					<span class="input-group-addon" style="width: 100px;">Name</span>
-					<input type="text" name="queueName" class="form-control" placeholder="ctf5">
-				</div>
-				<div class="input-group">
-					<span class="input-group-addon" style="width: 100px;">Players</span>
-					<input type="text" name="queueMaxSize" class="form-control" placeholder="8">
-				</div>
-				<div style="text-align: center;">
-					<button class="btn btn-default" type="button" onClick="createQueue();">Create</button>
-				</div>
+			<div class="panel-body">
+				<form id="createQueueForm">
+					<div class="input-group">
+						<span class="input-group-addon" style="width: 100px;">Name</span>
+						<input type="text" id="createQueueName" class="form-control" placeholder="ctf5">
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon" style="width: 100px;">Players</span>
+						<input type="text" id="createQueueMaxSize" class="form-control" placeholder="8">
+					</div>
+					<div style="text-align: center;">
+						<button class="btn btn-default" type="submit" onClick="createQueue(); return false;">Create</button>
+					</div>
+				</form>
 			</div>
 		</div>
 
 		<!-- Delete queue -->
 		<div class="panel panel-info panel-last">
 			<div class="panel-heading">Delete a queue</div>
-			<div class="panel-body" id="deleteQueueForm">
-				<div class="input-group">
-					<span class="input-group-addon" style="width: 100px;">Name</span>
-					<input type="text" name="queueName" class="form-control" placeholder="ctf5">
-				</div>
-				<div style="text-align: center;">
-					<button class="btn btn-default" type="button" onClick="deleteQueue();">Delete</button>
-				</div>
+			<div class="panel-body">
+				<form id="deleteQueueForm">
+					<div class="input-group">
+						<span class="input-group-addon" style="width: 100px;">Name</span>
+						<input type="text" name="deleteQueueName" class="form-control" placeholder="ctf5">
+					</div>
+					<div style="text-align: center;">
+						<button class="btn btn-default" type="submit" onClick="deleteQueue(); return false;">Delete</button>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
