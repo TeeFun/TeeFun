@@ -2,6 +2,7 @@ package com.teeworlds.teefun.controller.queue;
 
 import javax.annotation.Resource;
 
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,6 +44,7 @@ public class QueueController extends AbstractController {
 	 * @param model the model
 	 * @return the view
 	 */
+	// @PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value = "/home", method = RequestMethod.GET)
 	public ModelAndView home(final Model model) {
 		model.addAttribute("queues", this.matchmaking.getQueues());
@@ -55,7 +57,7 @@ public class QueueController extends AbstractController {
 	 * @param queue the queue name
 	 * @return the view
 	 */
-	@RequestMapping(value = "/joinQueue", method = RequestMethod.POST)
+	@RequestMapping(value = "/joinQueue", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ModelAndView joinQueue(@RequestParam final String queueName) {
 		final Player player = this.userContext.getPlayer();
 		final Queue queue = this.matchmaking.getQueueByName(queueName);
@@ -80,7 +82,7 @@ public class QueueController extends AbstractController {
 	 * @param queue the queue name
 	 * @return the view
 	 */
-	@RequestMapping(value = "/quitQueue", method = RequestMethod.POST)
+	@RequestMapping(value = "/quitQueue", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ModelAndView quitQueue(@RequestParam final String queueName) {
 		final Player player = this.userContext.getPlayer();
 		final Queue queue = this.matchmaking.getQueueByName(queueName);
@@ -101,7 +103,7 @@ public class QueueController extends AbstractController {
 	 *
 	 * @return the view
 	 */
-	@RequestMapping(value = "/quitAllQueues", method = RequestMethod.POST)
+	@RequestMapping(value = "/quitAllQueues", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ModelAndView quitAllQueues() {
 		final Player player = this.userContext.getPlayer();
 		this.matchmaking.quitAllQueues(player);
@@ -113,7 +115,8 @@ public class QueueController extends AbstractController {
 	 *
 	 * @return the view
 	 */
-	@RequestMapping(value = "/createQueue", method = RequestMethod.POST)
+	// @PreAuthorize("hasRole('ROLE_ADMIN')")
+	@RequestMapping(value = "/createQueue", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ModelAndView createQueue(@RequestParam final String queueName, @RequestParam final Integer maxSize) {
 		final Queue queue = new Queue(queueName, maxSize);
 
@@ -130,7 +133,8 @@ public class QueueController extends AbstractController {
 	 *
 	 * @return the view
 	 */
-	@RequestMapping(value = "/deleteQueue", method = RequestMethod.POST)
+	// @PreAuthorize("hasRole('ROLE_ADMIN')")
+	@RequestMapping(value = "/deleteQueue", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ModelAndView deleteQueue(@RequestParam final String queueName) {
 		final Queue queue = this.matchmaking.getQueueByName(queueName);
 

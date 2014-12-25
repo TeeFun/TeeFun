@@ -2,6 +2,7 @@ package com.teeworlds.teefun.controller.home;
 
 import javax.annotation.Resource;
 
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,7 +56,7 @@ public class HomeController extends AbstractController {
 	 * @param model the model
 	 * @return the view
 	 */
-	@RequestMapping(value = "/refreshQueues", method = RequestMethod.GET)
+	@RequestMapping(value = "/refreshQueues", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ModelAndView refreshQueues(final Model model) {
 		model.addAttribute("queues", this.matchmaking.getQueues());
 		model.addAttribute("currentPlayer", this.userContext.getPlayer());
