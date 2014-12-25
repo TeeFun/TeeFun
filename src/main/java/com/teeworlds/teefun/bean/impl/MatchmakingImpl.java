@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Component;
 import com.teeworlds.teefun.bean.Matchmaking;
 import com.teeworlds.teefun.model.Player;
 import com.teeworlds.teefun.model.Queue;
+import com.teeworlds.teefun.model.teeworlds.TeeworldsConfig;
+import com.teeworlds.teefun.service.teeworlds.TeeworldsServerHandler;
 
 /**
  * Default impl for {@link Matchmaking}.
@@ -24,6 +28,12 @@ public class MatchmakingImpl implements Matchmaking {
 	 * Class logger.
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(MatchmakingImpl.class);
+
+	/**
+	 * Teeworlds server handler.
+	 */
+	@Resource
+	private TeeworldsServerHandler teeworldsServerHandler;
 
 	/**
 	 * List of available queues.
@@ -55,6 +65,13 @@ public class MatchmakingImpl implements Matchmaking {
 	public void joinQueue(final Player player, final Queue queue) {
 		LOGGER.debug(String.format("Add player '%s' to queue '%s'.", player.getName(), queue.getName()));
 		queue.addPlayer(player);
+		if (queue.getPlayers().size() == queue.getMaxSize()) {
+			LOGGER.debug(String.format("Queue '%s' ready. Starting the game.", queue.getName()));
+			final TeeworldsConfig serverConfig = queue.getServerConfig();
+			this.teeworldsServerHandler.createServer(serverConfig);
+			this.availableQueues.remove(queue);
+			// TODO send serverConfig.getPassword() to all players.
+		}
 	}
 
 	@Override

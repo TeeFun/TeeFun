@@ -10,6 +10,9 @@ setInterval(function(){
 
 // Keep alive (keep the player active)
 var inQueue = 0;
+if (isInQueue) {
+	inQueue = nbOfQueuesAtLoad;
+}
 setInterval(function(){
 	if (inQueue > 0) {
 		$.get("player/keepAlive.do");
@@ -71,8 +74,8 @@ var quitAllQueues = function() {
 };
 
 var createQueue = function() {
-	var queueName = $("#createQueueForm").find("input[name='queueName']").val();
-	var queueMaxSize = $("#createQueueForm").find("input[name='queueMaxSize']").val();
+	var queueName = $("#createQueueName").val();
+	var queueMaxSize = $("#createQueueMaxSize").val();
 	var posting = $.post("queue/createQueue.do?queueName=" + queueName + '&maxSize=' + queueMaxSize);
 
 	posting.done(function() {
@@ -82,7 +85,7 @@ var createQueue = function() {
 };
 
 var deleteQueue = function() {
-	var queueName = $("#deleteQueueForm").find("input[name='queueName']").val();
+	var queueName = $("#deleteQueueName").val();
 	var posting = $.post("queue/deleteQueue.do?queueName=" + queueName );
 
 	posting.done(function() {

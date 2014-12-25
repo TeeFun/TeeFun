@@ -42,6 +42,7 @@ public class HomeController extends AbstractController {
 	 */
 	@RequestMapping(value = "/home", method = RequestMethod.GET)
 	public ModelAndView home(final Model model) {
+		this.userContext.getPlayer().keepAlive();
 		model.addAttribute("queues", this.matchmaking.getQueues());
 		model.addAttribute("currentPlayer", this.userContext.getPlayer());
 		model.addAttribute("isInQueue", this.matchmaking.isInQueue(this.userContext.getPlayer()));

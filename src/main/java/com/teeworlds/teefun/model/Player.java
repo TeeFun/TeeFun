@@ -2,6 +2,8 @@ package com.teeworlds.teefun.model;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,5 +75,20 @@ public class Player implements Serializable {
 	public void setName(final String name) {
 		this.keepAlive();
 		this.name = name;
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().append(this.name).toHashCode();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj instanceof Player) {
+			final Player other = (Player) obj;
+			return new EqualsBuilder().append(this.name, other.name).isEquals();
+		} else {
+			return false;
+		}
 	}
 }

@@ -25,6 +25,10 @@
 
 		<!-- Common -->
 		<script src="resources/js/common.js"></script>
+		<!-- Static Page -->
+		<script>
+			<#include "/home/js.ftl" />
+		</script>
 		<!-- Custom -->
 		<script src="resources/js/home/home.js"></script>
 	</body>
