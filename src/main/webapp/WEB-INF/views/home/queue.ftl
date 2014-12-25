@@ -25,7 +25,7 @@
 				<#assign
 					cols = 4
 					rows = (queue.getMaxSize() / cols)?int
-				/>
+				>
 				<!-- for each cell -->
 				<#list 0..cols*rows-1 as i>
 					<!-- row begin -->
