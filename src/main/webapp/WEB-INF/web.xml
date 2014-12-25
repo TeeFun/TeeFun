@@ -56,7 +56,7 @@
  	-->
  	
 	<error-page>
-		<location>/error</location>
+		<location>/error.do</location>
 	</error-page>
 
 	<welcome-file-list>
