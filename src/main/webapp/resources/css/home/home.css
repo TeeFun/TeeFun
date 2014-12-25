@@ -1,17 +1,3 @@
-div.normal {
-	width: 400px;
-	padding: 5px;
-	margin-left: auto;
-	margin-right: auto;
-	margin-top: 5px;
-	margin-bottom: 5px;
-	border: 1px solid #000000;
-}
-
-div.highlight {
-	border: 1px solid #AA0000;
-}
-
 table.main {
 	margin-left: auto;
 	margin-right: auto;
@@ -48,13 +34,53 @@ span.queue {
 	font-weight: bold;
 }
 
-div.progress {
-	margin-left: auto;
-	margin-right: auto;
-	width: 120px;
-	margin-bottom: 8px;
-}
-
 td.form-label {
 	text-align: right;
+}
+
+
+
+div.big {
+	width: 550px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 10px;
+}
+
+div.panel-last {
+	margin-bottom: 0px;
+}
+
+div.progress {
+	width: 100%;
+	margin: 0px auto;
+	position: relative;
+	line-height: 20px;
+	height: 20px;
+}
+
+span.progress-value {
+	color: #222222;
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	top: 0px;
+	bottom: 0px;
+	height: 100%;
+	text-align: center;
+}
+
+div.input-group {
+	width: 100%;
+	margin-bottom: 5px;
+}
+
+div.panel-highlight {
+	text-align: center;
+}
+
+span.text-overflow {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
