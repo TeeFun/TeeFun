@@ -73,23 +73,3 @@ var quitAllQueues = function() {
 	});
 };
 
-var createQueue = function() {
-	var queueName = $("#createQueueName").val();
-	var queueMaxSize = $("#createQueueMaxSize").val();
-	var posting = $.post("queue/createQueue.do?queueName=" + queueName + '&maxSize=' + queueMaxSize);
-
-	posting.done(function() {
-		refreshQueues();
-		alert('Created queue : ' + queueName);
-	});
-};
-
-var deleteQueue = function() {
-	var queueName = $("#deleteQueueName").val();
-	var posting = $.post("queue/deleteQueue.do?queueName=" + queueName );
-
-	posting.done(function() {
-		refreshQueues();
-		alert('Deleted queue : ' + queueName);
-	});
-};

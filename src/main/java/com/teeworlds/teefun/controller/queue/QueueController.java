@@ -3,6 +3,7 @@ package com.teeworlds.teefun.controller.queue;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,6 +36,18 @@ public class QueueController extends AbstractController {
 	 */
 	@Resource
 	private UserContext userContext;
+
+	/**
+	 * Queue modification home page.
+	 *
+	 * @param model the model
+	 * @return the view
+	 */
+	@RequestMapping(value = "/home", method = RequestMethod.GET)
+	public ModelAndView home(final Model model) {
+		model.addAttribute("queues", this.matchmaking.getQueues());
+		return new ModelAndView("queue");
+	}
 
 	/**
 	 * Join a queue.

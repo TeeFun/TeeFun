@@ -1,4 +1,4 @@
-<#assign pageName="home"/>
+<#assign pageName="queue"/>
 <#import "/spring.ftl" as spring/>
 <!DOCTYPE html>
 <html>
