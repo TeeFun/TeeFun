@@ -1,6 +1,7 @@
 package com.teeworlds.teefun.context;
 
 import java.io.IOException;
+import java.util.Properties;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,6 +42,9 @@ public class MvcConfigurer extends WebMvcConfigurerAdapter {
 		// FIXME factory not working
 		// result.setConfiguration(factory.createConfiguration());
 		result.setTemplateLoaderPath("/WEB-INF/views/");
+		final Properties properties = new Properties();
+		properties.put("auto_import", "spring.ftl as spring");
+		result.setFreemarkerSettings(properties);
 
 		return result;
 	}
