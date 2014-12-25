@@ -20,7 +20,7 @@ import freemarker.template.TemplateException;
  *
  */
 @Configuration
-public class MvcConfigurer extends WebMvcConfigurerAdapter {
+public class MvcConfig extends WebMvcConfigurerAdapter {
 
 	@Bean
 	public ViewResolver getViewResolver() {

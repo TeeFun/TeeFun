@@ -7,9 +7,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * Default app context.
- * 
+ *
  * @author Rajh
- * 
+ *
  */
 @Configuration
 @EnableAsync
@@ -18,4 +18,5 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class AppConfig {
 
 	// TODO init csrf filters
+
 }
