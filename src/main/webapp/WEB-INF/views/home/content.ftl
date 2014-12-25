@@ -8,7 +8,7 @@
 				<div class="input-group" style="width: 100%;">
 					<div class="input-group has-success has-feedback">
 						<span class="input-group-addon">Nickname</span>
-						<input type="text" class="form-control" value="${currentPlayer.getName()}">
+						<input type="text" name="nickname" class="form-control" value="${currentPlayer.getName()}">
 						<span class="glyphicon glyphicon-ok form-control-feedback"></span>
 					</div>
 				</div>
@@ -60,11 +60,11 @@
 			<div class="panel-body" id="createQueueForm">
 				<div class="input-group">
 					<span class="input-group-addon" style="width: 100px;">Name</span>
-					<input type="text" class="form-control" placeholder="ctf5">
+					<input type="text" name="queueName" class="form-control" placeholder="ctf5">
 				</div>
 				<div class="input-group">
 					<span class="input-group-addon" style="width: 100px;">Players</span>
-					<input type="text" class="form-control" placeholder="8">
+					<input type="text" name="queueMaxSize" class="form-control" placeholder="8">
 				</div>
 				<div style="text-align: center;">
 					<button class="btn btn-default" type="button" onClick="createQueue();">Create</button>
@@ -78,7 +78,7 @@
 			<div class="panel-body" id="deleteQueueForm">
 				<div class="input-group">
 					<span class="input-group-addon" style="width: 100px;">Name</span>
-					<input type="text" class="form-control" placeholder="ctf5">
+					<input type="text" name="queueName" class="form-control" placeholder="ctf5">
 				</div>
 				<div style="text-align: center;">
 					<button class="btn btn-default" type="button" onClick="deleteQueue();">Delete</button>
