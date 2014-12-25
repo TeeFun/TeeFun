@@ -31,8 +31,13 @@
 					</#if>
 
 					<#if i gte queue.getSize()>
-						<!-- empty cell -->
-						<td class="disabled"></td>
+						<#if i gte queue.getMaxSize()>
+							<!-- disabled cell -->
+							<td class="disabled"></td>
+						<#else>
+							<!-- empty cell -->
+							<td></td>
+						</#if>
 					<#else>
 						<!-- player cell -->
 						<#assign cellPlayer = queue.getPlayers()[i]>
