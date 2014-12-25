@@ -67,4 +67,12 @@ public interface Matchmaking {
 	 */
 	void removeQueue(Queue queue);
 
+	/**
+	 * Is a player in any queue.
+	 *
+	 * @param player the player
+	 * @return true if the player is at least in one queue
+	 */
+	boolean isInQueue(Player player);
+
 }

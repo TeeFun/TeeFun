@@ -44,6 +44,7 @@ public class HomeController extends AbstractController {
 	public ModelAndView home(final Model model) {
 		model.addAttribute("queues", this.matchmaking.getQueues());
 		model.addAttribute("currentPlayer", this.userContext.getPlayer());
+		model.addAttribute("isInQueue", this.matchmaking.isInQueue(this.userContext.getPlayer()));
 		return new ModelAndView("home");
 	}
 

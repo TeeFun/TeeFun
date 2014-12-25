@@ -95,4 +95,14 @@ public class MatchmakingImpl implements Matchmaking {
 		}
 	}
 
+	@Override
+	public boolean isInQueue(final Player player) {
+		for (final Queue queue : this.availableQueues) {
+			if (queue.getPlayers().contains(player)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 }
