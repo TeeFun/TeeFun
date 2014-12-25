@@ -38,7 +38,7 @@
 						<td class="disabled"></td>
 					<#else>
 						<!-- player cell -->
-						<#assign cellPlayer = queue.getPlayers().get(i)>
+						<#assign cellPlayer = queue.getPlayers()[i]>
 						<#if cellPlayer == currentPlayer>
 							<td class="user">${cellPlayer.getName()}</td>
 						<#else>

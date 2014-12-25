@@ -22,7 +22,7 @@ public class ErrorController {
 	 *
 	 * @return the view
 	 */
-	@RequestMapping("/")
+	@RequestMapping("/default")
 	public ModelAndView error() {
 		return new ModelAndView("error");
 	}
