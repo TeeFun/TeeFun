@@ -17,7 +17,7 @@
 
 		<!-- Queues list -->
 		<div class="panel panel-default panel-last">
-			<div class="panel-heading">Queues you belong to</div>
+			<div class="panel-heading">Available queues</div>
 			<div class="panel-body">
 				<div id="queues">
 					<#include "queues.ftl"/>
