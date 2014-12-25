@@ -10,7 +10,7 @@
 	<span class="input-group-addon queue-progress">
 		<div class="progress">
 			<span class="progress-value">${queue.getSize()}/${queue.getMaxSize()}</span>
-			<div class="progress-bar progress-bar-info progress-bar-striped" style="width: ${100*queue.getSize()/queue.getMaxSize()}%;"></div>
+			<div class="progress-bar progress-bar-info progress-bar-striped" style="width: ${(100*queue.getSize()/queue.getMaxSize())?int}%;"></div>
 		</div>
 	</span>
 	<span class="input-group-btn">
