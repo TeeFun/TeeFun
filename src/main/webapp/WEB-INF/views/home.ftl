@@ -20,6 +20,8 @@
 		<#include "/" + pageName + "/content.ftl" />
 
 		<!-- Load js at end -->
+		<script src="http://cdn.jsdelivr.net/sockjs/0.3.4/sockjs.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		<!-- Bootstrap -->
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
