@@ -26,7 +26,9 @@
 			</tr>
 		</table>
 		">${queue.getName()}</span>
-	<span class="input-group-addon text-overflow queue-name">${queue.serverConfig.password!'N/A'}</span>
+		<#if queue.serverConfig.password != "">
+			<span class="input-group-addon text-overflow queue-name">${queue.serverConfig.password}</span>
+		</#if>
 	<span class="input-group-addon queue-progress">
 		<div class="progress">
 			<span class="progress-value">${queue.getSize()}/${queue.getMaxSize()}</span>
