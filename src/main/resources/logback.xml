@@ -30,7 +30,6 @@
 	<logger name="com.teeworlds.teefun" level="TRACE" />
 	
 	<logger name="com.teeworlds.teefun.task" level="WARN" />
-	<logger name="com.teeworlds.teefun.bean.impl" level="DEBUG" />
 
 	<root level="WARN">
 		<appender-ref ref="STDOUT" />

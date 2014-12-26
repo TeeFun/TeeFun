@@ -3,6 +3,7 @@
  */
 package com.teeworlds.teefun.exception;
 
+
 /**
  * Default exception used in teefun objects.
  *
@@ -19,10 +20,20 @@ public class TeeFunRuntimeException extends RuntimeException {
 	/**
 	 * Default constructor.
 	 *
-	 * @param string
+	 * @param message the message
 	 */
 	public TeeFunRuntimeException(final String message) {
 		super(message);
+	}
+
+	/**
+	 * Default constructor with exception.
+	 *
+	 * @param message the message
+	 * @param exception the exception
+	 */
+	public TeeFunRuntimeException(final String message, final Exception exception) {
+		super(message, exception);
 	}
 
 }

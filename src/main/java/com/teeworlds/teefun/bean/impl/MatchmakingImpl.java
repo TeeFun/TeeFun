@@ -42,7 +42,6 @@ public class MatchmakingImpl implements Matchmaking {
 
 	@Override
 	public void removeInactivePlayers() {
-		LOGGER.trace("Removing inactive players ...");
 		for (final Queue queue : this.availableQueues) {
 			final Iterator<Player> playerIter = queue.getPlayers().iterator();
 			while (playerIter.hasNext()) {

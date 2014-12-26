@@ -3,7 +3,10 @@
  */
 package com.teeworlds.teefun.model.teeworlds;
 
-import java.io.File;
+import java.nio.file.Path;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A Teeworlds server configuration.
@@ -12,6 +15,11 @@ import java.io.File;
  *
  */
 public class TeeworldsConfig {
+
+	/**
+	 * Class logger.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(TeeworldsConfig.class);
 
 	/**
 	 * Server name.
@@ -73,11 +81,14 @@ public class TeeworldsConfig {
 	/**
 	 * Generate a random password.
 	 */
-	public void generatePassword() {
-		// TODO generate a password.
+	public String generatePassword() {
+		this.password = "test";
+		LOGGER.trace("Generated password : " + this.password);
+		return this.password;
 	}
 
-	public File generateConfigFile() {
+	public Path generateConfigFile() {
+		LOGGER.trace("Generated config file.");
 		// TODO generate config file
 		return null;
 	}
