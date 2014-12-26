@@ -6,7 +6,6 @@
 			<button class="btn btn-success" type="button" onClick="joinQueue('${queue.getName()}');">Join</button>
 		</#if>
 	</span>
-	<span class="input-group-addon text-overflow queue-name">${queue.serverConfig.password!'N/A'}</span>
 	<span class="input-group-addon text-overflow queue-name" data-toggle="tooltip" data-placement="top" data-html="true" title="
 		<table>
 			<tr>
@@ -27,6 +26,7 @@
 			</tr>
 		</table>
 		">${queue.getName()}</span>
+	<span class="input-group-addon text-overflow queue-name">${queue.serverConfig.password!'N/A'}</span>
 	<span class="input-group-addon queue-progress">
 		<div class="progress">
 			<span class="progress-value">${queue.getSize()}/${queue.getMaxSize()}</span>
