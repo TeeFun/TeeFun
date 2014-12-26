@@ -34,14 +34,17 @@ public class WebSocketController {
 	}
 
 	@MessageMapping("/test")
-	public void test(final String string) throws InterruptedException {
+	@SendTo("/topic/sendTest1")
+	public String test(final String string) throws InterruptedException {
+		LOGGER.debug("In /test");
 		Thread.sleep(5000);
 		this.sendTest(string);
 		this.topicSendTest(string);
 		Thread.sleep(5000);
 		this.sendTest2(string);
 		this.topicSendTest2(string);
-		LOGGER.debug("/test");
+		LOGGER.debug("Out /test");
+		return "/app/test";
 	}
 
 	@SendTo("/topic/sendTest2")
