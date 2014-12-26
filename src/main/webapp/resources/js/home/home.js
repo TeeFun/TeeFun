@@ -1,7 +1,12 @@
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+
 // Refresh content every X seconds
 var refreshQueues = function () {
 	$.get( "refreshQueues.do", function( data ) {
 		$("#queues").html( data );
+		$('[data-toggle="tooltip"]').tooltip()
 	});
 };
 setInterval(function(){
