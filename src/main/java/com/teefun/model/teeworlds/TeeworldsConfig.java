@@ -66,6 +66,10 @@ public class TeeworldsConfig {
 		return password;
 	}
 
+	public String getPassword() {
+		return this.variables.get("password");
+	}
+
 	/**
 	 * Generate the config file that this object represents.
 	 *

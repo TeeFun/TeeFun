@@ -85,8 +85,12 @@ public class TeeworldsServerHandlerImpl implements TeeworldsServerHandler {
 	@PostConstruct
 	@PreDestroy
 	public void cleanupServers() throws IOException {
-		LOGGER.debug("Cleaning zombie servers.");
-		new ProcessBuilder(TEEWORLDS_CLEANUP_SERVERS_SCRIPT).start();
+		try {
+			LOGGER.debug("Cleaning zombie servers.");
+			new ProcessBuilder(TEEWORLDS_CLEANUP_SERVERS_SCRIPT).start();
+		} catch (final Exception exception) {
+			LOGGER.error("Error while cleaning zombie servers.", exception);
+		}
 	}
 
 	@Override
