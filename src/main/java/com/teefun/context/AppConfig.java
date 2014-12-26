@@ -14,7 +14,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @Configuration
 @EnableAsync
 @EnableScheduling
-@ComponentScan(basePackages = "com.teeworlds.teefun")
+@ComponentScan(basePackages = "com.teefun")
 public class AppConfig {
 
 	// TODO init csrf filters

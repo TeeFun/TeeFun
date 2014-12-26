@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -38,6 +41,11 @@ public class TeeworldsServerHandlerImpl implements TeeworldsServerHandler {
 	private static final String TEEWORLDS_START_SERVER_SCRIPT = "/opt/teeworlds/start_server.sh";
 
 	/**
+	 * Start server script.
+	 */
+	private static final String TEEWORLDS_CLEANUP_SERVERS_SCRIPT = "/opt/teeworlds/cleanup_servers.sh";
+
+	/**
 	 * Number of maximum running servers.
 	 */
 	private static final Integer MAX_SERVER_AVAILABLE = 2;
@@ -46,6 +54,18 @@ public class TeeworldsServerHandlerImpl implements TeeworldsServerHandler {
 	 * List of currently running servers.
 	 */
 	private final List<TeeworldsServer> runningServers = new ArrayList<TeeworldsServer>();
+
+	/**
+	 * Clean servers at startup. For remaining servers.
+	 *
+	 * @throws IOException
+	 */
+	@PostConstruct
+	@PreDestroy
+	public void cleanupServers() throws IOException {
+		LOGGER.debug("Cleaning zombie servers.");
+		new ProcessBuilder(TEEWORLDS_CLEANUP_SERVERS_SCRIPT).start();
+	}
 
 	@Override
 	public TeeworldsServer createServer(final TeeworldsConfig configuration) {
