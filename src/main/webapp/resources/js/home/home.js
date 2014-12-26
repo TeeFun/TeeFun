@@ -1,15 +1,14 @@
-var socket = new SockJS("ws://rajhserv.no-ip.org/teefun/websocket/teefun");
+var socket = new SockJS(sockJSUrl);
 stompClient = Stomp.over(socket);
 stompClient.connect({}, function(frame) {
 	alert("connected");
-	setConnected(true);
-	stompClient.send("/app/test");
 	stompClient.subscribe("/topic/sendTest1", function(message){
 		alert("sendTest1: " + message);
 	});
 	stompClient.subscribe("/topic/sendTest2", function(message){
 		alert("sendTest2: " + message);
 	});
+	stompClient.send("/app/test");
 });
 
 $(function () {

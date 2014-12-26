@@ -131,6 +131,7 @@ public class MatchmakingImpl implements Matchmaking {
 			if (queue.isFull()) {
 				queue.setQueueState(QueueState.WAITING_SERVER);
 				LOGGER.debug(String.format("Queue '%s' is waiting for a server'.", queue.getName()));
+				// FIXME factor this method. How to autocheck queue ? Task ? Event ?
 				if (this.teeworldsServerHandler.hasServerAvailable()) {
 					final TeeworldsServer server = this.teeworldsServerHandler.createAndBorrowServer(queue.makeConfig());
 					queue.setServer(server);
@@ -156,6 +157,7 @@ public class MatchmakingImpl implements Matchmaking {
 			// LOGGER.debug(String.format("Queue '%s' has terminated. Players were not ready.", queue.getName()));
 			return;
 		case WAITING_SERVER:
+			// FIXME Thread-Safe ?
 			if (this.teeworldsServerHandler.hasServerAvailable()) {
 				final TeeworldsServer server = this.teeworldsServerHandler.createAndBorrowServer(queue.makeConfig());
 				queue.setServer(server);

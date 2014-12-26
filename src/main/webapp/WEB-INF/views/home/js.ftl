@@ -1,3 +1,8 @@
+<!-- SockJS -->
+<script src="http://cdn.sockjs.org/sockjs-0.3.min.js"></script>
+<!-- Stomp -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script>
 var isInQueue = ${isInQueue?c};
 <#assign nbOfQueuesAtLoad = 0 />
 <#list queues as queue>
@@ -6,3 +11,4 @@ var isInQueue = ${isInQueue?c};
 		</#if>
 </#list>
 var nbOfQueuesAtLoad = ${nbOfQueuesAtLoad};
+</script>
