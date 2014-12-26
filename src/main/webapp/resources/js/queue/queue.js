@@ -1,7 +1,13 @@
 var createQueue = function() {
-	var queueName = $("#createQueueName").val();
-	var queueMaxSize = $("#createQueueMaxSize").val();
-	var posting = $.post("createQueue.do?queueName=" + queueName + '&maxSize=' + queueMaxSize);
+	var queueName =			$("#createQueueName").val();
+	var queueMaxSize =		$("#createQueueMaxSize").val();
+	var queueMap =			$("#createQueueMap").val();
+	var queueGametype =		$("#createQueueGametype").val();
+	var queueScoreLimit =	$("#createQueueScoreLimit").val();
+	var queueTimeLimit =	$("#createQueueTimeLimit").val();
+	var posting = $.post("createQueue.do?name=" + queueName + "&maxSize=" + queueMaxSize
+							+ "&map=" + queueMap + "&gametype=" + queueGametype
+							+ "&scoreLimit=" + queueScoreLimit + "&timeLimit=" + queueTimeLimit);
 
 	posting.done(function() {
 		alert('Created queue : ' + queueName);

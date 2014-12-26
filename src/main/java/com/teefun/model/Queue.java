@@ -28,6 +28,16 @@ public class Queue {
 	private final int maxSize;
 
 	/**
+	 * Map.
+	 */
+	private final String map;
+
+	/**
+	 * Game type.
+	 */
+	private final String gametype;
+
+	/**
 	 * Score limit.
 	 */
 	private final int scoreLimit;
@@ -36,11 +46,6 @@ public class Queue {
 	 * Time limit.
 	 */
 	private final int timeLimit;
-
-	/**
-	 * Game type.
-	 */
-	private final String gametype;
 
 	/**
 	 * List of players which joined the queue.
@@ -58,12 +63,15 @@ public class Queue {
 	 * @param name queue name
 	 * @param maxSize queue capacity
 	 */
-	public Queue(final String name, final int maxSize) {
+	public Queue(final String name, final int maxSize,
+					final String map, final String gametype,
+					final int scoreLimit, final int timeLimit) {
 		this.name = name;
 		this.maxSize = maxSize;
-		this.scoreLimit = 600;
-		this.timeLimit = 0;
-		this.gametype = "ctf";
+		this.map = map;
+		this.gametype = gametype;
+		this.scoreLimit = scoreLimit;
+		this.timeLimit = timeLimit;
 		this.players = new ArrayList<Player>();
 		this.serverConfig = this.makeConfig();
 	}
@@ -73,11 +81,11 @@ public class Queue {
 	 */
 	private TeeworldsConfig makeConfig() {
 		TeeworldsConfig config = TeeworldsConfigUtil.getDefaultConfig();
-		config.setVariable("sv_map", this.name);
+		config.setVariable("sv_map", this.map);
 		config.setVariable("sv_max_clients", this.maxSize);
 		config.setVariable("sv_scorelimit", this.scoreLimit);
-		config.setVariable("sv_scorelimit", this.timeLimit);
-		config.setVariable("sv_scorelimit", this.gametype);
+		config.setVariable("sv_timelimit", this.timeLimit);
+		config.setVariable("sv_gametype", this.gametype);
 		return config;
 	}
 

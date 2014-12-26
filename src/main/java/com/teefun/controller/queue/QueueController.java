@@ -117,8 +117,10 @@ public class QueueController extends AbstractController {
 	 */
 	// @PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value = "/createQueue", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ModelAndView createQueue(@RequestParam final String queueName, @RequestParam final Integer maxSize) {
-		final Queue queue = new Queue(queueName, maxSize);
+	public ModelAndView createQueue(@RequestParam final String name, @RequestParam final Integer maxSize,
+									@RequestParam final String map, @RequestParam final String gametype,
+									@RequestParam final Integer scoreLimit, @RequestParam final Integer timeLimit) {
+		final Queue queue = new Queue(name, maxSize, map, gametype, scoreLimit, timeLimit);
 
 		if (this.matchmaking.getQueues().contains(queue)) {
 			// TODO "Queue already exist";
