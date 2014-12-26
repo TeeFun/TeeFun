@@ -1,7 +1,7 @@
 package com.teefun.model;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -50,7 +50,7 @@ public class Queue {
 	/**
 	 * List of players which joined the queue.
 	 */
-	private final List<Player> players;
+	private final List<Player> players = new CopyOnWriteArrayList<Player>();
 
 	/**
 	 * Server config associated to this queue.
@@ -63,16 +63,13 @@ public class Queue {
 	 * @param name queue name
 	 * @param maxSize queue capacity
 	 */
-	public Queue(final String name, final int maxSize,
-					final String map, final String gametype,
-					final int scoreLimit, final int timeLimit) {
+	public Queue(final String name, final int maxSize, final String map, final String gametype, final int scoreLimit, final int timeLimit) {
 		this.name = name;
 		this.maxSize = maxSize;
 		this.map = map;
 		this.gametype = gametype;
 		this.scoreLimit = scoreLimit;
 		this.timeLimit = timeLimit;
-		this.players = new ArrayList<Player>();
 		this.serverConfig = this.makeConfig();
 	}
 
@@ -80,7 +77,7 @@ public class Queue {
 	 * Make a config for this server.
 	 */
 	private TeeworldsConfig makeConfig() {
-		TeeworldsConfig config = TeeworldsConfigUtil.getDefaultConfig();
+		final TeeworldsConfig config = TeeworldsConfigUtil.getDefaultConfig();
 		config.setVariable("sv_map", this.map);
 		config.setVariable("sv_max_clients", this.maxSize);
 		config.setVariable("sv_scorelimit", this.scoreLimit);

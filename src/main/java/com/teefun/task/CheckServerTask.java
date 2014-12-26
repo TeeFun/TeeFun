@@ -3,7 +3,6 @@
  */
 package com.teefun.task;
 
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -43,16 +42,14 @@ public class CheckServerTask {
 	@Scheduled(fixedRate = 5 * 60 * 1000)
 	public void freeServers() {
 		LOGGER.trace("Free servers...");
-		final List<TeeworldsServer> runningServers = Collections.synchronizedList(this.teeworldsServerHandler.getRunningServers());
-		synchronized (runningServers) {
-			final Iterator<TeeworldsServer> iter = runningServers.iterator();
-			while (iter.hasNext()) {
-				final TeeworldsServer server = iter.next();
-				if (!server.isActive()) {
-					LOGGER.debug("Server has timed out : " + server.getServerId());
-					server.shutdown();
-					iter.remove();
-				}
+		final List<TeeworldsServer> runningServers = this.teeworldsServerHandler.getRunningServers();
+		final Iterator<TeeworldsServer> iter = runningServers.iterator();
+		while (iter.hasNext()) {
+			final TeeworldsServer server = iter.next();
+			if (!server.isActive()) {
+				LOGGER.debug("Server shutdown : " + server.getServerId());
+				server.shutdown();
+				iter.remove();
 			}
 		}
 	}

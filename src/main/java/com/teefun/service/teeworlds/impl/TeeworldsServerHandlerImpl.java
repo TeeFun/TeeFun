@@ -5,9 +5,9 @@ package com.teefun.service.teeworlds.impl;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -53,7 +53,7 @@ public class TeeworldsServerHandlerImpl implements TeeworldsServerHandler {
 	/**
 	 * List of currently running servers.
 	 */
-	private final List<TeeworldsServer> runningServers = new ArrayList<TeeworldsServer>();
+	private final List<TeeworldsServer> runningServers = new CopyOnWriteArrayList<TeeworldsServer>();
 
 	/**
 	 * Clean servers at startup. For remaining servers.

@@ -2,6 +2,7 @@ package com.teefun.bean.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.annotation.Resource;
 
@@ -37,7 +38,7 @@ public class MatchmakingImpl implements Matchmaking {
 	/**
 	 * List of available queues.
 	 */
-	private final List<Queue> availableQueues = new ArrayList<Queue>();
+	private final List<Queue> availableQueues = new CopyOnWriteArrayList<Queue>();
 
 	@Override
 	public List<Queue> getQueues() {
