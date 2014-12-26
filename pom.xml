@@ -19,6 +19,7 @@
 		<jcl-over-slf4j.version>1.7.5</jcl-over-slf4j.version>
 		<freemarker.version>2.3.21</freemarker.version>
 		<jackson.version>2.4.4</jackson.version>
+		<tomcat.version>7.0.57</tomcat.version>
 	</properties>
 
 	<dependencies>
@@ -136,6 +137,14 @@
 		</dependency>
 
 		<!-- *** -->
+
+		<!-- We are running on Tomcat -->
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-websocket</artifactId>
+			<version>${tomcat.version}</version>
+			<scope>embedded</scope>
+		</dependency>
 
 	</dependencies>
 
