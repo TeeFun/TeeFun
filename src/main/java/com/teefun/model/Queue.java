@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import com.teefun.model.teeworlds.TeeworldsConfig;
+import com.teefun.model.teeworlds.TeeworldsServer;
 import com.teefun.util.TeeworldsConfigUtil;
 
 /**
@@ -53,9 +54,19 @@ public class Queue {
 	private final List<Player> players = new CopyOnWriteArrayList<Player>();
 
 	/**
-	 * Server config associated to this queue.
+	 * Teeworlds server associated when the game is started.
 	 */
-	private final TeeworldsConfig serverConfig;
+	private TeeworldsServer server;
+
+	/**
+	 * Queue state.
+	 */
+	private QueueState queueState = QueueState.WAITING_PLAYERS;
+
+	/**
+	 * Is the queue permanent ?. If true it will automatically reset after the game as finised.
+	 */
+	private boolean permanent = false;
 
 	/**
 	 * Default constructor.
@@ -70,13 +81,14 @@ public class Queue {
 		this.gametype = gametype;
 		this.scoreLimit = scoreLimit;
 		this.timeLimit = timeLimit;
-		this.serverConfig = this.makeConfig();
 	}
 
 	/**
 	 * Make a config for this server.
+	 *
+	 * @return the configuration
 	 */
-	private TeeworldsConfig makeConfig() {
+	public TeeworldsConfig makeConfig() {
 		final TeeworldsConfig config = TeeworldsConfigUtil.getDefaultConfig();
 		config.setVariable("sv_map", this.map);
 		config.setVariable("sv_max_clients", this.maxSize);
@@ -151,10 +163,8 @@ public class Queue {
 	 *
 	 * @param player the player to be removed
 	 */
-	public void removePlayer(final Player player) {
-		if (this.players.contains(player)) {
-			this.players.remove(player);
-		}
+	public boolean removePlayer(final Player player) {
+		return this.players.remove(player);
 	}
 
 	/**
@@ -172,13 +182,6 @@ public class Queue {
 	 */
 	public List<Player> getPlayers() {
 		return this.players;
-	}
-
-	/**
-	 * @return the {@link #serverConfig}
-	 */
-	public TeeworldsConfig getServerConfig() {
-		return this.serverConfig;
 	}
 
 	@Override
@@ -201,6 +204,58 @@ public class Queue {
 	 */
 	public boolean isFull() {
 		return this.players.size() == this.maxSize;
+	}
+
+	/**
+	 * @return the {@link #server}
+	 */
+	public TeeworldsServer getServer() {
+		return this.server;
+	}
+
+	/**
+	 * @param server the {@link #server} to set
+	 */
+	public void setServer(final TeeworldsServer server) {
+		this.server = server;
+	}
+
+	/**
+	 * @return the {@link #queueState}
+	 */
+	public QueueState getQueueState() {
+		return this.queueState;
+	}
+
+	/**
+	 * @param queueState the {@link #queueState} to set
+	 */
+	public void setQueueState(final QueueState queueState) {
+		this.queueState = queueState;
+	}
+
+	/**
+	 * @return the {@link #permanent}
+	 */
+	public boolean isPermanent() {
+		return this.permanent;
+	}
+
+	/**
+	 * @param permanent the {@link #permanent} to set
+	 */
+	public void setPermanent(final boolean permanent) {
+		this.permanent = permanent;
+	}
+
+	/**
+	 * Reset the queue to waiting player state.
+	 */
+	public void reset() {
+		this.queueState = QueueState.WAITING_PLAYERS;
+		// Shall we make sure the server is shutdown ?
+		this.server = null;
+		this.players.clear();
 	}
 
 }

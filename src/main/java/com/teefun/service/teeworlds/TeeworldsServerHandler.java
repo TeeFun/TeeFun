@@ -17,19 +17,33 @@ import com.teefun.model.teeworlds.TeeworldsServer;
 public interface TeeworldsServerHandler {
 
 	/**
-	 * Create and start a teeworlds server.
+	 * Create a teeworlds server.
 	 *
 	 * @param configuration the server configuration
 	 * @return the server created
 	 */
-	public TeeworldsServer createServer(TeeworldsConfig configuration);
+	public TeeworldsServer createAndBorrowServer(TeeworldsConfig configuration);
 
 	/**
-	 * Get the list of running servers.
+	 * Free a borrowed server.
+	 *
+	 * @param server the server
+	 */
+	public void freeServer(TeeworldsServer server);
+
+	/**
+	 * Start a teeworlds server.
+	 *
+	 * @param server the server
+	 */
+	public void startServer(TeeworldsServer server);
+
+	/**
+	 * Get the list of borrowed servers.
 	 *
 	 * @return the list of servers
 	 */
-	public List<TeeworldsServer> getRunningServers();
+	public List<TeeworldsServer> getBorrowedServers();
 
 	/**
 	 * Check if any server are available.
@@ -37,5 +51,12 @@ public interface TeeworldsServerHandler {
 	 * @return true if at least one server is free
 	 */
 	public boolean hasServerAvailable();
+
+	/**
+	 * Get numbers of free servers.
+	 *
+	 * @return the nb of servers available
+	 */
+	public Integer getNbFreeServers();
 
 }

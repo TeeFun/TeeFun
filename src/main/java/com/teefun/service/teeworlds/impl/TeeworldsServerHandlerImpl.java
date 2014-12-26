@@ -73,9 +73,9 @@ public class TeeworldsServerHandlerImpl implements TeeworldsServerHandler {
 	private static final Integer MAX_SERVER_AVAILABLE = 2;
 
 	/**
-	 * List of currently running servers.
+	 * List of currently borrowed servers.
 	 */
-	private final List<TeeworldsServer> runningServers = new CopyOnWriteArrayList<TeeworldsServer>();
+	private final List<TeeworldsServer> borrowedServers = new CopyOnWriteArrayList<TeeworldsServer>();
 
 	/**
 	 * Clean servers at startup. For remaining servers.
@@ -94,40 +94,49 @@ public class TeeworldsServerHandlerImpl implements TeeworldsServerHandler {
 	}
 
 	@Override
-	public TeeworldsServer createServer(final TeeworldsConfig configuration) {
-		if (this.runningServers.size() >= MAX_SERVER_AVAILABLE) {
+	public TeeworldsServer createAndBorrowServer(final TeeworldsConfig configuration) {
+		if (this.borrowedServers.size() >= MAX_SERVER_AVAILABLE) {
 			throw new TeeFunRuntimeException("Maximum server size reached.");
 		}
-		final TeeworldsServer server = this.startServer(configuration);
-		this.runningServers.add(server);
+
+		final String serverId = this.generateUUID();
+		try {
+			final Integer port = SocketUtils.findAvailableUdpPort(TEEWORLDS_MIN_PORT, TEEWORLDS_MAX_PORT);
+			configuration.setVariable("sv_port", port);
+		} catch (final IllegalStateException exception) {
+			LOGGER.error("Could not find any port.", exception);
+			throw new TeeFunRuntimeException("Could not find any port.", exception);
+		}
+		configuration.setVariable("logfile", String.format(LOG_FILENAME_PATTERN, serverId));
+		configuration.generatePassword();
+
+		final TeeworldsServer server = new TeeworldsServer(configuration, System.currentTimeMillis(), serverId);
+
+		this.borrowedServers.add(server);
+
+		LOGGER.debug("Created server : " + server.getServerId() + ". " + this.getNbFreeServers() + "/" + MAX_SERVER_AVAILABLE + " .");
 		return server;
 	}
 
-	/**
-	 * Start the server.
-	 *
-	 * @param configFile the configuration
-	 * @return the server
-	 */
-	private TeeworldsServer startServer(final TeeworldsConfig configuration) {
+	@Override
+	public void freeServer(final TeeworldsServer server) {
+		this.borrowedServers.remove(server);
+	}
+
+	@Override
+	public void startServer(final TeeworldsServer server) {
+		if (!this.borrowedServers.contains(server)) {
+			final String msg = "Trying to start an unknown server. Please make you you borrowed it first and it did not timedout";
+			LOGGER.error(msg);
+			throw new TeeFunRuntimeException(msg);
+		}
 		try {
-			final String serverId = this.generateUUID();
-			final Path configPath = Paths.get(String.format(CONFIG_FILENAME_PATTERN, serverId));
-			try {
-				final Integer port = SocketUtils.findAvailableUdpPort(TEEWORLDS_MIN_PORT, TEEWORLDS_MAX_PORT);
-				configuration.setVariable("sv_port", port);
-			} catch (final IllegalStateException exception) {
-				LOGGER.error("Could not find any port.", exception);
-				throw new TeeFunRuntimeException("Could not find any port.", exception);
-			}
-			configuration.setVariable("logfile", String.format(LOG_FILENAME_PATTERN, serverId));
-			configuration.generateConfigFile(configPath);
-
+			final Path configPath = Paths.get(String.format(CONFIG_FILENAME_PATTERN, server.getServerId()));
+			server.getConfig().generateConfigFile(configPath);
 			final Process process = new ProcessBuilder(TEEWORLDS_SERVER_PATH, "-f", configPath.toAbsolutePath().toString()).start();
-			final TeeworldsServer server = new TeeworldsServer(configuration, System.currentTimeMillis(), process, serverId);
+			server.setProcess(process);
 
-			LOGGER.debug("Server : " + serverId + " started(" + this.runningServers.size() + ").");
-			return server;
+			LOGGER.debug("Server : " + server.getServerId() + " started.");
 		} catch (final IOException e) {
 			LOGGER.error("Error while running server.", e);
 			throw new TeeFunRuntimeException("Error while running server.", e);
@@ -144,13 +153,18 @@ public class TeeworldsServerHandlerImpl implements TeeworldsServerHandler {
 	}
 
 	@Override
-	public List<TeeworldsServer> getRunningServers() {
-		return this.runningServers;
+	public List<TeeworldsServer> getBorrowedServers() {
+		return this.borrowedServers;
 	}
 
 	@Override
 	public boolean hasServerAvailable() {
-		return this.runningServers.size() < MAX_SERVER_AVAILABLE;
+		return this.borrowedServers.size() < MAX_SERVER_AVAILABLE;
+	}
+
+	@Override
+	public Integer getNbFreeServers() {
+		return MAX_SERVER_AVAILABLE - this.borrowedServers.size();
 	}
 
 }

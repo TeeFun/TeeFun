@@ -38,7 +38,7 @@ public class TeeworldsServer {
 	/**
 	 * The process.
 	 */
-	private final Process process;
+	private Process process;
 
 	/**
 	 * Default constructor.
@@ -48,11 +48,10 @@ public class TeeworldsServer {
 	 * @param process the process associated
 	 * @param serverId the server UUID
 	 */
-	public TeeworldsServer(final TeeworldsConfig config, final Long startTime, final Process process, final String serverId) {
+	public TeeworldsServer(final TeeworldsConfig config, final Long startTime, final String serverId) {
 		super();
 		this.config = config;
 		this.startTime = startTime;
-		this.process = process;
 		this.serverId = serverId;
 	}
 
@@ -85,16 +84,23 @@ public class TeeworldsServer {
 	}
 
 	/**
-	 * @return false if the server has timed out
+	 * @return true if the server has started
 	 */
-	public boolean isActive() {
-		return ProcessUtil.isRunning(this.process) && !this.hasTimedOut();
+	public boolean hasStarted() {
+		return this.process != null;
+	}
+
+	/**
+	 * @return true if the server has stopped
+	 */
+	public boolean hasStopped() {
+		return ProcessUtil.isRunning(this.process);
 	}
 
 	/**
 	 * @return true if the server has timed out and should be killed
 	 */
-	private boolean hasTimedOut() {
+	public boolean hasTimedOut() {
 		return System.currentTimeMillis() - this.startTime >= SERVER_TTL;
 	}
 
@@ -103,6 +109,13 @@ public class TeeworldsServer {
 	 */
 	public void shutdown() {
 		this.process.destroy();
+	}
+
+	/**
+	 * @param process the {@link #process} to set
+	 */
+	public void setProcess(final Process process) {
+		this.process = process;
 	}
 
 }
