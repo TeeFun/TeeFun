@@ -24,7 +24,9 @@ public final class TeeworldsConfigUtil {
 	 * @return server default configuration
 	 */
 	public static TeeworldsConfig getDefaultConfig() {
-		return null;
+
+		// TODO
+		return new TeeworldsConfig();
 	}
 
 }
