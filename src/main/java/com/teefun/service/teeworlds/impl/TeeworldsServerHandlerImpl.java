@@ -86,7 +86,7 @@ public class TeeworldsServerHandlerImpl implements TeeworldsServerHandler {
 	private TeeworldsServer startServer(final TeeworldsConfig configuration) {
 		try {
 			final String serverId = this.generateUUID();
-			final Path configPath = configuration.generateConfigFile();
+			final Path configPath = configuration.generateConfigFile(serverId);
 			final Process process = new ProcessBuilder(TEEWORLDS_START_SERVER_SCRIPT, configPath.toAbsolutePath().toString(), serverId).start();
 			final TeeworldsServer server = new TeeworldsServer(configuration, System.currentTimeMillis(), process, serverId);
 			LOGGER.debug("Server : " + serverId + " started.");
