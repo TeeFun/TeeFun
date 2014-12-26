@@ -3,7 +3,6 @@
  */
 package com.teefun.task;
 
-import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -43,13 +42,11 @@ public class CheckServerTask {
 	public void freeServers() {
 		LOGGER.trace("Free servers...");
 		final List<TeeworldsServer> runningServers = this.teeworldsServerHandler.getRunningServers();
-		// CopyOnWriteArray create a copy array for iterators
-		final Iterator<TeeworldsServer> iter = runningServers.iterator();
-		while (iter.hasNext()) {
-			final TeeworldsServer server = iter.next();
+		for (final TeeworldsServer server : runningServers) {
 			if (!server.isActive()) {
 				LOGGER.debug("Server shutdown : " + server.getServerId());
 				server.shutdown();
+				// Safe due to CopyOnWriteArrayList
 				runningServers.remove(server);
 			}
 		}

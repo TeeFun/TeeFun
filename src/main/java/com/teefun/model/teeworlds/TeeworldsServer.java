@@ -88,14 +88,14 @@ public class TeeworldsServer {
 	 * @return false if the server has timed out
 	 */
 	public boolean isActive() {
-		return ProcessUtil.isRunning(this.process) && !this.asTimedOut();
+		return ProcessUtil.isRunning(this.process) && !this.hasTimedOut();
 	}
 
 	/**
-	 * @return true if the server as timed out and should be killed
+	 * @return true if the server has timed out and should be killed
 	 */
-	private boolean asTimedOut() {
-		return System.currentTimeMillis() - this.startTime < SERVER_TTL;
+	private boolean hasTimedOut() {
+		return System.currentTimeMillis() - this.startTime >= SERVER_TTL;
 	}
 
 	/**

@@ -44,7 +44,7 @@
 				<form id="deleteQueueForm">
 					<div class="input-group">
 						<span class="input-group-addon" style="width: 100px;">Name</span>
-						<input type="text" name="deleteQueueName" class="form-control" placeholder="ctf5">
+						<input type="text" id="deleteQueueName" class="form-control" placeholder="ctf5">
 					</div>
 					<div style="text-align: center;">
 						<button class="btn btn-default" type="submit" onClick="deleteQueue(); return false;">Delete</button>

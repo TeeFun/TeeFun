@@ -1,6 +1,5 @@
 package com.teefun.task;
 
-import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -42,13 +41,10 @@ public class CheckPlayersTask {
 		LOGGER.trace("Removing inactive players ...");
 		final List<Queue> queues = this.matchmaking.getQueues();
 		for (final Queue queue : queues) {
-			// CopyOnWriteArray create a copy array for iterators
-			final Iterator<Player> playerIter = queue.getPlayers().iterator();
-			while (playerIter.hasNext()) {
-				final Player player = playerIter.next();
+			for (final Player player : queue.getPlayers()) {
 				if (!player.isActive()) {
 					LOGGER.debug(String.format("Player '%s' is inactive, removing it.", player.getName()));
-					queues.remove(player);
+					this.matchmaking.quitQueue(player, queue);
 				}
 			}
 		}
