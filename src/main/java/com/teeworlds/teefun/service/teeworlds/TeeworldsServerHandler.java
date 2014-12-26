@@ -31,4 +31,11 @@ public interface TeeworldsServerHandler {
 	 */
 	public List<TeeworldsServer> getRunningServers();
 
+	/**
+	 * Check if any server are available.
+	 *
+	 * @return true if at least one server is free
+	 */
+	public boolean hasServerAvailable();
+
 }

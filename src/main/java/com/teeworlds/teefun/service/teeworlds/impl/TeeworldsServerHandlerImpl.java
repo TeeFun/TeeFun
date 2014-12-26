@@ -38,13 +38,21 @@ public class TeeworldsServerHandlerImpl implements TeeworldsServerHandler {
 	private static final String TEEWORLDS_START_SERVER_SCRIPT = "/opt/teeworlds/start_server.sh";
 
 	/**
+	 * Number of maximum running servers.
+	 */
+	private static final Integer MAX_SERVER_AVAILABLE = 2;
+
+	/**
 	 * List of currently running servers.
 	 */
 	private final List<TeeworldsServer> runningServers = new ArrayList<TeeworldsServer>();
 
 	@Override
 	public TeeworldsServer createServer(final TeeworldsConfig configuration) {
-		TeeworldsServer server = this.startServer(configuration);
+		if (this.runningServers.size() >= MAX_SERVER_AVAILABLE) {
+			throw new TeeFunRuntimeException("Maximum server size reached.");
+		}
+		final TeeworldsServer server = this.startServer(configuration);
 		this.runningServers.add(server);
 		return server;
 	}
@@ -81,6 +89,11 @@ public class TeeworldsServerHandlerImpl implements TeeworldsServerHandler {
 	@Override
 	public List<TeeworldsServer> getRunningServers() {
 		return this.runningServers;
+	}
+
+	@Override
+	public boolean hasServerAvailable() {
+		return this.runningServers.size() < MAX_SERVER_AVAILABLE;
 	}
 
 }
