@@ -13,7 +13,8 @@ import org.springframework.stereotype.Component;
 import com.teefun.bean.Matchmaking;
 import com.teefun.model.Player;
 import com.teefun.model.Queue;
-import com.teefun.model.teeworlds.TeeworldsConfig;
+import com.teefun.model.QueueState;
+import com.teefun.model.teeworlds.TeeworldsServer;
 import com.teefun.service.teeworlds.TeeworldsServerHandler;
 
 /**
@@ -65,8 +66,11 @@ public class MatchmakingImpl implements Matchmaking {
 
 	@Override
 	public void quitQueue(final Player player, final Queue queue) {
-		LOGGER.debug(String.format("Remove player '%s' from queue '%s'.", player.getName(), queue.getName()));
-		queue.removePlayer(player);
+		if (QueueState.WAITING_PLAYERS == queue.getQueueState()) {
+			LOGGER.debug(String.format("Remove player '%s' from queue '%s'.", player.getName(), queue.getName()));
+			queue.removePlayer(player);
+		}
+		this.checkQueue(queue);
 	}
 
 	@Override
@@ -74,6 +78,7 @@ public class MatchmakingImpl implements Matchmaking {
 		LOGGER.debug(String.format("Remove player '%s' from all queues.", player.getName()));
 		for (final Queue queue : this.availableQueues) {
 			queue.removePlayer(player);
+			this.checkQueue(queue);
 		}
 	}
 
@@ -117,15 +122,42 @@ public class MatchmakingImpl implements Matchmaking {
 	 * @param queue the queue
 	 */
 	private void checkQueue(final Queue queue) {
-		if (queue.isFull()) {
-			LOGGER.debug(String.format("Queue '%s' ready. Starting the game.", queue.getName()));
-			final TeeworldsConfig serverConfig = queue.getServerConfig();
-			serverConfig.generatePassword();
-			this.teeworldsServerHandler.createServer(serverConfig);
-			// TODO Catch of check hasServerAvailable and handle it ? how ?
-			// TODO What to do here ? removeQueue ? Wait it to be ready ? Who will handle ready timer ?
-			// this.availableQueues.remove(queue);
+		switch (queue.getQueueState()) {
+		case SUSPENDED:
+			return;
+		case IN_GAME:
+			return;
+		case WAITING_PLAYERS:
+			if (queue.isFull()) {
+				LOGGER.debug(String.format("Queue '%s' ready. Starting the game.", queue.getName()));
+				queue.setQueueState(QueueState.WAITING_SERVER);
+			}
+			return;
+		case WAITING_READY:
+			// TODO check if all ready or ready timed out
+			// TODO if all ready
+			this.teeworldsServerHandler.startServer(queue.getServer());
+			queue.setQueueState(QueueState.IN_GAME);
+			queue.getServer().getConfig().getPassword();
 			// TODO send serverConfig.getPassword() to all players.
+
+			// TODO if timedout
+			// this.teeworldsServerHandler.freeServer(queue.getServer());
+			// queue.setQueueState(QueueState.GAME_OVER);
+			return;
+		case WAITING_SERVER:
+			if (this.teeworldsServerHandler.hasServerAvailable()) {
+				final TeeworldsServer server = this.teeworldsServerHandler.createAndBorrowServer(queue.makeConfig());
+				queue.setServer(server);
+				queue.setQueueState(QueueState.WAITING_READY);
+			}
+			return;
+		case GAME_OVER:
+			if (queue.isPermanent()) {
+				// TODO reset
+			} else {
+				this.removeQueue(queue);
+			}
 		}
 	}
 }
