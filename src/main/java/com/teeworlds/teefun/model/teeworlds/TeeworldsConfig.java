@@ -4,6 +4,7 @@
 package com.teeworlds.teefun.model.teeworlds;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,6 +91,6 @@ public class TeeworldsConfig {
 	public Path generateConfigFile() {
 		LOGGER.trace("Generated config file.");
 		// TODO generate config file
-		return null;
+		return Paths.get("/tmp/server.cfg");
 	}
 }
