@@ -1,0 +1,32 @@
+/**
+ *
+ */
+package com.teefun.util;
+
+import com.teefun.model.teeworlds.TeeworldsConfig;
+
+/**
+ * Utility class for {@link TeeworldsConfig}.
+ *
+ * @author Rajh
+ *
+ */
+public final class TeeworldsConfigUtil {
+
+	/**
+	 * Private constructor for utility classes.
+	 */
+	private TeeworldsConfigUtil() {
+
+	}
+
+	/**
+	 * @return server default configuration
+	 */
+	public static TeeworldsConfig getDefaultConfig() {
+
+		// TODO
+		return new TeeworldsConfig();
+	}
+
+}

@@ -8,4 +8,8 @@ fi
 configFile=$1
 serverId=$2
 cd /opt/teeworlds
-./teeworlds_srv -f $configFile > logs/$serverId/std.log 2> logs/$serverId/err.log
+mkdir logs/$serverId
+./teeworlds_srv -f $configFile > logs/$serverId/std.log 2> logs/$serverId/err.l$
+
+
+
