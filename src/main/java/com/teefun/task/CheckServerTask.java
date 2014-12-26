@@ -42,7 +42,7 @@ public class CheckServerTask {
 	 */
 	@Scheduled(fixedRate = 5 * 60 * 1000)
 	public void freeServers() {
-		LOGGER.trace("Removing inactive players ...");
+		LOGGER.trace("Free servers...");
 		final List<TeeworldsServer> runningServers = Collections.synchronizedList(this.teeworldsServerHandler.getRunningServers());
 		synchronized (runningServers) {
 			final Iterator<TeeworldsServer> iter = runningServers.iterator();
