@@ -3,6 +3,8 @@
  */
 package com.teefun.model.teeworlds;
 
+import java.util.HashMap;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -23,61 +25,30 @@ public class TeeworldsConfig {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TeeworldsConfig.class);
 
 	/**
-	 * Server name.
+	 * Variables hashmap.
 	 */
-	private String name;
+	private HashMap<String, String> variables;
 
 	/**
-	 * Server password.
+	 * Constructor.
 	 */
-	private String password;
+	public TeeworldsConfig() {
+		this.variables = new HashMap<String, String>();
+	}
 
 	/**
-	 * Server's ip (if null, will be auto handled).
+	 * Sets a variable to a string value.
 	 */
-	private String bindAddr;
+	public void setVariable(final String name, final String value) {
+		this.variables.put(name, String.format("\"%s\"", value));
+	}
 
 	/**
-	 * Server port (if null, will be auto handled).
+	 * Sets a variable to an integer value.
 	 */
-	private String port;
-
-	/**
-	 * Max clients.
-	 */
-	private Integer maxClients;
-
-	/**
-	 * Map.
-	 */
-	private String map;
-
-	/* Game settings */
-
-	/**
-	 * Warmup time.
-	 */
-	private Integer warmup;
-
-	/**
-	 * Score limit.
-	 */
-	private Integer scoreLimit;
-
-	/**
-	 * Time limit.
-	 */
-	private Integer timeLimit;
-
-	/**
-	 * Game type.
-	 */
-	private String gameType;
-
-	/**
-	 * Server's motd.
-	 */
-	private String motd;
+	public void setVariable(final String name, final int value) {
+		this.variables.put(name, String.format("%d", value));
+	}
 
 	/**
 	 * Generate a random password.
@@ -88,9 +59,22 @@ public class TeeworldsConfig {
 		return this.password;
 	}
 
+	/**
+	 * Generate the config file that this object represents.
+	 */
 	public Path generateConfigFile() {
+		Path path = Paths.get("/tmp/server.cfg");
+		try(BufferedWriter writer = Files.newBufferedWriter(path, Charset.defaultCharset())) {
+			for(Entry<String, String> entry : map.entrySet()) {
+				writer.append(String.format("%s %s", entry.getKey(), entry.getValue()));
+				writer.newLine();
+			}
+			writer.flush();
+		} catch(IOException exception) {
+			System.out.println("Error writing to file");
+		}
+
 		LOGGER.trace("Generated config file.");
-		// TODO generate config file
-		return Paths.get("/tmp/server.cfg");
+		return path;
 	}
 }

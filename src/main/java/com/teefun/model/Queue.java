@@ -28,6 +28,21 @@ public class Queue {
 	private final int maxSize;
 
 	/**
+	 * Score limit.
+	 */
+	private final int scoreLimit;
+
+	/**
+	 * Time limit.
+	 */
+	private final int timeLimit;
+
+	/**
+	 * Game type.
+	 */
+	private final String gametype;
+
+	/**
 	 * List of players which joined the queue.
 	 */
 	private final List<Player> players;
@@ -46,8 +61,24 @@ public class Queue {
 	public Queue(final String name, final int maxSize) {
 		this.name = name;
 		this.maxSize = maxSize;
+		this.scoreLimit = 600;
+		this.timeLimit = 0;
+		this.gametype = "ctf";
 		this.players = new ArrayList<Player>();
-		this.serverConfig = TeeworldsConfigUtil.getDefaultConfig();
+		this.serverConfig = this.makeConfig();
+	}
+
+	/**
+	 * Make a config for this server.
+	 */
+	private TeeworldsConfig makeConfig() {
+		TeeworldsConfig config = TeeworldsConfigUtil.getDefaultConfig();
+		config.setVariable("sv_map", this.name);
+		config.setVariable("sv_max_clients", this.maxSize);
+		config.setVariable("sv_scorelimit", this.scoreLimit);
+		config.setVariable("sv_scorelimit", this.timeLimit);
+		config.setVariable("sv_scorelimit", this.gametype);
+		return config;
 	}
 
 	/**
