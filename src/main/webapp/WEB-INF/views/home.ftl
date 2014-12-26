@@ -1,2 +1,2 @@
-<#assign pageName="home"/>
+<#assign pageName="queue"/>
 <#include "/template/defaultTemplate.ftl" />
