@@ -1,7 +1,6 @@
 package com.teefun.bean.impl;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -39,21 +38,6 @@ public class MatchmakingImpl implements Matchmaking {
 	 * List of available queues.
 	 */
 	private final List<Queue> availableQueues = new ArrayList<Queue>();
-
-	@Override
-	public void removeInactivePlayers() {
-		for (final Queue queue : this.availableQueues) {
-			final Iterator<Player> playerIter = queue.getPlayers().iterator();
-			while (playerIter.hasNext()) {
-				final Player player = playerIter.next();
-				if (!player.isActive()) {
-					LOGGER.debug(String.format("Player '%s' is inactive, removing it.", player.getName()));
-					playerIter.remove();
-				}
-			}
-		}
-
-	}
 
 	@Override
 	public List<Queue> getQueues() {

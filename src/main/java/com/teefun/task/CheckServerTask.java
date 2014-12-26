@@ -3,7 +3,9 @@
  */
 package com.teefun.task;
 
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -39,14 +41,18 @@ public class CheckServerTask {
 	 * Remove leavers (not receiving keep alive packets).
 	 */
 	@Scheduled(fixedRate = 5 * 60 * 1000)
-	public void removeLeavers() {
-		final Iterator<TeeworldsServer> iter = this.teeworldsServerHandler.getRunningServers().iterator();
-		while (iter.hasNext()) {
-			final TeeworldsServer server = iter.next();
-			if (!server.isActive()) {
-				LOGGER.debug("Server has timed out : " + server.getServerId());
-				server.shutdown();
-				iter.remove();
+	public void freeServers() {
+		LOGGER.trace("Removing inactive players ...");
+		final List<TeeworldsServer> runningServers = Collections.synchronizedList(this.teeworldsServerHandler.getRunningServers());
+		synchronized (runningServers) {
+			final Iterator<TeeworldsServer> iter = runningServers.iterator();
+			while (iter.hasNext()) {
+				final TeeworldsServer server = iter.next();
+				if (!server.isActive()) {
+					LOGGER.debug("Server has timed out : " + server.getServerId());
+					server.shutdown();
+					iter.remove();
+				}
 			}
 		}
 	}

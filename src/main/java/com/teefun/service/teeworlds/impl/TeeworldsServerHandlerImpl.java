@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,6 +61,7 @@ public class TeeworldsServerHandlerImpl implements TeeworldsServerHandler {
 	 * @throws IOException
 	 */
 	@PostConstruct
+	@PreDestroy
 	public void cleanupServers() throws IOException {
 		LOGGER.debug("Cleaning zombie servers.");
 		new ProcessBuilder(TEEWORLDS_CLEANUP_SERVERS_SCRIPT).start();

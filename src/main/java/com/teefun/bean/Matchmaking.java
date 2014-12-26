@@ -13,11 +13,6 @@ import com.teefun.model.Queue;
 public interface Matchmaking {
 
 	/**
-	 * Remove inactive players from queues.
-	 */
-	void removeInactivePlayers();
-
-	/**
 	 * @return the list of available queues
 	 */
 	List<Queue> getQueues();
