@@ -248,4 +248,14 @@ public class Queue {
 		this.permanent = permanent;
 	}
 
+	/**
+	 * Reset the queue to waiting player state.
+	 */
+	public void reset() {
+		this.queueState = QueueState.WAITING_PLAYERS;
+		// Shall we make sure the server is shutdown ?
+		this.server = null;
+		this.players.clear();
+	}
+
 }

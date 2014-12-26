@@ -129,8 +129,14 @@ public class MatchmakingImpl implements Matchmaking {
 			return;
 		case WAITING_PLAYERS:
 			if (queue.isFull()) {
-				LOGGER.debug(String.format("Queue '%s' ready. Starting the game.", queue.getName()));
 				queue.setQueueState(QueueState.WAITING_SERVER);
+				LOGGER.debug(String.format("Queue '%s' is waiting for a server'.", queue.getName()));
+				if (this.teeworldsServerHandler.hasServerAvailable()) {
+					final TeeworldsServer server = this.teeworldsServerHandler.createAndBorrowServer(queue.makeConfig());
+					queue.setServer(server);
+					queue.setQueueState(QueueState.WAITING_READY);
+					LOGGER.debug(String.format("Queue '%s' has found a server.", queue.getName()));
+				}
 			}
 			return;
 		case WAITING_READY:
@@ -139,23 +145,30 @@ public class MatchmakingImpl implements Matchmaking {
 			this.teeworldsServerHandler.startServer(queue.getServer());
 			queue.setQueueState(QueueState.IN_GAME);
 			queue.getServer().getConfig().getPassword();
+			LOGGER.debug(String.format("Queue '%s' has started its game.", queue.getName()));
 			// TODO send serverConfig.getPassword() to all players.
 
 			// TODO if timedout
 			// this.teeworldsServerHandler.freeServer(queue.getServer());
-			// queue.setQueueState(QueueState.GAME_OVER);
+			// queue.setQueueState(QueueState.WAITING_PLAYERS);
+			// queue.setServer(null);
+			// TODO remove the leavers
+			// LOGGER.debug(String.format("Queue '%s' has terminated. Players were not ready.", queue.getName()));
 			return;
 		case WAITING_SERVER:
 			if (this.teeworldsServerHandler.hasServerAvailable()) {
 				final TeeworldsServer server = this.teeworldsServerHandler.createAndBorrowServer(queue.makeConfig());
 				queue.setServer(server);
 				queue.setQueueState(QueueState.WAITING_READY);
+				LOGGER.debug(String.format("Queue '%s' has found a server.", queue.getName()));
 			}
 			return;
 		case GAME_OVER:
 			if (queue.isPermanent()) {
-				// TODO reset
+				LOGGER.debug(String.format("Queue '%s' has terminated and has been reset.", queue.getName()));
+				queue.reset();
 			} else {
+				LOGGER.debug(String.format("Queue '%s' has terminated.", queue.getName()));
 				this.removeQueue(queue);
 			}
 		}
