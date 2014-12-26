@@ -25,11 +25,11 @@ public final class TeeworldsConfigUtil {
 	public static TeeworldsConfig getDefaultConfig() {
 		TeeworldsConfig config = new TeeworldsConfig();
 
-		// config.setVariable("password", "");
+		config.setVariable("password", "");
 		config.setVariable("sv_name", "TeeFun server");
-		// config.setVariable("sv_port", 0);
-		// config.setVariable("sv_map", "");
-		// config.setVariable("sv_max_clients", 16);
+		config.setVariable("sv_port", 8303);
+		config.setVariable("sv_map", "dm1");
+		config.setVariable("sv_max_clients", 16);
 		config.setVariable("sv_max_clients_per_ip", 1);
 		config.setVariable("sv_register", 1);
 		config.setVariable("sv_rcon_password", "");
@@ -43,9 +43,9 @@ public final class TeeworldsConfigUtil {
 		config.setVariable("sv_rounds_per_map", 1);
 		config.setVariable("sv_round_swap", 1);
 		config.setVariable("sv_powerups", 0);
-		// config.setVariable("sv_scorelimit", 600);
-		// config.setVariable("sv_timelimit", 0);
-		// config.setVariable("sv_gametype", 0);
+		config.setVariable("sv_scorelimit", 10);
+		config.setVariable("sv_timelimit", 5);
+		config.setVariable("sv_gametype", "dm");
 		config.setVariable("sv_tournament_mode", 1);
 		config.setVariable("sv_spamprotection", 1);
 		config.setVariable("sv_respawn_delay_tdm", 2);
