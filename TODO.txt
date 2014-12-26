@@ -5,3 +5,4 @@ json errors
 validators
 eventBus when server available
 Modifications threadsafe ?
+fix memory leak

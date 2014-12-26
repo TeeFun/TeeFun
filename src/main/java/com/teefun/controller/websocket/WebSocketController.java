@@ -37,8 +37,10 @@ public class WebSocketController {
 	public void test(final String string) throws InterruptedException {
 		Thread.sleep(5000);
 		this.sendTest(string);
+		this.topicSendTest(string);
 		Thread.sleep(5000);
 		this.sendTest2(string);
+		this.topicSendTest2(string);
 		LOGGER.debug("/test");
 	}
 
@@ -56,7 +58,7 @@ public class WebSocketController {
 
 	@SendTo("/sendTest2")
 	private String sendTest2(final String string) {
-		LOGGER.debug("/sendTest1");
+		LOGGER.debug("/sendTest2");
 		return "Message2 " + string;
 	}
 
