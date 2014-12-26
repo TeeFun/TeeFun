@@ -27,9 +27,9 @@
 		</encoder>
 	</appender>
 
-	<logger name="com.teeworlds.teefun" level="TRACE" />
+	<logger name="com.teefun" level="TRACE" />
 	
-	<logger name="com.teeworlds.teefun.task" level="WARN" />
+	<logger name="com.teefun.task" level="WARN" />
 
 	<root level="WARN">
 		<appender-ref ref="STDOUT" />
