@@ -14,7 +14,7 @@
 						</div>
 					</div>
 					<div style="text-align: center;">
-						<button class="btn btn-default" type="submit" onClick="changeName(); return false;">Create</button>
+						<button class="btn btn-default" type="submit" onClick="changeName(); return false;">Confirm</button>
 					</div>
 				</form>
 			</div>

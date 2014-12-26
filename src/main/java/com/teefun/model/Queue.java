@@ -101,6 +101,34 @@ public class Queue {
 	}
 
 	/**
+	 * @return the {@link #map}
+	 */
+	public String getMap() {
+		return this.map;
+	}
+
+	/**
+	 * @return the {@link #gametype}
+	 */
+	public String getGametype() {
+		return this.gametype;
+	}
+
+	/**
+	 * @return the {@link #scoreLimit}
+	 */
+	public int getScoreLimit() {
+		return this.scoreLimit;
+	}
+
+	/**
+	 * @return the {@link #timeLimit}
+	 */
+	public int getTimeLimit() {
+		return this.timeLimit;
+	}
+
+	/**
 	 * @return the current size
 	 */
 	public int getSize() {

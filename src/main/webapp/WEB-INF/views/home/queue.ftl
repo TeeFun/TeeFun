@@ -7,6 +7,26 @@
 		</#if>
 	</span>
 	<span class="input-group-addon text-overflow queue-name">${queue.getName()}</span>
+	<span class="input-group-addon text-overflow queue-name" data-toggle="tooltip" data-placement="top" data-html="true" title="
+		<table>
+			<tr>
+				<td style='text-align: right;'>Map:&nbsp;</td>
+				<td style='text-align: left;'>${queue.getMap()}</td>
+			</tr>
+			<tr>
+				<td style='text-align: right;'>Gametype:&nbsp;</td>
+				<td style='text-align: left;'>${queue.getGametype()}</td>
+			</tr>
+			<tr>
+				<td style='text-align: right;'>Score limit:&nbsp;</td>
+				<td style='text-align: left;'>${queue.getScoreLimit()}</td>
+			</tr>
+			<tr>
+				<td style='text-align: right;'>Time limit:&nbsp;</td>
+				<td style='text-align: left;'>${queue.getTimeLimit()}</td>
+			</tr>
+		</table>
+		">ctf8</span>
 	<span class="input-group-addon queue-progress">
 		<div class="progress">
 			<span class="progress-value">${queue.getSize()}/${queue.getMaxSize()}</span>
