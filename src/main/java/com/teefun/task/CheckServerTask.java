@@ -39,7 +39,7 @@ public class CheckServerTask {
 	/**
 	 * Remove leavers (not receiving keep alive packets).
 	 */
-	@Scheduled(fixedRate = 5 * 60 * 1000)
+	@Scheduled(fixedRate = 1 * 60 * 1000)
 	public void freeServers() {
 		LOGGER.trace("Free servers...");
 		final List<TeeworldsServer> runningServers = this.teeworldsServerHandler.getRunningServers();

@@ -120,6 +120,7 @@ public class MatchmakingImpl implements Matchmaking {
 		if (queue.isFull()) {
 			LOGGER.debug(String.format("Queue '%s' ready. Starting the game.", queue.getName()));
 			final TeeworldsConfig serverConfig = queue.getServerConfig();
+			serverConfig.generatePassword();
 			this.teeworldsServerHandler.createServer(serverConfig);
 			// TODO Catch of check hasServerAvailable and handle it ? how ?
 			// TODO What to do here ? removeQueue ? Wait it to be ready ? Who will handle ready timer ?

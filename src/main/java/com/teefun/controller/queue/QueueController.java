@@ -63,12 +63,15 @@ public class QueueController extends AbstractController {
 		final Queue queue = this.matchmaking.getQueueByName(queueName);
 		if (queue == null) {
 			// TODO queue doesnt exist error
+			return new ModelAndView("json/empty.json");
 		}
 		if (queue.isFull()) {
 			// TODO "Queue is full"
+			return new ModelAndView("json/empty.json");
 		}
 		if (queue.containsPlayer(player)) {
 			// TODO "Queue already contains this player"
+			return new ModelAndView("json/empty.json");
 		}
 
 		this.matchmaking.joinQueue(player, queue);
@@ -89,9 +92,11 @@ public class QueueController extends AbstractController {
 
 		if (queue == null) {
 			// TODO queue doesnt exist error
+			return new ModelAndView("json/empty.json");
 		}
 		if (!queue.containsPlayer(player)) {
 			// TODO "Player not in queue"
+			return new ModelAndView("json/empty.json");
 		}
 
 		this.matchmaking.quitQueue(player, queue);
@@ -117,13 +122,13 @@ public class QueueController extends AbstractController {
 	 */
 	// @PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value = "/createQueue", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ModelAndView createQueue(@RequestParam final String name, @RequestParam final Integer maxSize,
-									@RequestParam final String map, @RequestParam final String gametype,
-									@RequestParam final Integer scoreLimit, @RequestParam final Integer timeLimit) {
+	public ModelAndView createQueue(@RequestParam final String name, @RequestParam final Integer maxSize, @RequestParam final String map, @RequestParam final String gametype,
+			@RequestParam final Integer scoreLimit, @RequestParam final Integer timeLimit) {
 		final Queue queue = new Queue(name, maxSize, map, gametype, scoreLimit, timeLimit);
 
 		if (this.matchmaking.getQueues().contains(queue)) {
 			// TODO "Queue already exist";
+			return new ModelAndView("json/empty.json");
 		}
 
 		this.matchmaking.addQueue(queue);
@@ -142,6 +147,7 @@ public class QueueController extends AbstractController {
 
 		if (queue == null) {
 			// TODO "queue doesnt exist"
+			return new ModelAndView("json/empty.json");
 		}
 
 		this.matchmaking.removeQueue(queue);

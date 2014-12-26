@@ -3,6 +3,8 @@
  */
 package com.teefun.util;
 
+import java.util.Random;
+
 import com.teefun.model.teeworlds.TeeworldsConfig;
 
 /**
@@ -20,10 +22,31 @@ public final class TeeworldsConfigUtil {
 	}
 
 	/**
+	 * Symbols allowed in password.
+	 */
+	private static final char[] symbols;
+
+	/**
+	 * Random generator.
+	 */
+	private static final Random random = new Random();
+
+	static {
+		final StringBuilder tmp = new StringBuilder();
+		for (char ch = '0'; ch <= '9'; ++ch) {
+			tmp.append(ch);
+		}
+		for (char ch = 'a'; ch <= 'z'; ++ch) {
+			tmp.append(ch);
+		}
+		symbols = tmp.toString().toCharArray();
+	}
+
+	/**
 	 * @return server default configuration
 	 */
 	public static TeeworldsConfig getDefaultConfig() {
-		TeeworldsConfig config = new TeeworldsConfig();
+		final TeeworldsConfig config = new TeeworldsConfig();
 
 		config.setVariable("password", "");
 		config.setVariable("sv_name", "TeeFun server");
@@ -62,4 +85,17 @@ public final class TeeworldsConfigUtil {
 		return config;
 	}
 
+	/**
+	 * Generate a random string.
+	 *
+	 * @param length the string length
+	 * @return the string
+	 */
+	public static String getRandomString(final int length) {
+		final char[] buf = new char[length];
+		for (int idx = 0; idx < buf.length; ++idx) {
+			buf[idx] = symbols[random.nextInt(symbols.length)];
+		}
+		return new String(buf);
+	}
 }

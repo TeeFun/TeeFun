@@ -14,8 +14,10 @@ import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.SocketUtils;
 
 import com.teefun.exception.TeeFunRuntimeException;
+import com.teefun.util.TeeworldsConfigUtil;
 
 /**
  * A Teeworlds server configuration.
@@ -34,6 +36,16 @@ public class TeeworldsConfig {
 	 * Pattern for config filename generation.
 	 */
 	private static final String CONFIG_FILENAME_PATTERN = "/tmp/server-%s.cfg";
+
+	/**
+	 * Min port available.
+	 */
+	private static final int TEEWORLDS_MIN_PORT = 27015;
+
+	/**
+	 * Max port available.
+	 */
+	private static final int TEEWORLDS_MAX_PORT = 27020;
 
 	/**
 	 * Variables hashmap.
@@ -65,10 +77,22 @@ public class TeeworldsConfig {
 	 * Generate a random password.
 	 */
 	public String generatePassword() {
-		final String password = "test";
+		final String password = TeeworldsConfigUtil.getRandomString(5);
 		LOGGER.trace("Generated password : " + password);
 		this.setVariable("password", password);
 		return password;
+	}
+
+	public Integer findAndSetAvailablePort() {
+		try {
+			final Integer port = SocketUtils.findAvailableUdpPort(TEEWORLDS_MIN_PORT, TEEWORLDS_MAX_PORT);
+			this.setVariable("sv_port", port);
+			return port;
+		} catch (final IllegalStateException exception) {
+			LOGGER.error("Could not find any port.", exception);
+			throw new TeeFunRuntimeException("Could not find any port.", exception);
+		}
+
 	}
 
 	/**
