@@ -45,7 +45,7 @@ public class QueueController extends AbstractController {
 	 * @return the view
 	 */
 	// @PreAuthorize("hasRole('ROLE_ADMIN')")
-	@RequestMapping(value = "/home", method = RequestMethod.GET)
+	@RequestMapping(value = { "/home", "/" }, method = RequestMethod.GET)
 	public ModelAndView home(final Model model) {
 		model.addAttribute("queues", this.matchmaking.getQueues());
 		return new ModelAndView("queue");

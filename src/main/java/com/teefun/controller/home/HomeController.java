@@ -41,7 +41,7 @@ public class HomeController extends AbstractController {
 	 * @param model the model
 	 * @return the view
 	 */
-	@RequestMapping(value = "/home", method = RequestMethod.GET)
+	@RequestMapping(value = { "/home", "/" }, method = RequestMethod.GET)
 	public ModelAndView home(final Model model) {
 		this.userContext.getPlayer().keepAlive();
 		model.addAttribute("queues", this.matchmaking.getQueues());

@@ -8,7 +8,7 @@ stompClient.connect({}, function(frame) {
 	stompClient.subscribe("/topic/sendTest2", function(message){
 		alert("sendTest2: " + message);
 	});
-	stompClient.send("/app/test");
+	stompClient.send("/app/test", {}, 'hello' );
 });
 
 $(function () {
@@ -17,7 +17,7 @@ $(function () {
 
 // Refresh content every X seconds
 var refreshQueues = function () {
-	$.get( "refreshQueues.do", function( data ) {
+	$.get( "refreshQueues", function( data ) {
 		$("#queues").html( data );
 		$('[data-toggle="tooltip"]').tooltip()
 	});
@@ -33,13 +33,13 @@ if (isInQueue) {
 }
 setInterval(function(){
 	if (inQueue > 0) {
-		$.get("player/keepAlive.do");
+		$.get("player/keepAlive");
 	}
 }, 5000);
 
 var changeName = function() {
 	var newName = $("#changeNameForm").find("input[name='nickname']").val();
-	var posting = $.post("player/changeName.do?name=" + newName);
+	var posting = $.post("player/changeName?name=" + newName);
 
 	posting.done(function() {
 		refreshQueues();
@@ -62,7 +62,7 @@ var expandQueue = function(queueName) {
 };
 
 var joinQueue = function(queueName) {
-	var posting = $.post("queue/joinQueue.do?queueName=" + queueName);
+	var posting = $.post("queue/joinQueue?queueName=" + queueName);
 
 	posting.done(function() {
 		inQueue++;
@@ -72,7 +72,7 @@ var joinQueue = function(queueName) {
 };
 
 var quitQueue = function(queueName) {
-	var posting = $.post("queue/quitQueue.do?queueName=" + queueName);
+	var posting = $.post("queue/quitQueue?queueName=" + queueName);
 
 	posting.done(function() {
 		inQueue--;
@@ -82,7 +82,7 @@ var quitQueue = function(queueName) {
 };
 
 var quitAllQueues = function() {
-	var posting = $.post("queue/quitAllQueues.do");
+	var posting = $.post("queue/quitAllQueues");
 
 	posting.done(function() {
 		inQueue = 0;

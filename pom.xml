@@ -18,7 +18,7 @@
 		<logback.version>1.0.13</logback.version>
 		<jcl-over-slf4j.version>1.7.5</jcl-over-slf4j.version>
 		<freemarker.version>2.3.21</freemarker.version>
-		<tomcat.version>7.0.52</tomcat.version>
+		<jackson.version>2.4.4</jackson.version>
 	</properties>
 
 	<dependencies>
@@ -79,6 +79,18 @@
 			<artifactId>spring-messaging</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
+		
+		<!-- Jackson2 -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
 
 		<!-- Security -->
 		<dependency>
@@ -124,13 +136,6 @@
 		</dependency>
 
 		<!-- *** -->
-
-		<!-- WebSocket tomcat -->
-		<dependency>
-			<groupId>org.apache.tomcat.embed</groupId>
-			<artifactId>tomcat-embed-websocket</artifactId>
-			<version>${tomcat.version}</version>
-		</dependency>
 
 	</dependencies>
 

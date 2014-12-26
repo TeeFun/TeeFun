@@ -22,7 +22,7 @@ import com.teefun.filter.bean.XSSRequestWrapper;
  * @author Rajh
  *
  */
-@WebFilter("/*")
+@WebFilter(value = "/*", asyncSupported = true)
 public class XSSFilter implements Filter {
 
 	@Override

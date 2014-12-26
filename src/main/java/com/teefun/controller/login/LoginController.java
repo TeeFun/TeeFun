@@ -60,7 +60,7 @@ public class LoginController extends AbstractController {
 	 */
 	@RequestMapping(value = "/logout", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ModelAndView logout() {
-		return new ModelAndView("redirect:/home.do");
+		return new ModelAndView("redirect:/home");
 	}
 
 }
