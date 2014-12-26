@@ -1,3 +1,7 @@
+$(function() {
+	$('[data-toggle="tooltip"]').tooltip()
+});
+
 var createQueue = function() {
 	var queueName =			$("#createQueueName").val();
 	var queueMaxSize =		$("#createQueueMaxSize").val();
