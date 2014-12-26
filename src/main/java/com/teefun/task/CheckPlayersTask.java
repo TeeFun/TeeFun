@@ -1,6 +1,5 @@
 package com.teefun.task;
 
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -41,16 +40,15 @@ public class CheckPlayersTask {
 	@Scheduled(fixedRate = 15 * 1000)
 	public void removeLeavers() {
 		LOGGER.trace("Removing inactive players ...");
-		final List<Queue> queues = Collections.synchronizedList(this.matchmaking.getQueues());
-		synchronized (queues) {
-			for (final Queue queue : queues) {
-				final Iterator<Player> playerIter = queue.getPlayers().iterator();
-				while (playerIter.hasNext()) {
-					final Player player = playerIter.next();
-					if (!player.isActive()) {
-						LOGGER.debug(String.format("Player '%s' is inactive, removing it.", player.getName()));
-						playerIter.remove();
-					}
+		final List<Queue> queues = this.matchmaking.getQueues();
+		for (final Queue queue : queues) {
+			// CopyOnWriteArray create a copy array for iterators
+			final Iterator<Player> playerIter = queue.getPlayers().iterator();
+			while (playerIter.hasNext()) {
+				final Player player = playerIter.next();
+				if (!player.isActive()) {
+					LOGGER.debug(String.format("Player '%s' is inactive, removing it.", player.getName()));
+					queues.remove(player);
 				}
 			}
 		}

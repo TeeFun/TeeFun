@@ -43,13 +43,14 @@ public class CheckServerTask {
 	public void freeServers() {
 		LOGGER.trace("Free servers...");
 		final List<TeeworldsServer> runningServers = this.teeworldsServerHandler.getRunningServers();
+		// CopyOnWriteArray create a copy array for iterators
 		final Iterator<TeeworldsServer> iter = runningServers.iterator();
 		while (iter.hasNext()) {
 			final TeeworldsServer server = iter.next();
 			if (!server.isActive()) {
 				LOGGER.debug("Server shutdown : " + server.getServerId());
 				server.shutdown();
-				iter.remove();
+				runningServers.remove(server);
 			}
 		}
 	}
