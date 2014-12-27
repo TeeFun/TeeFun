@@ -39,14 +39,18 @@ public class CheckPlayersTask {
 	@Scheduled(fixedRate = 15 * 1000)
 	public void removeLeavers() {
 		LOGGER.trace("Removing inactive players ...");
-		final List<Queue> queues = this.matchmaking.getQueues();
-		for (final Queue queue : queues) {
-			for (final Player player : queue.getPlayers()) {
-				if (!player.isActive()) {
-					LOGGER.debug(String.format("Player '%s' is inactive, removing it.", player.getName()));
-					this.matchmaking.quitQueue(player, queue);
+		try {
+			final List<Queue> queues = this.matchmaking.getQueues();
+			for (final Queue queue : queues) {
+				for (final Player player : queue.getPlayers()) {
+					if (!player.isActive()) {
+						LOGGER.debug(String.format("Player '%s' is inactive, removing it.", player.getName()));
+						this.matchmaking.quitQueue(player, queue);
+					}
 				}
 			}
+		} catch (final Exception ex) {
+			LOGGER.error("Error in removeLeavers task.", ex);
 		}
 
 	}

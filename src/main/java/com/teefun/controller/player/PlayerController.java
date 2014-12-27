@@ -43,17 +43,19 @@ public class PlayerController extends AbstractController {
 	 *
 	 * @param name the new name
 	 */
-	@RequestMapping(value = "/changeName", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void changeName(@RequestBody @Valid final String name, final BindingResult bindingResult) {
+	@RequestMapping(value = "/changeName", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public String changeName(@RequestBody @Valid final String name, final BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors()) {
-			throw new JsonErrorException("Invalid name", bindingResult);
+			throw new JsonErrorException("Request validation failed", bindingResult);
 		}
 
 		this.userContext.getPlayer().setName(name);
 		for (final Queue queue : this.matchmaking.getQueues(this.userContext.getPlayer())) {
 			this.matchmaking.checkQueue(queue);
 		}
+
+		return EMPTY_JSON;
 	}
 
 	/**

@@ -1,26 +1,24 @@
 var createQueue = function() {
-	var queueName =			$("#createQueueName").val();
-	var queueMaxSize =		$("#createQueueMaxSize").val();
-	var queueMap =			$("#createQueueMap").val();
-	var queueGametype =		$("#createQueueGametype").val();
-	var queueScoreLimit =	$("#createQueueScoreLimit").val();
-	var queueTimeLimit =	$("#createQueueTimeLimit").val();
-	var queuePermanent = 	$("#createQueuePermanent").prop('checked');
-	var posting = $.post("createQueue?name=" + queueName + "&maxSize=" + queueMaxSize
-							+ "&map=" + queueMap + "&gametype=" + queueGametype
-							+ "&scoreLimit=" + queueScoreLimit + "&timeLimit=" + queueTimeLimit
-							+ "&permanent=" + queuePermanent);
+	var queueName = $("#createQueueName").val();
+	var input = {
+			name : 			queueName,
+			maxSize :		$("#createQueueMaxSize").val(),
+			map :			$("#createQueueMap").val(),
+			gametype :		$("#createQueueGametype").val(),
+			scoreLimit :	$("#createQueueScoreLimit").val(),
+			timeLimit :		$("#createQueueTimeLimit").val(),
+			permanent : 	$("#createQueuePermanent").prop('checked'),
+	};
 
-	posting.done(function() {
-		console.log("Created queue: " + queueName);
+	var posting = $.postjson("createQueue", input, function() {
+		alert("Created queue: " + queueName);
 	});
 };
 
 var deleteQueue = function() {
+	var queueName = $("#deleteQueueId option:selected").text();
 	var queueId = $("#deleteQueueId").val();
-	var posting = $.post("deleteQueue?queueId=" + queueId);
-
-	posting.done(function() {
-		console.log("Deleted queue: " + queueId);
+	var posting = $.postjson("deleteQueue", queueId, function() {
+		alert("Deleted queue: " + queueName);
 	});
 };

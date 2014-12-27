@@ -63,11 +63,12 @@ public class QueueController extends AbstractController {
 	 *
 	 * @param queue the queue name
 	 */
-	@RequestMapping(value = "/joinQueue", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void joinQueue(@RequestBody @Valid final Integer queueId, final BindingResult bindingResult) {
+	@RequestMapping(value = "/joinQueue", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public String joinQueue(@RequestBody @Valid final Integer queueId, final BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors()) {
-			throw new JsonErrorException("Invalid queue id", bindingResult);
+			throw new JsonErrorException("Request validation failed", bindingResult);
 		}
 
 		final Player player = this.userContext.getPlayer();
@@ -87,6 +88,8 @@ public class QueueController extends AbstractController {
 		}
 
 		this.matchmaking.joinQueue(player, queue);
+
+		return EMPTY_JSON;
 	}
 
 	/**
@@ -94,11 +97,12 @@ public class QueueController extends AbstractController {
 	 *
 	 * @param queue the queue name
 	 */
-	@RequestMapping(value = "/quitQueue", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void quitQueue(@RequestBody @Valid final Integer queueId, final BindingResult bindingResult) {
+	@RequestMapping(value = "/quitQueue", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public String quitQueue(@RequestBody @Valid final Integer queueId, final BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors()) {
-			throw new JsonErrorException("Invalid queue id", bindingResult);
+			throw new JsonErrorException("Request validation failed", bindingResult);
 		}
 
 		final Player player = this.userContext.getPlayer();
@@ -118,26 +122,32 @@ public class QueueController extends AbstractController {
 		}
 
 		this.matchmaking.quitQueue(player, queue);
+
+		return EMPTY_JSON;
 	}
 
 	/**
 	 * Quit all queues.
 	 */
-	@RequestMapping(value = "/quitAllQueues", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void quitAllQueues() {
+	@RequestMapping(value = "/quitAllQueues", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public String quitAllQueues() {
 		final Player player = this.userContext.getPlayer();
 		this.matchmaking.quitAllQueues(player);
+
+		return EMPTY_JSON;
 	}
 
 	/**
 	 * Create a queue.
 	 */
 	// @PreAuthorize("hasRole('ROLE_ADMIN')")
-	@RequestMapping(value = "/createQueue", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void createQueue(@RequestBody @Valid final CreateQueueRequest createQueueRequest, final BindingResult bindingResult) {
+	@RequestMapping(value = "/createQueue", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public String createQueue(@RequestBody @Valid final CreateQueueRequest createQueueRequest, final BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors()) {
-			throw new JsonErrorException("Invalid request", bindingResult);
+			throw new JsonErrorException("Request validation failed", bindingResult);
 		}
 
 		final Queue existQueue = this.matchmaking.getQueueByName(createQueueRequest.getName());
@@ -149,17 +159,20 @@ public class QueueController extends AbstractController {
 				createQueueRequest.getTimeLimit(), createQueueRequest.getPermanent());
 
 		this.matchmaking.addQueue(queue);
+
+		return EMPTY_JSON;
 	}
 
 	/**
 	 * Delete a queue.
 	 */
 	// @PreAuthorize("hasRole('ROLE_ADMIN')")
-	@RequestMapping(value = "/deleteQueue", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void deleteQueue(@RequestBody @Valid final Integer queueId, final BindingResult bindingResult) {
+	@RequestMapping(value = "/deleteQueue", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public String deleteQueue(@RequestBody @Valid final Integer queueId, final BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors()) {
-			throw new JsonErrorException("Invalid queue id", bindingResult);
+			throw new JsonErrorException("Request validation failed", bindingResult);
 		}
 
 		final Queue queue = this.matchmaking.getQueueById(queueId);
@@ -169,6 +182,8 @@ public class QueueController extends AbstractController {
 		}
 
 		this.matchmaking.removeQueue(queue);
+
+		return EMPTY_JSON;
 	}
 
 	@RequestMapping(value = "/askPassword", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -176,7 +191,7 @@ public class QueueController extends AbstractController {
 	public String askPassword(@RequestBody @Valid final Integer queueId, final BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors()) {
-			throw new JsonErrorException("Invalid queue id", bindingResult);
+			throw new JsonErrorException("Request validation failed", bindingResult);
 		}
 
 		final Queue queue = this.matchmaking.getQueueById(queueId);
@@ -194,11 +209,12 @@ public class QueueController extends AbstractController {
 		return queue.getServer().getConfig().getPassword();
 	}
 
-	@RequestMapping(value = "/playerReady", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void playerReady(@RequestBody @Valid final PlayerReadyRequest playerReadyRequest, final BindingResult bindingResult) {
+	@RequestMapping(value = "/playerReady", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public String playerReady(@RequestBody @Valid final PlayerReadyRequest playerReadyRequest, final BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors()) {
-			throw new JsonErrorException("Invalid request", bindingResult);
+			throw new JsonErrorException("Request validation failed", bindingResult);
 		}
 
 		final Queue queue = this.matchmaking.getQueueById(playerReadyRequest.getQueueId());
@@ -216,6 +232,8 @@ public class QueueController extends AbstractController {
 		queue.setPlayerReady(this.userContext.getPlayer(), playerReadyRequest.getReady());
 		// TODO event ...
 		this.matchmaking.checkQueue(queue);
+
+		return EMPTY_JSON;
 	}
 
 }

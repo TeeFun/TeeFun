@@ -3,6 +3,8 @@
  */
 package com.teefun.model.json;
 
+import java.io.Serializable;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.teefun.model.Queue;
@@ -14,7 +16,12 @@ import com.teefun.model.Queue;
  *
  */
 @JsonRootName("QueueData")
-public class QueueData {
+public class QueueData implements Serializable {
+
+	/**
+	 * SUID.
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@JsonProperty("name")
 	private final String name;

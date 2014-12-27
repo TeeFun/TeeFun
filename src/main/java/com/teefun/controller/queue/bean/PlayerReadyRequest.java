@@ -3,6 +3,10 @@
  */
 package com.teefun.controller.queue.bean;
 
+import java.io.Serializable;
+
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
@@ -13,19 +17,20 @@ import com.fasterxml.jackson.annotation.JsonRootName;
  *
  */
 @JsonRootName("CreateQueueRequest")
-public class PlayerReadyRequest {
+public class PlayerReadyRequest implements Serializable {
+
+	/**
+	 * SUID.
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@JsonProperty
-	private final Integer queueId;
+	@NotNull
+	private Integer queueId;
 
 	@JsonProperty
-	private final Boolean ready;
-
-	public PlayerReadyRequest(final Integer queueId, final Boolean ready) {
-		super();
-		this.queueId = queueId;
-		this.ready = ready;
-	}
+	@NotNull
+	private Boolean ready;
 
 	/**
 	 * @return the {@link #queueId}
@@ -35,10 +40,24 @@ public class PlayerReadyRequest {
 	}
 
 	/**
+	 * @param queueId the {@link #queueId} to set
+	 */
+	public void setQueueId(final Integer queueId) {
+		this.queueId = queueId;
+	}
+
+	/**
 	 * @return the {@link #ready}
 	 */
 	public Boolean getReady() {
 		return this.ready;
+	}
+
+	/**
+	 * @param ready the {@link #ready} to set
+	 */
+	public void setReady(final Boolean ready) {
+		this.ready = ready;
 	}
 
 }

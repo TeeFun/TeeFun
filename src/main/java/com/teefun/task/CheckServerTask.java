@@ -41,18 +41,22 @@ public class CheckServerTask {
 	@Scheduled(fixedRate = 1 * 60 * 1000)
 	public void freeServers() {
 		LOGGER.trace("Free servers...");
-		final List<TeeworldsServer> runningServers = this.teeworldsServerHandler.getBorrowedServers();
-		for (final TeeworldsServer server : runningServers) {
-			if (server.hasTimedOut()) {
-				LOGGER.debug("Server has timed out force shutdown : " + server.getServerId());
-				server.shutdown();
-				this.teeworldsServerHandler.freeServer(server);
+		try {
+			final List<TeeworldsServer> runningServers = this.teeworldsServerHandler.getBorrowedServers();
+			for (final TeeworldsServer server : runningServers) {
+				if (server.hasTimedOut()) {
+					LOGGER.debug("Server has timed out force shutdown : " + server.getServerId());
+					server.shutdown();
+					this.teeworldsServerHandler.freeServer(server);
+				}
+				if (server.hasStarted() && server.hasStopped()) {
+					LOGGER.debug("Server has shutdown : " + server.getServerId());
+					server.shutdown();
+					this.teeworldsServerHandler.freeServer(server);
+				}
 			}
-			if (server.hasStarted() && server.hasStopped()) {
-				LOGGER.debug("Server has shutdown : " + server.getServerId());
-				server.shutdown();
-				this.teeworldsServerHandler.freeServer(server);
-			}
+		} catch (final Exception ex) {
+			LOGGER.error("Error in freeServers task.", ex);
 		}
 	}
 }

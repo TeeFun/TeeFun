@@ -76,9 +76,7 @@ var expandQueue = function(queueName) {
 };
 
 var joinQueue = function(queueId) {
-	var posting = $.post("queue/joinQueue?queueId=" + queueId);
-
-	posting.done(function() {
+	var posting = $.postjson("queue/joinQueue", queueId, function() {
 		inQueue++;
 		console.log("Joined queue: " + queueId);
 	});
