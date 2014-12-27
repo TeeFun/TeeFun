@@ -3,20 +3,35 @@ package com.teefun.bean.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.teefun.bean.Matchmaking;
+import com.teefun.events.event.GameAbortedEvent;
+import com.teefun.events.event.GameReadyEvent;
+import com.teefun.events.event.GameStartedEvent;
+import com.teefun.events.event.PlayerModifiedEvent;
+import com.teefun.events.event.PlayerReadyEvent;
+import com.teefun.events.event.QueueCreatedEvent;
+import com.teefun.events.event.QueueDeletedEvent;
+import com.teefun.events.event.QueueModifiedEvent;
+import com.teefun.events.event.QueueReadyTimedOutEvent;
+import com.teefun.events.event.ServerFreeEvent;
 import com.teefun.model.Player;
 import com.teefun.model.Queue;
 import com.teefun.model.QueueState;
 import com.teefun.model.teeworlds.TeeworldsServer;
 import com.teefun.service.teeworlds.TeeworldsServerHandler;
-import com.teefun.service.websocket.WebSocketHandler;
 
 /**
  * Default impl for {@link Matchmaking}.
@@ -32,16 +47,22 @@ public class MatchmakingImpl implements Matchmaking {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MatchmakingImpl.class);
 
 	/**
+	 * Time in seconds before the ready request timeout.
+	 */
+	@Value("${queue.ready.ttl}")
+	private static Long READY_TIMEOUT;
+
+	/**
 	 * Teeworlds server handler.
 	 */
 	@Resource
 	private TeeworldsServerHandler teeworldsServerHandler;
 
 	/**
-	 * Websocket handler.
+	 * Event bus.
 	 */
 	@Resource
-	private WebSocketHandler websocketHandler;
+	private EventBus eventBus;
 
 	/**
 	 * List of available queues.
@@ -68,7 +89,7 @@ public class MatchmakingImpl implements Matchmaking {
 	public void joinQueue(final Player player, final Queue queue) {
 		LOGGER.debug(String.format("Add player '%s' to queue '%s'.", player.getName(), queue.getName()));
 		queue.addPlayer(player);
-		this.checkQueue(queue);
+		this.eventBus.post(new QueueModifiedEvent(queue));
 	}
 
 	@Override
@@ -77,7 +98,7 @@ public class MatchmakingImpl implements Matchmaking {
 			LOGGER.debug(String.format("Remove player '%s' from queue '%s'.", player.getName(), queue.getName()));
 			queue.removePlayer(player);
 		}
-		this.checkQueue(queue);
+		this.eventBus.post(new QueueModifiedEvent(queue));
 	}
 
 	@Override
@@ -85,7 +106,7 @@ public class MatchmakingImpl implements Matchmaking {
 		LOGGER.debug(String.format("Remove player '%s' from all queues.", player.getName()));
 		for (final Queue queue : this.availableQueues) {
 			queue.removePlayer(player);
-			this.checkQueue(queue);
+			this.eventBus.post(new QueueModifiedEvent(queue));
 		}
 	}
 
@@ -113,7 +134,7 @@ public class MatchmakingImpl implements Matchmaking {
 	public void addQueue(final Queue queue) {
 		if (!this.availableQueues.contains(queue)) {
 			this.availableQueues.add(queue);
-			this.websocketHandler.queueCreated(queue);
+			this.eventBus.post(new QueueCreatedEvent(queue));
 		}
 	}
 
@@ -121,7 +142,7 @@ public class MatchmakingImpl implements Matchmaking {
 	public void removeQueue(final Queue queue) {
 		if (this.availableQueues.contains(queue)) {
 			this.availableQueues.remove(queue);
-			this.websocketHandler.queueDeleted(queue);
+			this.eventBus.post(new QueueDeletedEvent(queue));
 		}
 	}
 
@@ -136,12 +157,14 @@ public class MatchmakingImpl implements Matchmaking {
 	}
 
 	/**
-	 * Check queue status.
+	 * Listen queue modified event.
 	 *
-	 * @param queue the queue
+	 * @param queueModifiedEvent the event
 	 */
-	@Override
-	public void checkQueue(final Queue queue) {
+	@Subscribe
+	public void onQueueModified(final QueueModifiedEvent queueModifiedEvent) {
+		final Queue queue = queueModifiedEvent.getQueue();
+		boolean queueModified = false;
 		switch (queue.getState()) {
 		case SUSPENDED:
 			break;
@@ -149,39 +172,25 @@ public class MatchmakingImpl implements Matchmaking {
 			break;
 		case WAITING_PLAYERS:
 			if (queue.isFull()) {
-				queue.setState(QueueState.WAITING_SERVER);
 				LOGGER.debug(String.format("Queue '%s' is waiting for a server'.", queue.getName()));
-				// FIXME factor this method. How to autocheck queue ? Task ? Event ?
-				if (this.teeworldsServerHandler.hasServerAvailable()) {
-					LOGGER.debug(String.format("Queue '%s' has found a server.", queue.getName()));
-					final TeeworldsServer server = this.teeworldsServerHandler.createAndBorrowServer(queue.makeConfig());
-					queue.setServer(server);
-					queue.setState(QueueState.WAITING_READY);
-					queue.startTimer();
-					this.websocketHandler.gameReady(queue);
-					LOGGER.debug(String.format("Queue '%s' has borrowed a server.", queue.getName()));
-				}
+				queue.setState(QueueState.WAITING_SERVER);
+				queueModified = true;
 			}
 			break;
 		case WAITING_READY:
-			// TODO check if all ready or ready timed out
-			// TODO if all ready
 			if (queue.isEveryoneReady()) {
 				this.teeworldsServerHandler.startServer(queue.getServer());
 				queue.setState(QueueState.IN_GAME);
-				queue.getServer().getConfig().getPassword();
-				this.websocketHandler.gameStarted(queue);
 				LOGGER.debug(String.format("Queue '%s' has started its game.", queue.getName()));
+				this.eventBus.post(new GameStartedEvent(queue));
+				queueModified = true;
 			}
 
-			// TODO if timedout
-			if (queue.hasEveryResponse() && !queue.isEveryoneReady() || queue.hasTimedOut()) {
-				this.teeworldsServerHandler.freeServer(queue.getServer());
-				queue.setState(QueueState.WAITING_PLAYERS);
-				this.websocketHandler.gameAborted(queue);
-				queue.setServer(null);
-				queue.removeLeavers();
-				LOGGER.debug(String.format("Queue '%s' has terminated. Players were not ready.", queue.getName()));
+			if (queue.hasEveryResponse() && !queue.isEveryoneReady()) {
+				this.cancelQueueReady(queue);
+				LOGGER.debug(String.format("Queue '%s' has terminated. At least one player was not ready.", queue.getName()));
+				this.eventBus.post(new GameAbortedEvent(queue));
+				queueModified = true;
 			}
 			break;
 		case WAITING_SERVER:
@@ -191,32 +200,108 @@ public class MatchmakingImpl implements Matchmaking {
 				final TeeworldsServer server = this.teeworldsServerHandler.createAndBorrowServer(queue.makeConfig());
 				queue.setServer(server);
 				queue.setState(QueueState.WAITING_READY);
-				this.websocketHandler.gameReady(queue);
+				this.startReadyTimer(queue);
 				LOGGER.debug(String.format("Queue '%s' has borrowed a server.", queue.getName()));
+				this.eventBus.post(new GameReadyEvent(queue));
+				queueModified = true;
 			}
 			break;
 		case GAME_OVER:
 			if (queue.isPermanent()) {
 				LOGGER.debug(String.format("Queue '%s' has terminated and has been reset.", queue.getName()));
 				queue.reset();
+				queueModified = true;
 			} else {
 				LOGGER.debug(String.format("Queue '%s' has terminated.", queue.getName()));
 				this.removeQueue(queue);
 			}
 			break;
 		}
-		this.websocketHandler.queueUpdated(queue);
+		if (queueModified) {
+			// Care to loop here. We are firing an event inside the same event
+			this.eventBus.post(new QueueModifiedEvent(queue));
+		}
 	}
 
-	@Override
-	public void onServerFree(final TeeworldsServer server) {
-		// TODO use an event system -_-
-		for (final Queue queue : this.availableQueues) {
-			if (queue.getServer() == server) {
-				queue.setState(QueueState.GAME_OVER);
+	/**
+	 * Cancel queue ready.
+	 *
+	 * @param queue the queue
+	 */
+	private void cancelQueueReady(final Queue queue) {
+		this.teeworldsServerHandler.freeServer(queue.getServer());
+		queue.setServer(null);
+		queue.setState(QueueState.WAITING_PLAYERS);
+		queue.removeLeavers();
+	}
+
+	/**
+	 * When queue ready has timed out.
+	 *
+	 * @param queueReadyTimedOutEvent the event
+	 */
+	@Subscribe
+	public void onQueueReadyTimedout(final QueueReadyTimedOutEvent queueReadyTimedOutEvent) {
+		final Queue queue = queueReadyTimedOutEvent.getQueue();
+		this.cancelQueueReady(queue);
+		this.eventBus.post(new QueueModifiedEvent(queue));
+		LOGGER.debug(String.format("Queue '%s' has terminated. At least one player was not ready.", queue.getName()));
+		this.eventBus.post(new QueueModifiedEvent(queue));
+	}
+
+	/**
+	 * Start ready timer on a queue.
+	 *
+	 * @param queue the queue
+	 */
+	private void startReadyTimer(final Queue queue) {
+		final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+		executor.schedule(new Runnable() {
+			@Override
+			public void run() {
+				if (queue.getState() == QueueState.WAITING_READY && !queue.hasEveryResponse()) {
+					MatchmakingImpl.this.eventBus.post(new QueueReadyTimedOutEvent(queue));
+				}
 			}
-			this.checkQueue(queue);
+		}, READY_TIMEOUT, TimeUnit.SECONDS);
+	}
+
+	/**
+	 * Listen to server free event.
+	 *
+	 * @param serverFreeEvent the event
+	 */
+	@Subscribe
+	public void onServerFree(final ServerFreeEvent serverFreeEvent) {
+		for (final Queue queue : this.availableQueues) {
+			if (queue.getServer() == serverFreeEvent.getServer()) {
+				queue.setState(QueueState.GAME_OVER);
+				this.eventBus.post(new QueueModifiedEvent(queue));
+			}
 		}
+	}
+
+	/**
+	 * A player has been modified. Update all queue which contains it.<br/>
+	 * FIXME : should only update the player instead of all queues
+	 *
+	 * @param playerModifiedEvent the event
+	 */
+	@Subscribe
+	public void onPlayerModified(final PlayerModifiedEvent playerModifiedEvent) {
+		for (final Queue queue : this.getQueues(playerModifiedEvent.getPlayer())) {
+			this.eventBus.post(new QueueModifiedEvent(queue));
+		}
+	}
+
+	/**
+	 * A player has been ready. Update the queue.<br/>
+	 *
+	 * @param playerReadyEvent the event
+	 */
+	@Subscribe
+	public void onPlayerReady(final PlayerReadyEvent playerReadyEvent) {
+		this.eventBus.post(new QueueModifiedEvent(playerReadyEvent.getQueue()));
 	}
 
 }

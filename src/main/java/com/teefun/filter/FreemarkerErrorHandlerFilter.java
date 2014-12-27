@@ -16,6 +16,8 @@ import javax.servlet.annotation.WebFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import freemarker.template.TemplateException;
+
 /**
  * Freemarker exception handler.
  *
@@ -35,7 +37,11 @@ public class FreemarkerErrorHandlerFilter implements Filter {
 		try {
 			filterChain.doFilter(request, response);
 		} catch (final Exception ex) {
-			LOGGER.error("Error in freemarker.", ex);
+			if (ex instanceof TemplateException) {
+				LOGGER.error("Error in freemarker.", ex);
+			} else {
+				LOGGER.error("Error while processing request.", ex);
+			}
 			throw ex;
 		}
 

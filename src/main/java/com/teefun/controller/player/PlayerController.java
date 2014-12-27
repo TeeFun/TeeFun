@@ -11,11 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.common.eventbus.EventBus;
 import com.teefun.bean.Matchmaking;
 import com.teefun.bean.UserContext;
 import com.teefun.controller.AbstractController;
+import com.teefun.events.event.PlayerModifiedEvent;
 import com.teefun.exception.JsonErrorException;
-import com.teefun.model.Queue;
 
 /**
  * Player controller.
@@ -40,6 +41,12 @@ public class PlayerController extends AbstractController {
 	private Matchmaking matchmaking;
 
 	/**
+	 * Event bus.
+	 */
+	@Resource
+	private EventBus eventBus;
+
+	/**
 	 * Change a player's name.
 	 *
 	 * @param name the new name
@@ -52,9 +59,7 @@ public class PlayerController extends AbstractController {
 		}
 
 		this.userContext.getPlayer().setName(name);
-		for (final Queue queue : this.matchmaking.getQueues(this.userContext.getPlayer())) {
-			this.matchmaking.checkQueue(queue);
-		}
+		this.eventBus.post(new PlayerModifiedEvent(this.userContext.getPlayer()));
 
 		return EMPTY_JSON;
 	}

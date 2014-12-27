@@ -1,4 +1,6 @@
-<#include "/home/queue.ftl">
+<#list queues as queue>
+	<#include "/home/queue.ftl">
+</#list>
 
 <div style="text-align: center; margin-top: 10px;">
 	<#if isInQueue>

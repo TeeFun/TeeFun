@@ -1,0 +1,62 @@
+/**
+ *
+ */
+package com.teefun.events;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.stereotype.Component;
+
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
+
+/**
+ * EventBusPostProcessor registers Spring beans with EventBus. All beans containing Guava's @Subscribe annotation are registered.
+ *
+ * @author Rajh
+ *
+ */
+@Component
+public class EventBusPostProcessor implements BeanPostProcessor {
+
+	/**
+	 * Class logger.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(EventBusPostProcessor.class);
+
+	/**
+	 * Guava event bus.
+	 */
+	@Resource
+	private EventBus eventBus;
+
+	@Override
+	public Object postProcessBeforeInitialization(final Object bean, final String beanName) throws BeansException {
+		return bean;
+	}
+
+	@Override
+	public Object postProcessAfterInitialization(final Object bean, final String beanName) throws BeansException {
+		final Method[] methods = bean.getClass().getMethods();
+		for (final Method method : methods) {
+			final Annotation[] annotations = method.getAnnotations();
+			for (final Annotation annotation : annotations) {
+				if (annotation.annotationType().equals(Subscribe.class)) {
+					this.eventBus.register(bean);
+					LOGGER.trace("Bean {} method {} subscribed to {}", new Object[] { beanName, method.getName(), EventBus.class.getCanonicalName() });
+					return bean;
+				}
+			}
+		}
+
+		return bean;
+	}
+
+}

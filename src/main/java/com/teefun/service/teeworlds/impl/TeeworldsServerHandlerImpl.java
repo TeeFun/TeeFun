@@ -19,7 +19,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.SocketUtils;
 
-import com.teefun.bean.Matchmaking;
+import com.google.common.eventbus.EventBus;
+import com.teefun.events.event.ServerFreeEvent;
 import com.teefun.exception.TeeFunRuntimeException;
 import com.teefun.model.teeworlds.TeeworldsConfig;
 import com.teefun.model.teeworlds.TeeworldsServer;
@@ -80,10 +81,10 @@ public class TeeworldsServerHandlerImpl implements TeeworldsServerHandler {
 	private final List<TeeworldsServer> borrowedServers = new CopyOnWriteArrayList<TeeworldsServer>();
 
 	/**
-	 * FIXME : remove dependance and use event system.
+	 * Event bus.
 	 */
 	@Resource
-	private Matchmaking matchmaking;
+	private EventBus eventBus;
 
 	/**
 	 * Clean servers at startup. For remaining servers.
@@ -129,8 +130,7 @@ public class TeeworldsServerHandlerImpl implements TeeworldsServerHandler {
 	@Override
 	public void freeServer(final TeeworldsServer server) {
 		this.borrowedServers.remove(server);
-		// FIXME send an event
-		this.matchmaking.onServerFree(server);
+		this.eventBus.post(new ServerFreeEvent(server));
 	}
 
 	@Override

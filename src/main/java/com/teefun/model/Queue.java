@@ -3,12 +3,10 @@ package com.teefun.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.teefun.model.teeworlds.TeeworldsConfig;
 import com.teefun.model.teeworlds.TeeworldsServer;
@@ -26,12 +24,6 @@ public class Queue {
 	 * Queue counter to generate id.
 	 */
 	private static final AtomicInteger QUEUE_COUNTER = new AtomicInteger();
-
-	/**
-	 * Time in seconds before the ready request timeout.
-	 */
-	@Value("${queue.ready.ttl}")
-	private static Long READY_TIMEOUT;
 
 	/**
 	 * Queue id.
@@ -97,11 +89,6 @@ public class Queue {
 	 * List of player not ready.
 	 */
 	private final List<Player> playersNotReady = new ArrayList<Player>();
-
-	/**
-	 * Ready start time in millis.
-	 */
-	private Long readyStartTime;
 
 	/**
 	 * Default constructor.
@@ -358,24 +345,6 @@ public class Queue {
 		}
 		this.playersNotReady.clear();
 		this.playersReady.clear();
-	}
-
-	/**
-	 * @return true if the ready check has timed out
-	 */
-	public boolean hasTimedOut() {
-		if (this.readyStartTime == null) {
-			return true;
-		}
-		return System.currentTimeMillis() - this.readyStartTime > TimeUnit.SECONDS.toMillis(READY_TIMEOUT);
-	}
-
-	/**
-	 * Start the ready timer.
-	 */
-	public void startTimer() {
-		this.readyStartTime = System.currentTimeMillis();
-		// TODO Create a timer. When timer exectued throw event.
 	}
 
 }
