@@ -20,6 +20,7 @@
 		<freemarker.version>2.3.21</freemarker.version>
 		<jackson.version>2.4.4</jackson.version>
 		<tomcat.version>7.0.57</tomcat.version>
+		<hibernate-valid.version>4.2.0.Final</hibernate-valid.version>
 	</properties>
 
 	<dependencies>
@@ -144,6 +145,13 @@
 			<artifactId>tomcat-embed-websocket</artifactId>
 			<version>${tomcat.version}</version>
 			<scope>embedded</scope>
+		</dependency>
+		
+		<!-- Hibernate Validator -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>${hibernate-valid.version}</version>
 		</dependency>
 
 	</dependencies>

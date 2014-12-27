@@ -1,18 +1,24 @@
 package com.teefun.controller.queue;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.teefun.bean.Matchmaking;
 import com.teefun.bean.UserContext;
 import com.teefun.controller.AbstractController;
+import com.teefun.controller.queue.bean.CreateQueueRequest;
+import com.teefun.controller.queue.bean.PlayerReadyRequest;
+import com.teefun.exception.JsonErrorException;
 import com.teefun.model.Player;
 import com.teefun.model.Queue;
 import com.teefun.model.QueueState;
@@ -56,155 +62,159 @@ public class QueueController extends AbstractController {
 	 * Join a queue.
 	 *
 	 * @param queue the queue name
-	 * @return the view
 	 */
-	@RequestMapping(value = "/joinQueue", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ModelAndView joinQueue(@RequestParam final String queueName) {
+	@RequestMapping(value = "/joinQueue", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public void joinQueue(@RequestBody @Valid final String queueName, final BindingResult bindingResult) {
+
+		if (bindingResult.hasErrors()) {
+			throw new JsonErrorException("Invalid name", bindingResult);
+		}
+
 		final Player player = this.userContext.getPlayer();
 		final Queue queue = this.matchmaking.getQueueByName(queueName);
+
 		if (queue == null) {
-			// TODO queue doesnt exist error
-			return new ModelAndView("json/empty.json");
+			throw new JsonErrorException("Queue does not exist", bindingResult);
 		}
 		if (queue.isFull()) {
-			// TODO "Queue is full"
-			return new ModelAndView("json/empty.json");
+			throw new JsonErrorException("Queue is full", bindingResult);
 		}
 		if (queue.containsPlayer(player)) {
-			// TODO "Queue already contains this player"
-			return new ModelAndView("json/empty.json");
+			throw new JsonErrorException("Player already in queue", bindingResult);
 		}
 		if (queue.getState() != QueueState.WAITING_PLAYERS) {
-			// TODO incorrect state
-			return new ModelAndView("json/empty.json");
+			throw new JsonErrorException("Incorrect queue state", bindingResult);
 		}
 
 		this.matchmaking.joinQueue(player, queue);
-
-		return new ModelAndView("json/empty.json");
 	}
 
 	/**
 	 * Quit a queue.
 	 *
 	 * @param queue the queue name
-	 * @return the view
 	 */
-	@RequestMapping(value = "/quitQueue", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ModelAndView quitQueue(@RequestParam final String queueName) {
+	@RequestMapping(value = "/quitQueue", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public void quitQueue(@RequestBody @Valid final String queueName, final BindingResult bindingResult) {
+
+		if (bindingResult.hasErrors()) {
+			throw new JsonErrorException("Invalid name", bindingResult);
+		}
+
 		final Player player = this.userContext.getPlayer();
 		final Queue queue = this.matchmaking.getQueueByName(queueName);
 
 		if (queue == null) {
-			// TODO queue doesnt exist error
-			return new ModelAndView("json/empty.json");
+			throw new JsonErrorException("Queue does not exist", bindingResult);
+		}
+		if (queue.isFull()) {
+			throw new JsonErrorException("Queue is full", bindingResult);
 		}
 		if (!queue.containsPlayer(player)) {
-			// TODO "Player not in queue"
-			return new ModelAndView("json/empty.json");
+			throw new JsonErrorException("Player is not in this queue", bindingResult);
 		}
 		if (queue.getState() != QueueState.WAITING_PLAYERS) {
-			// TODO incorrect state
-			return new ModelAndView("json/empty.json");
+			throw new JsonErrorException("Incorrect queue state", bindingResult);
 		}
 
 		this.matchmaking.quitQueue(player, queue);
-		return new ModelAndView("json/empty.json");
 	}
 
 	/**
 	 * Quit all queues.
-	 *
-	 * @return the view
 	 */
-	@RequestMapping(value = "/quitAllQueues", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ModelAndView quitAllQueues() {
+	@RequestMapping(value = "/quitAllQueues", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public void quitAllQueues() {
 		final Player player = this.userContext.getPlayer();
 		this.matchmaking.quitAllQueues(player);
-		return new ModelAndView("json/empty.json");
 	}
 
 	/**
 	 * Create a queue.
-	 *
-	 * @return the view
 	 */
 	// @PreAuthorize("hasRole('ROLE_ADMIN')")
-	@RequestMapping(value = "/createQueue", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ModelAndView createQueue(@RequestParam final String name, @RequestParam final Integer maxSize, @RequestParam final String map, @RequestParam final String gametype,
-			@RequestParam final Integer scoreLimit, @RequestParam final Integer timeLimit, @RequestParam final Boolean permanent) {
-		final Queue queue = new Queue(name, maxSize, map, gametype, scoreLimit, timeLimit, permanent);
+	@RequestMapping(value = "/createQueue", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public void createQueue(@RequestBody @Valid final CreateQueueRequest createQueueRequest, final BindingResult bindingResult) {
+
+		if (bindingResult.hasErrors()) {
+			throw new JsonErrorException("Invalid name", bindingResult);
+		}
+
+		final Queue queue = new Queue(createQueueRequest.getName(), createQueueRequest.getMaxSize(), createQueueRequest.getMap(), createQueueRequest.getGametype(), createQueueRequest.getScoreLimit(),
+				createQueueRequest.getTimeLimit(), createQueueRequest.getPermanent());
 
 		if (this.matchmaking.getQueues().contains(queue)) {
-			// TODO "Queue already exist";
-			return new ModelAndView("json/empty.json");
+			throw new JsonErrorException("Queue already exist", bindingResult);
 		}
 
 		this.matchmaking.addQueue(queue);
-		return new ModelAndView("json/empty.json");
 	}
 
 	/**
 	 * Delete a queue.
-	 *
-	 * @return the view
 	 */
 	// @PreAuthorize("hasRole('ROLE_ADMIN')")
-	@RequestMapping(value = "/deleteQueue", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ModelAndView deleteQueue(@RequestParam final String queueName) {
+	@RequestMapping(value = "/deleteQueue", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public void deleteQueue(@RequestBody @Valid final String queueName, final BindingResult bindingResult) {
+
+		if (bindingResult.hasErrors()) {
+			throw new JsonErrorException("Invalid name", bindingResult);
+		}
+
 		final Queue queue = this.matchmaking.getQueueByName(queueName);
 
 		if (queue == null) {
-			// TODO "queue doesnt exist"
-			return new ModelAndView("json/empty.json");
+			throw new JsonErrorException("Queue does not exist", bindingResult);
 		}
 
 		this.matchmaking.removeQueue(queue);
-		return new ModelAndView("json/empty.json");
 	}
 
-	@RequestMapping(value = "/askPassword", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ModelAndView askPassword(@RequestParam final String queueName) {
+	@RequestMapping(value = "/askPassword", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public String askPassword(@RequestBody @Valid final String queueName, final BindingResult bindingResult) {
+
+		if (bindingResult.hasErrors()) {
+			throw new JsonErrorException("Invalid name", bindingResult);
+		}
+
 		final Queue queue = this.matchmaking.getQueueByName(queueName);
 
 		if (queue == null) {
-			// TODO "queue doesnt exist"
-			return new ModelAndView("json/empty.json");
+			throw new JsonErrorException("Queue does not exist", bindingResult);
 		}
-
 		if (!queue.containsPlayer(this.userContext.getPlayer())) {
-			// TODO user not allowed
-			return new ModelAndView("json/empty.json");
+			throw new JsonErrorException("Player is not in this queue", bindingResult);
+		}
+		if (queue.getState() != QueueState.IN_GAME) {
+			throw new JsonErrorException("Game not ready", bindingResult);
 		}
 
-		if (queue.getState() == QueueState.IN_GAME) {
-			// TODO return pass
-		}
-
-		return new ModelAndView("json/empty.json");
+		return queue.getServer().getConfig().getPassword();
 	}
 
-	@RequestMapping(value = "/playerReady", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ModelAndView playerReady(@RequestParam final String queueName, @RequestParam final Boolean isReady) {
-		final Queue queue = this.matchmaking.getQueueByName(queueName);
+	@RequestMapping(value = "/playerReady", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public void playerReady(@RequestBody @Valid final PlayerReadyRequest playerReadyRequest, final BindingResult bindingResult) {
+
+		if (bindingResult.hasErrors()) {
+			throw new JsonErrorException("Invalid name", bindingResult);
+		}
+
+		final Queue queue = this.matchmaking.getQueueByName(playerReadyRequest.getQueueName());
 
 		if (queue == null) {
-			// TODO "queue doesnt exist"
-			return new ModelAndView("json/empty.json");
+			throw new JsonErrorException("Queue does not exist", bindingResult);
 		}
-
 		if (!queue.containsPlayer(this.userContext.getPlayer())) {
-			// TODO user not allowed
-			return new ModelAndView("json/empty.json");
+			throw new JsonErrorException("Player is not in this queue", bindingResult);
+		}
+		if (queue.getState() != QueueState.WAITING_READY) {
+			throw new JsonErrorException("Incorrect queue state", bindingResult);
 		}
 
-		if (queue.getState() == QueueState.WAITING_READY) {
-			queue.setPlayerReady(this.userContext.getPlayer(), isReady);
-			// TODO event ...
-			this.matchmaking.checkQueue(queue);
-		}
-
-		return new ModelAndView("json/empty.json");
+		queue.setPlayerReady(this.userContext.getPlayer(), playerReadyRequest.getReady());
+		// TODO event ...
+		this.matchmaking.checkQueue(queue);
 	}
 
 }
