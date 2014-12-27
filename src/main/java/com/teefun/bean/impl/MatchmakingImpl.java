@@ -164,7 +164,7 @@ public class MatchmakingImpl implements Matchmaking {
 			}
 
 			// TODO if timedout
-			if (queue.isSomeoneNotReady() || queue.hasTimedOut()) {
+			if ((queue.hasEveryResponse() && !queue.isEveryoneReady()) || queue.hasTimedOut()) {
 				this.teeworldsServerHandler.freeServer(queue.getServer());
 				queue.setQueueState(QueueState.WAITING_PLAYERS);
 				this.websocketHandler.gameAborted(queue);
