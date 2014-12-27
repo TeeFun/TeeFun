@@ -200,6 +200,8 @@ public class QueueController extends AbstractController {
 
 		if (queue.getQueueState() == QueueState.WAITING_READY) {
 			queue.setPlayerReady(this.userContext.getPlayer(), isReady);
+			// TODO event ...
+			this.matchmaking.checkQueue(queue);
 		}
 
 		return new ModelAndView("json/empty.json");
