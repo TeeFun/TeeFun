@@ -55,13 +55,13 @@ public class QueueController extends AbstractController {
 	/**
 	 * Join a queue.
 	 *
-	 * @param queue the queue name
+	 * @param queue the queue id
 	 * @return the view
 	 */
 	@RequestMapping(value = "/joinQueue", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ModelAndView joinQueue(@RequestParam final String queueName) {
+	public ModelAndView joinQueue(@RequestParam final int queueId) {
 		final Player player = this.userContext.getPlayer();
-		final Queue queue = this.matchmaking.getQueueByName(queueName);
+		final Queue queue = this.matchmaking.getQueueById(queueId);
 		if (queue == null) {
 			// TODO queue doesnt exist error
 			return new ModelAndView("json/empty.json");
@@ -87,13 +87,13 @@ public class QueueController extends AbstractController {
 	/**
 	 * Quit a queue.
 	 *
-	 * @param queue the queue name
+	 * @param queue the queue id
 	 * @return the view
 	 */
 	@RequestMapping(value = "/quitQueue", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ModelAndView quitQueue(@RequestParam final String queueName) {
+	public ModelAndView quitQueue(@RequestParam final int queueId) {
 		final Player player = this.userContext.getPlayer();
-		final Queue queue = this.matchmaking.getQueueByName(queueName);
+		final Queue queue = this.matchmaking.getQueueById(queueId);
 
 		if (queue == null) {
 			// TODO queue doesnt exist error
@@ -164,8 +164,8 @@ public class QueueController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/askPassword", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ModelAndView askPassword(@RequestParam final String queueName) {
-		final Queue queue = this.matchmaking.getQueueByName(queueName);
+	public ModelAndView askPassword(@RequestParam final int queueId) {
+		final Queue queue = this.matchmaking.getQueueById(queueId);
 
 		if (queue == null) {
 			// TODO "queue doesnt exist"
@@ -185,8 +185,8 @@ public class QueueController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/playerReady", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ModelAndView playerReady(@RequestParam final String queueName, @RequestParam final Boolean isReady) {
-		final Queue queue = this.matchmaking.getQueueByName(queueName);
+	public ModelAndView playerReady(@RequestParam final int queueId, @RequestParam final Boolean isReady) {
+		final Queue queue = this.matchmaking.getQueueById(queueId);
 
 		if (queue == null) {
 			// TODO "queue doesnt exist"
