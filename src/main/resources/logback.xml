@@ -30,6 +30,6 @@
 	<logger name="com.teefun" level="TRACE" />
 
 	<root level="WARN">
-		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE" />
 	</root>
 </configuration>
