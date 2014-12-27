@@ -124,8 +124,8 @@ public class QueueController extends AbstractController {
 	// @PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value = "/createQueue", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ModelAndView createQueue(@RequestParam final String name, @RequestParam final Integer maxSize, @RequestParam final String map, @RequestParam final String gametype,
-			@RequestParam final Integer scoreLimit, @RequestParam final Integer timeLimit) {
-		final Queue queue = new Queue(name, maxSize, map, gametype, scoreLimit, timeLimit);
+			@RequestParam final Integer scoreLimit, @RequestParam final Integer timeLimit, @RequestParam final Boolean permanent) {
+		final Queue queue = new Queue(name, maxSize, map, gametype, scoreLimit, timeLimit, permanent);
 
 		if (this.matchmaking.getQueues().contains(queue)) {
 			// TODO "Queue already exist";
@@ -171,6 +171,27 @@ public class QueueController extends AbstractController {
 
 		if (queue.getQueueState() == QueueState.IN_GAME) {
 			// TODO return pass
+		}
+
+		return new ModelAndView("json/empty.json");
+	}
+
+	@RequestMapping(value = "/playerReady", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ModelAndView playerReady(@RequestParam final String queueName, @RequestParam final Boolean isReady) {
+		final Queue queue = this.matchmaking.getQueueByName(queueName);
+
+		if (queue == null) {
+			// TODO "queue doesnt exist"
+			return new ModelAndView("json/empty.json");
+		}
+
+		if (!queue.containsPlayer(this.userContext.getPlayer())) {
+			// TODO user not allowed
+			return new ModelAndView("json/empty.json");
+		}
+
+		if (queue.getQueueState() == QueueState.WAITING_READY) {
+			queue.setPlayerReady(this.userContext.getPlayer(), isReady);
 		}
 
 		return new ModelAndView("json/empty.json");

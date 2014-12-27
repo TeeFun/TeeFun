@@ -130,7 +130,7 @@ public class MatchmakingImpl implements Matchmaking {
 	 *
 	 * @param queue the queue
 	 */
-	private void checkQueue(final Queue queue) {
+	public void checkQueue(final Queue queue) {
 		switch (queue.getQueueState()) {
 		case SUSPENDED:
 			break;

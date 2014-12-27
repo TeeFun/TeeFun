@@ -30,6 +30,13 @@
 						<span class="input-group-addon" style="width: 100px;">Time limit</span>
 						<input type="text" id="createQueueTimeLimit" class="form-control" placeholder="0">
 					</div>
+					<div class="checkbox">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" id="createQueuePermanent" placeholder="false">Is queue permanent ?
+							</label>
+						</div>
+					</div>
 					<div style="text-align: center;">
 						<button class="btn btn-default" type="submit" onClick="createQueue(); return false;">Create</button>
 					</div>

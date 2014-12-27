@@ -86,4 +86,11 @@ public interface Matchmaking {
 	 */
 	public void onServerFree(final TeeworldsServer server);
 
+	/**
+	 * Check the queue state due to a change. TODO : use event ?
+	 *
+	 * @param queue the queue to be checked
+	 */
+	public void checkQueue(Queue queue);
+
 }

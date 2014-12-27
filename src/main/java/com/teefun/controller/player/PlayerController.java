@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.teefun.bean.Matchmaking;
 import com.teefun.bean.UserContext;
 import com.teefun.controller.AbstractController;
+import com.teefun.model.Queue;
 
 /**
  * Player controller.
@@ -44,6 +45,9 @@ public class PlayerController extends AbstractController {
 	@RequestMapping(value = "/changeName", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ModelAndView changeName(@RequestParam final String name) {
 		this.userContext.getPlayer().setName(name);
+		for (final Queue queue : this.matchmaking.getQueues(this.userContext.getPlayer())) {
+			this.matchmaking.checkQueue(queue);
+		}
 		return new ModelAndView("json/empty.json");
 	}
 

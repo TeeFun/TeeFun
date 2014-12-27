@@ -37,37 +37,37 @@ public class WebSocketHandlerImpl implements WebSocketHandler {
 	@Override
 	public void queueUpdated(final Queue queue) {
 		LOGGER.debug("Queue updated event for : " + queue.getName());
-		this.template.convertAndSend("/topic/queueUpdated", new QueueData());
+		this.template.convertAndSend("/topic/queueUpdated", new QueueData(queue));
 	}
 
 	@Override
 	public void queueCreated(final Queue queue) {
 		LOGGER.debug("Queue created event for : " + queue.getName());
-		this.template.convertAndSend("/topic/queueCreated", new QueueData());
+		this.template.convertAndSend("/topic/queueCreated", new QueueData(queue));
 	}
 
 	@Override
 	public void queueDeleted(final Queue queue) {
 		LOGGER.debug("Queue deleted event for : " + queue.getName());
-		this.template.convertAndSend("/topic/queueDeleted", new QueueData());
+		this.template.convertAndSend("/topic/queueDeleted", new QueueData(queue));
 	}
 
 	@Override
 	public void gameReady(final Queue queue) {
 		LOGGER.debug("Game ready event for : " + queue.getName());
-		this.template.convertAndSend("/topic/gameReady", new QueueData());
+		this.template.convertAndSend("/topic/gameReady", new QueueData(queue));
 	}
 
 	@Override
 	public void gameStarted(final Queue queue) {
 		LOGGER.debug("Game started event for : " + queue.getName());
-		this.template.convertAndSend("/topic/gameStarted", new QueueData());
+		this.template.convertAndSend("/topic/gameStarted", new QueueData(queue));
 	}
 
 	@Override
 	public void gameAborted(final Queue queue) {
 		LOGGER.debug("Game aborted event for : " + queue.getName());
-		this.template.convertAndSend("/topic/gameAborted", new QueueData());
+		this.template.convertAndSend("/topic/gameAborted", new QueueData(queue));
 	}
 
 }

@@ -2,6 +2,7 @@ package com.teefun.model;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -17,6 +18,11 @@ import com.teefun.util.TeeworldsConfigUtil;
  *
  */
 public class Queue {
+
+	/**
+	 * Time in millis before the ready request timeout.
+	 */
+	private static final Long READY_TIMEOUT = TimeUnit.SECONDS.toMillis(30);
 
 	/**
 	 * Queue name.
@@ -66,7 +72,22 @@ public class Queue {
 	/**
 	 * Is the queue permanent ?. If true it will automatically reset after the game as finised.
 	 */
-	private boolean permanent = false;
+	private boolean permanent;
+
+	/**
+	 * List of player ready.
+	 */
+	private List<Player> playersReady;
+
+	/**
+	 * List of player not ready.
+	 */
+	private List<Player> playersNotReady;
+
+	/**
+	 * Ready start time in millis.
+	 */
+	private Long readyStartTime;
 
 	/**
 	 * Default constructor.
@@ -74,13 +95,14 @@ public class Queue {
 	 * @param name queue name
 	 * @param maxSize queue capacity
 	 */
-	public Queue(final String name, final int maxSize, final String map, final String gametype, final int scoreLimit, final int timeLimit) {
+	public Queue(final String name, final int maxSize, final String map, final String gametype, final int scoreLimit, final int timeLimit, final boolean permanent) {
 		this.name = name;
 		this.maxSize = maxSize;
 		this.map = map;
 		this.gametype = gametype;
 		this.scoreLimit = scoreLimit;
 		this.timeLimit = timeLimit;
+		this.permanent = permanent;
 	}
 
 	/**
@@ -256,6 +278,45 @@ public class Queue {
 		// Shall we make sure the server is shutdown ?
 		this.server = null;
 		this.players.clear();
+		this.playersNotReady.clear();
+		this.playersReady.clear();
+	}
+
+	/**
+	 * Set the player ready state.
+	 *
+	 * @param player the player
+	 * @param isReady is the player ready
+	 */
+	public void setPlayerReady(final Player player, final Boolean isReady) {
+		if (!this.containsPlayer(player)) {
+			return;
+		}
+
+		if (this.playersReady.contains(player) || this.playersNotReady.contains(player)) {
+			return;
+		}
+
+		if (isReady) {
+			this.playersReady.add(player);
+		} else {
+			this.playersNotReady.add(player);
+		}
+
+	}
+
+	/**
+	 * @return true if every players in queue has respond to ready question
+	 */
+	public boolean hasEveryResponse() {
+		return this.playersReady.size() + this.playersNotReady.size() == this.players.size();
+	}
+
+	/**
+	 * @return true if every players are ready
+	 */
+	public boolean isEveryoneReady() {
+		return this.playersReady.size() == this.players.size();
 	}
 
 }

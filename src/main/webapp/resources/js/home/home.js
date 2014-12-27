@@ -1,30 +1,40 @@
 var socket = new SockJS(sockJSUrl);
 stompClient = Stomp.over(socket);
+stompClient.debug = null;
 stompClient.connect({}, function(frame) {
-	alert("connected");
-	stompClient.subscribe("/topic/sendTest1", function(message){
-		alert("sendTest1: " + message);
+	stompClient.subscribe("/topic/queueUpdated", function(data){
+		alert("queueUpdated: " + data);
+		refreshQueues();
 	});
-	stompClient.subscribe("/topic/sendTest2", function(message){
-		alert("sendTest2: " + message);
+	stompClient.subscribe("/topic/queueCreated", function(data){
+		alert("queueCreated: " + data);
+		refreshQueues();
 	});
-	stompClient.send("/app/test", {}, 'hello' );
+	stompClient.subscribe("/topic/queueDeleted", function(data){
+		alert("queueDeleted: " + data);
+		refreshQueues();
+	});
+	stompClient.subscribe("/topic/gameReady", function(data){
+		alert("gameReady: " + data);
+	});
+	stompClient.subscribe("/topic/gameStarted", function(data){
+		alert("gameStarted: " + data);
+	});
+	stompClient.subscribe("/topic/gameAborted", function(data){
+		alert("gameAborted: " + data);
+	});
 });
 
-$(function () {
-  $('[data-toggle="tooltip"]').tooltip()
-})
-
-// Refresh content every X seconds
 var refreshQueues = function () {
 	$.get( "refreshQueues", function( data ) {
 		$("#queues").html( data );
 		$('[data-toggle="tooltip"]').tooltip()
 	});
 };
-setInterval(function(){
-	refreshQueues();
-}, 15000);
+
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
 
 // Keep alive (keep the player active)
 var inQueue = 0;
@@ -42,7 +52,6 @@ var changeName = function() {
 	var posting = $.post("player/changeName?name=" + newName);
 
 	posting.done(function() {
-		refreshQueues();
 		alert('Name changed to ' + newName);
 	});
 };
@@ -66,7 +75,6 @@ var joinQueue = function(queueName) {
 
 	posting.done(function() {
 		inQueue++;
-		refreshQueues();
 		alert('Joined queue : ' + queueName);
 	});
 };
@@ -76,7 +84,6 @@ var quitQueue = function(queueName) {
 
 	posting.done(function() {
 		inQueue--;
-		refreshQueues();
 		alert('Quited queue : ' +  queueName);
 	});
 };
@@ -86,8 +93,22 @@ var quitAllQueues = function() {
 
 	posting.done(function() {
 		inQueue = 0;
-		refreshQueues();
 		alert('Left all queue');
+	});
+};
+
+var askPassword = function(queueName) {
+	var posting = $.post("queue/askPassword?queueName=" + queueName);
+
+	posting.done(function(data) {
+		alert("Password is : " + data);
+	});
+};
+
+var playerReady = function(queueName, isReady) {
+	var posting = $.post("queue/playerReady?queueName=" +queueName + "&isReady" + isReady);
+
+	posting.done(function() {
 	});
 };
 
