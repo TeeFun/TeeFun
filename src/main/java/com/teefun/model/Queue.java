@@ -243,7 +243,7 @@ public class Queue {
 	public boolean equals(final Object obj) {
 		if (obj instanceof Queue) {
 			final Queue other = (Queue) obj;
-			return new EqualsBuilder().append(this.name, other.name).append(this.id, other.id).isEquals();
+			return new EqualsBuilder().append(this.id, other.id).isEquals();
 		} else {
 			return false;
 		}

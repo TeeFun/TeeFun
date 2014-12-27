@@ -1,14 +1,17 @@
 <div class="input-group">
 	<span class="input-group-btn">
 		<#if queue.containsPlayer(currentPlayer)>
-			<button class="btn btn-danger" type="button" onClick="quitQueue('${queue.getName()}');">Quit</button>
+			<button class="btn btn-danger" type="button" onClick="quitQueue(${queue.getId()});">Quit</button>
 		<#else>
-			<button class="btn btn-success" type="button" onClick="joinQueue('${queue.getName()}');">Join</button>
+			<button class="btn btn-success" type="button" onClick="joinQueue(${queue.getId()});">Join</button>
 		</#if>
 	</span>
-	<span class="input-group-addon text-overflow queue-name">${queue.getState()}</span>
 	<span class="input-group-addon text-overflow queue-name" data-toggle="tooltip" data-placement="top" data-html="true" title="
 		<table>
+			<tr>
+				<td style='text-align: right;'>State:&nbsp;</td>
+				<td style='text-align: left;'>${queue.getState()}</td>
+			</tr>
 			<tr>
 				<td style='text-align: right;'>Map:&nbsp;</td>
 				<td style='text-align: left;'>${queue.getMap()}</td>
@@ -37,11 +40,11 @@
 		</div>
 	</span>
 	<span class="input-group-btn">
-		<button class="btn btn-primary" id="expand-${queue.getName()}-button" type="button" onClick="expandQueue('${queue.getName()}');"><span class="caret"></span></button>
+		<button class="btn btn-primary" id="expand-${queue.getId()}-button" type="button" onClick="expandQueue('${queue.getId()}');"><span class="caret"></span></button>
 	</span>
 </div>
 
-<div class="panel panel-default" id="expand-${queue.getName()}-content" style="display: none;">
+<div class="panel panel-default" id="expand-${queue.getId()}-content" style="display: none;">
 	<div class="panel-body">
 		<table class="table table-bordered players">
 			<tbody>

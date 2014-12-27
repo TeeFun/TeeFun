@@ -8,10 +8,11 @@ var createQueue = function() {
 	var queuePermanent = 	$("#createQueuePermanent").prop('checked');
 	var posting = $.post("createQueue?name=" + queueName + "&maxSize=" + queueMaxSize
 							+ "&map=" + queueMap + "&gametype=" + queueGametype
-							+ "&scoreLimit=" + queueScoreLimit + "&timeLimit=" + queueTimeLimit + "&permanent=" + queuePermanent);
+							+ "&scoreLimit=" + queueScoreLimit + "&timeLimit=" + queueTimeLimit
+							+ "&permanent=" + queuePermanent);
 
 	posting.done(function() {
-		console.log('Created queue : ' + queueName);
+		console.log("Created queue: " + queueName);
 	});
 };
 
@@ -20,6 +21,6 @@ var deleteQueue = function() {
 	var posting = $.post("deleteQueue?queueName=" + queueName );
 
 	posting.done(function() {
-		console.log('Deleted queue : ' + queueName);
+		console.log("Deleted queue: " + queueName);
 	});
 };

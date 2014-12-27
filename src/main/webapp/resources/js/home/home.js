@@ -31,24 +31,23 @@ stompClient.connect({}, function(frame) {
 	});
 });
 
-var refreshQueues = function () {
-	$.get( "refreshQueues", function( data ) {
-		$("#queues").html( data );
-		$('[data-toggle="tooltip"]').tooltip()
+var refreshQueues = function() {
+	$.get("refreshQueues", function(data) {
+		$("#queues").html(data);
+		$("[data-toggle='tooltip']").tooltip()
 	});
 };
 
-$(function () {
-  $('[data-toggle="tooltip"]').tooltip()
+$(function() {
+	$("[data-toggle='tooltip']").tooltip()
 })
 
 // Keep alive (keep the player active)
 var inQueue = 0;
-if (isInQueue) {
+if(isInQueue)
 	inQueue = nbOfQueuesAtLoad;
-}
-setInterval(function(){
-	if (inQueue > 0) {
+setInterval(function() {
+	if(inQueue > 0) {
 		$.get("player/keepAlive");
 	}
 }, 5000);
@@ -58,7 +57,7 @@ var changeName = function() {
 	var posting = $.post("player/changeName?name=" + newName);
 
 	posting.done(function() {
-		console.log('Name changed to ' + newName);
+		console.log("Name changed to: " + newName);
 	});
 };
 
@@ -76,21 +75,21 @@ var expandQueue = function(queueName) {
 	}
 };
 
-var joinQueue = function(queueName) {
-	var posting = $.post("queue/joinQueue?queueName=" + queueName);
+var joinQueue = function(queueId) {
+	var posting = $.post("queue/joinQueue?queueId=" + queueId);
 
 	posting.done(function() {
 		inQueue++;
-		console.log('Joined queue : ' + queueName);
+		console.log("Joined queue: " + queueId);
 	});
 };
 
-var quitQueue = function(queueName) {
-	var posting = $.post("queue/quitQueue?queueName=" + queueName);
+var quitQueue = function(queueId) {
+	var posting = $.post("queue/quitQueue?queueId=" + queueId);
 
 	posting.done(function() {
 		inQueue--;
-		console.log('Quited queue : ' +  queueName);
+		console.log("Quited queue: " + queueId);
 	});
 };
 
@@ -99,20 +98,20 @@ var quitAllQueues = function() {
 
 	posting.done(function() {
 		inQueue = 0;
-		console.log('Left all queue');
+		console.log("Left all queues");
 	});
 };
 
 var askPassword = function(queueName) {
-	var posting = $.post("queue/askPassword?queueName=" + queueName);
+	var posting = $.post("queue/askPassword?queueName=" + queueId);
 
 	posting.done(function(data) {
-		console.log("Password is : " + data);
+		console.log("Password is: " + data);
 	});
 };
 
 var playerReady = function(isReady) {
-	$('#gameReadyModal').modal('hide');
+	$('#gameReadyModal').modal("hide");
 	var posting = $.post("queue/playerReady?queueName=" + readyQueueName + "&isReady=" + isReady);
 
 	posting.done(function() {
@@ -120,6 +119,45 @@ var playerReady = function(isReady) {
 };
 
 var showReadyPanel = function(queueName) {
-	$('#gameReadyModal').modal('show');
+	$('#gameReadyModal').modal("show");
 }
 
+
+
+function QueueController($scope, $http) {
+    $scope.queues = [];
+    $scope.addQueue = function(data) {
+		$scope.queues.push(data);
+    };
+    $scope.findQueue = function(queueId) {
+		for(var i = 0; i < arrayLength; i++) {
+			if($scope.queues[i] == queueId)
+				return i;
+		}
+		return -1;
+    };
+    $scope.removeQueue = function(queueId) {
+		var index = findQueue(queueId);
+		if(index != -1)
+			$scope.queues.remove(index);
+    };
+    $scope.updateQueue = function(queueId, data) {
+		var index = findQueue(queueId);
+		if(index != -1)
+			$scope.queues[index] = data;
+    };
+
+	$scope.addQueue(
+		{
+			id: 1,
+			name: "Peter",
+			map: "Jhons",
+			gametype: "Jhons",
+			scorelimit: "Jhons",
+			timelimit: "Jhons",
+			containsPlayer: true
+		}
+	);
+}
+
+var app = angular.module('myApp', []);
