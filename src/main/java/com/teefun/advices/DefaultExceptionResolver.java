@@ -19,12 +19,12 @@ import org.springframework.web.servlet.ModelAndView;
  *
  */
 @Component
-public class DefaultControllerAdvice implements HandlerExceptionResolver {
+public class DefaultExceptionResolver implements HandlerExceptionResolver {
 
 	/**
 	 * Class logger.
 	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultControllerAdvice.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultExceptionResolver.class);
 
 	@Override
 	public ModelAndView resolveException(final HttpServletRequest request, final HttpServletResponse response, final Object handler, final Exception ex) {
