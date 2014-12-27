@@ -35,6 +35,14 @@ public interface Matchmaking {
 	Queue getQueueByName(String name);
 
 	/**
+	 * Get a queue by id.
+	 *
+	 * @param id the id
+	 * @return the queue
+	 */
+	Queue getQueueById(Integer id);
+
+	/**
 	 * Join a queue by its name.
 	 *
 	 * @param player the player

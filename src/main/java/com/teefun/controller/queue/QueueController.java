@@ -64,14 +64,14 @@ public class QueueController extends AbstractController {
 	 * @param queue the queue name
 	 */
 	@RequestMapping(value = "/joinQueue", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void joinQueue(@RequestBody @Valid final String queueId, final BindingResult bindingResult) {
+	public void joinQueue(@RequestBody @Valid final Integer queueId, final BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors()) {
 			throw new JsonErrorException("Invalid queue id", bindingResult);
 		}
 
 		final Player player = this.userContext.getPlayer();
-		final Queue queue = this.matchmaking.getQueueByName(queueId);
+		final Queue queue = this.matchmaking.getQueueById(queueId);
 
 		if (queue == null) {
 			throw new JsonErrorException("Queue does not exist", bindingResult);
@@ -95,14 +95,14 @@ public class QueueController extends AbstractController {
 	 * @param queue the queue name
 	 */
 	@RequestMapping(value = "/quitQueue", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void quitQueue(@RequestBody @Valid final String queueId, final BindingResult bindingResult) {
+	public void quitQueue(@RequestBody @Valid final Integer queueId, final BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors()) {
 			throw new JsonErrorException("Invalid queue id", bindingResult);
 		}
 
 		final Player player = this.userContext.getPlayer();
-		final Queue queue = this.matchmaking.getQueueByName(queueId);
+		final Queue queue = this.matchmaking.getQueueById(queueId);
 
 		if (queue == null) {
 			throw new JsonErrorException("Queue does not exist", bindingResult);
@@ -140,6 +140,11 @@ public class QueueController extends AbstractController {
 			throw new JsonErrorException("Invalid request", bindingResult);
 		}
 
+		final Queue existQueue = this.matchmaking.getQueueByName(createQueueRequest.getName());
+		if (existQueue != null) {
+			throw new JsonErrorException("A queue with that name already exist", bindingResult);
+		}
+
 		final Queue queue = new Queue(createQueueRequest.getName(), createQueueRequest.getMaxSize(), createQueueRequest.getMap(), createQueueRequest.getGametype(), createQueueRequest.getScoreLimit(),
 				createQueueRequest.getTimeLimit(), createQueueRequest.getPermanent());
 
@@ -151,7 +156,7 @@ public class QueueController extends AbstractController {
 	 */
 	// @PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value = "/deleteQueue", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void deleteQueue(@RequestBody @Valid final String queueId, final BindingResult bindingResult) {
+	public void deleteQueue(@RequestBody @Valid final Integer queueId, final BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors()) {
 			throw new JsonErrorException("Invalid queue id", bindingResult);
@@ -168,13 +173,13 @@ public class QueueController extends AbstractController {
 
 	@RequestMapping(value = "/askPassword", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public String askPassword(@RequestBody @Valid final String queueId, final BindingResult bindingResult) {
+	public String askPassword(@RequestBody @Valid final Integer queueId, final BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors()) {
 			throw new JsonErrorException("Invalid queue id", bindingResult);
 		}
 
-		final Queue queue = this.matchmaking.getQueueByName(queueId);
+		final Queue queue = this.matchmaking.getQueueById(queueId);
 
 		if (queue == null) {
 			throw new JsonErrorException("Queue does not exist", bindingResult);
@@ -196,7 +201,7 @@ public class QueueController extends AbstractController {
 			throw new JsonErrorException("Invalid request", bindingResult);
 		}
 
-		final Queue queue = this.matchmaking.getQueueByName(playerReadyRequest.getQueueId());
+		final Queue queue = this.matchmaking.getQueueById(playerReadyRequest.getQueueId());
 
 		if (queue == null) {
 			throw new JsonErrorException("Queue does not exist", bindingResult);

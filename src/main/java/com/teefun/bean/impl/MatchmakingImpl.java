@@ -100,6 +100,16 @@ public class MatchmakingImpl implements Matchmaking {
 	}
 
 	@Override
+	public Queue getQueueById(final Integer id) {
+		for (final Queue queue : this.availableQueues) {
+			if (id == queue.getId()) {
+				return queue;
+			}
+		}
+		return null;
+	}
+
+	@Override
 	public void addQueue(final Queue queue) {
 		if (!this.availableQueues.contains(queue)) {
 			this.availableQueues.add(queue);
@@ -208,4 +218,5 @@ public class MatchmakingImpl implements Matchmaking {
 			this.checkQueue(queue);
 		}
 	}
+
 }
