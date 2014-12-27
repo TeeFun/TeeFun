@@ -44,13 +44,31 @@ $(function() {
 
 // Keep alive (keep the player active)
 var inQueue = 0;
-if(isInQueue)
+if(isInQueue) {
 	inQueue = nbOfQueuesAtLoad;
+	// Immedia keep alive 
+	$.get("player/keepAlive");
+}
+
 setInterval(function() {
 	if(inQueue > 0) {
 		$.get("player/keepAlive");
 	}
 }, 5000);
+
+// Ask if the player really wants to leave if he is in queue
+$(document).ready(function(){
+	$(window).bind('beforeunload', function(){
+		if (inQueue > 0) {
+		  return "You are currently in a queue. Leaving the page will removing you from all queues. Are you sure you want to leave ?";
+		}
+	});
+	$(window).bind('unload', function(){
+		// Try to quit all queues on unload
+		// TODO a little bit buggy
+		quitAllQueues();
+	});
+});
 
 var changeName = function() {
 	var newName = $("#changeNameForm").find("input[name='nickname']").val();
