@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.teefun.model.teeworlds.TeeworldsConfig;
 import com.teefun.model.teeworlds.TeeworldsServer;
@@ -22,14 +23,15 @@ import com.teefun.util.TeeworldsConfigUtil;
 public class Queue {
 
 	/**
-	 * Time in millis before the ready request timeout.
-	 */
-	private static final Long READY_TIMEOUT = TimeUnit.SECONDS.toMillis(30);
-
-	/**
 	 * Queue counter to generate id.
 	 */
 	private static final AtomicInteger QUEUE_COUNTER = new AtomicInteger();
+
+	/**
+	 * Time in seconds before the ready request timeout.
+	 */
+	@Value("${queue.ready.ttl}")
+	private static Long READY_TIMEOUT;
 
 	/**
 	 * Queue id.
@@ -365,7 +367,7 @@ public class Queue {
 		if (this.readyStartTime == null) {
 			return true;
 		}
-		return System.currentTimeMillis() - this.readyStartTime > READY_TIMEOUT;
+		return System.currentTimeMillis() - this.readyStartTime > TimeUnit.SECONDS.toMillis(READY_TIMEOUT);
 	}
 
 	/**

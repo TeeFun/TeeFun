@@ -4,6 +4,7 @@
 package com.teefun.bean.impl;
 
 import java.io.Serializable;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.PostConstruct;
 
@@ -38,7 +39,7 @@ public class UserContextImpl implements UserContext, Serializable {
 	/**
 	 * Player count.
 	 */
-	private static int playerCount = 0;
+	private static final AtomicInteger PLAYER_COUNTER = new AtomicInteger();
 
 	/**
 	 * The player.
@@ -57,7 +58,7 @@ public class UserContextImpl implements UserContext, Serializable {
 	 * Look for a unique name for the player.
 	 */
 	public static String getUniqueName() {
-		return DEFAULT_NAME + " " + String.valueOf(playerCount++);
+		return DEFAULT_NAME + " " + String.valueOf(PLAYER_COUNTER.getAndAdd(1));
 	}
 
 	/**

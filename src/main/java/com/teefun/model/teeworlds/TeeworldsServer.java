@@ -5,6 +5,8 @@ package com.teefun.model.teeworlds;
 
 import java.util.concurrent.TimeUnit;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import com.teefun.util.ProcessUtil;
 
 /**
@@ -16,9 +18,10 @@ import com.teefun.util.ProcessUtil;
 public class TeeworldsServer {
 
 	/**
-	 * Server time to live. Default 30 min.
+	 * Server time to live in minutes.
 	 */
-	private static final Long SERVER_TTL = TimeUnit.MINUTES.toMillis(2);
+	@Value("${teeworlds.server.ttl}")
+	private static Long SERVER_TTL;
 
 	/**
 	 * Server configuration.
@@ -101,7 +104,7 @@ public class TeeworldsServer {
 	 * @return true if the server has timed out and should be killed
 	 */
 	public boolean hasTimedOut() {
-		return System.currentTimeMillis() - this.startTime >= SERVER_TTL;
+		return System.currentTimeMillis() - this.startTime >= TimeUnit.MINUTES.toMillis(SERVER_TTL);
 	}
 
 	/**
