@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.teefun.model.Player;
 import com.teefun.model.Queue;
+import com.teefun.model.teeworlds.TeeworldsServer;
 
 /**
  * Class to handle the matchmaking system.
@@ -77,5 +78,12 @@ public interface Matchmaking {
 	 * @return true if the player is at least in one queue
 	 */
 	boolean isInQueue(Player player);
+
+	/**
+	 * On server free event.
+	 *
+	 * @param server the server freed
+	 */
+	public void onServerFree(final TeeworldsServer server);
 
 }

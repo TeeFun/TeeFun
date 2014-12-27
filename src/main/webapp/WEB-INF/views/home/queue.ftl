@@ -26,7 +26,7 @@
 			</tr>
 		</table>
 		">${queue.getName()}</span>
-		<#if queue.serverConfig.password != "">
+		<#if (queue.server.config.password)!"" != "">
 			<span class="input-group-addon text-overflow queue-name">${queue.serverConfig.password}</span>
 		</#if>
 	<span class="input-group-addon queue-progress">

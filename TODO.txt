@@ -1,6 +1,6 @@
 Authentication
 CSRF filter
-websocket
+websocket errors
 json errors
 validators
 eventBus when server available

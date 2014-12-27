@@ -188,4 +188,14 @@ public class MatchmakingImpl implements Matchmaking {
 		}
 		this.websocketHandler.queueUpdated(queue);
 	}
+
+	public void onServerFree(final TeeworldsServer server) {
+		// TODO use an event system -_-
+		for (final Queue queue : this.availableQueues) {
+			if (queue.getServer() == server) {
+				queue.setQueueState(QueueState.GAME_OVER);
+			}
+			this.checkQueue(queue);
+		}
+	}
 }
