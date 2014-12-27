@@ -110,7 +110,7 @@ public class TeeworldsServerHandlerImpl implements TeeworldsServerHandler {
 	public void cleanupServers() throws IOException {
 		try {
 			LOGGER.debug("Cleaning zombie servers.");
-			new ProcessBuilder(this.TEEWORLDS_CLEANUP_SERVERS_SCRIPT).start();
+			new ProcessBuilder(TEEWORLDS_CLEANUP_SERVERS_SCRIPT).start();
 		} catch (final Exception exception) {
 			LOGGER.error("Error while cleaning zombie servers.", exception);
 		}
@@ -118,26 +118,26 @@ public class TeeworldsServerHandlerImpl implements TeeworldsServerHandler {
 
 	@Override
 	public TeeworldsServer createAndBorrowServer(final TeeworldsConfig configuration) {
-		if (this.borrowedServers.size() >= this.MAX_SERVER_AVAILABLE) {
+		if (this.borrowedServers.size() >= MAX_SERVER_AVAILABLE) {
 			throw new TeeFunRuntimeException("Maximum server size reached.");
 		}
 
 		final String serverId = this.generateUUID();
 		try {
-			final Integer port = SocketUtils.findAvailableUdpPort(this.TEEWORLDS_MIN_PORT, this.TEEWORLDS_MAX_PORT);
+			final Integer port = SocketUtils.findAvailableUdpPort(TEEWORLDS_MIN_PORT, TEEWORLDS_MAX_PORT);
 			configuration.setVariable("sv_port", port);
 		} catch (final IllegalStateException exception) {
 			LOGGER.error("Could not find any port.", exception);
 			throw new TeeFunRuntimeException("Could not find any port.", exception);
 		}
-		configuration.setVariable("logfile", String.format(this.LOG_FILENAME_PATTERN, serverId));
+		configuration.setVariable("logfile", String.format(LOG_FILENAME_PATTERN, serverId));
 		configuration.generatePassword();
 
 		final TeeworldsServer server = new TeeworldsServer(configuration, serverId, System.currentTimeMillis(), this.SERVER_TTL);
 
 		this.borrowedServers.add(server);
 
-		LOGGER.debug("Created server : " + server.getServerId() + ". " + this.getNbFreeServers() + "/" + this.MAX_SERVER_AVAILABLE + " .");
+		LOGGER.debug("Created server : " + server.getServerId() + ". " + this.getNbFreeServers() + "/" + MAX_SERVER_AVAILABLE + " .");
 		return server;
 	}
 
@@ -155,9 +155,9 @@ public class TeeworldsServerHandlerImpl implements TeeworldsServerHandler {
 			throw new TeeFunRuntimeException(msg);
 		}
 		try {
-			final Path configPath = Paths.get(String.format(this.CONFIG_FILENAME_PATTERN, server.getServerId()));
+			final Path configPath = Paths.get(String.format(CONFIG_FILENAME_PATTERN, server.getServerId()));
 			server.getConfig().generateConfigFile(configPath);
-			final Process process = new ProcessBuilder(this.TEEWORLDS_SERVER_PATH, "-f", configPath.toAbsolutePath().toString()).start();
+			final Process process = new ProcessBuilder(TEEWORLDS_SERVER_PATH, "-f", configPath.toAbsolutePath().toString()).start();
 			server.setProcess(process);
 
 			LOGGER.debug("Server : " + server.getServerId() + " started.");
@@ -183,12 +183,12 @@ public class TeeworldsServerHandlerImpl implements TeeworldsServerHandler {
 
 	@Override
 	public boolean hasServerAvailable() {
-		return this.borrowedServers.size() < this.MAX_SERVER_AVAILABLE;
+		return this.borrowedServers.size() < MAX_SERVER_AVAILABLE;
 	}
 
 	@Override
 	public Integer getNbFreeServers() {
-		return this.MAX_SERVER_AVAILABLE - this.borrowedServers.size();
+		return MAX_SERVER_AVAILABLE - this.borrowedServers.size();
 	}
 
 }

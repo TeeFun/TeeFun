@@ -50,7 +50,7 @@ public class MatchmakingImpl implements Matchmaking {
 	 * Time in seconds before the ready request timeout.
 	 */
 	@Value("${queue.ready.ttl}")
-	private static Long READY_TIMEOUT;
+	private Long READY_TIMEOUT;
 
 	/**
 	 * Teeworlds server handler.
@@ -263,7 +263,7 @@ public class MatchmakingImpl implements Matchmaking {
 					MatchmakingImpl.this.eventBus.post(new QueueReadyTimedOutEvent(queue));
 				}
 			}
-		}, READY_TIMEOUT, TimeUnit.SECONDS);
+		}, this.READY_TIMEOUT, TimeUnit.SECONDS);
 	}
 
 	/**
