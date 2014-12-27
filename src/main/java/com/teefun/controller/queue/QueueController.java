@@ -15,6 +15,7 @@ import com.teefun.bean.UserContext;
 import com.teefun.controller.AbstractController;
 import com.teefun.model.Player;
 import com.teefun.model.Queue;
+import com.teefun.model.QueueState;
 
 /**
  * Queue controller.
@@ -151,6 +152,27 @@ public class QueueController extends AbstractController {
 		}
 
 		this.matchmaking.removeQueue(queue);
+		return new ModelAndView("json/empty.json");
+	}
+
+	@RequestMapping(value = "/askPassword", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ModelAndView askPassword(@RequestParam final String queueName) {
+		final Queue queue = this.matchmaking.getQueueByName(queueName);
+
+		if (queue == null) {
+			// TODO "queue doesnt exist"
+			return new ModelAndView("json/empty.json");
+		}
+
+		if (!queue.containsPlayer(this.userContext.getPlayer())) {
+			// TODO user not allowed
+			return new ModelAndView("json/empty.json");
+		}
+
+		if (queue.getQueueState() == QueueState.IN_GAME) {
+			// TODO return pass
+		}
+
 		return new ModelAndView("json/empty.json");
 	}
 

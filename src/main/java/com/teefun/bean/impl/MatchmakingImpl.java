@@ -16,6 +16,7 @@ import com.teefun.model.Queue;
 import com.teefun.model.QueueState;
 import com.teefun.model.teeworlds.TeeworldsServer;
 import com.teefun.service.teeworlds.TeeworldsServerHandler;
+import com.teefun.service.websocket.WebSocketHandler;
 
 /**
  * Default impl for {@link Matchmaking}.
@@ -35,6 +36,12 @@ public class MatchmakingImpl implements Matchmaking {
 	 */
 	@Resource
 	private TeeworldsServerHandler teeworldsServerHandler;
+
+	/**
+	 * Websocket handler.
+	 */
+	@Resource
+	private WebSocketHandler websocketHandler;
 
 	/**
 	 * List of available queues.
@@ -124,9 +131,9 @@ public class MatchmakingImpl implements Matchmaking {
 	private void checkQueue(final Queue queue) {
 		switch (queue.getQueueState()) {
 		case SUSPENDED:
-			return;
+			break;
 		case IN_GAME:
-			return;
+			break;
 		case WAITING_PLAYERS:
 			if (queue.isFull()) {
 				queue.setQueueState(QueueState.WAITING_SERVER);
@@ -136,35 +143,39 @@ public class MatchmakingImpl implements Matchmaking {
 					final TeeworldsServer server = this.teeworldsServerHandler.createAndBorrowServer(queue.makeConfig());
 					queue.setServer(server);
 					queue.setQueueState(QueueState.WAITING_READY);
+					this.websocketHandler.gameReady(queue);
 					LOGGER.debug(String.format("Queue '%s' has found a server.", queue.getName()));
 				}
 			}
-			return;
+			break;
 		case WAITING_READY:
 			// TODO check if all ready or ready timed out
 			// TODO if all ready
 			this.teeworldsServerHandler.startServer(queue.getServer());
 			queue.setQueueState(QueueState.IN_GAME);
 			queue.getServer().getConfig().getPassword();
+			this.websocketHandler.gameStarted(queue);
 			LOGGER.debug(String.format("Queue '%s' has started its game.", queue.getName()));
 			// TODO send serverConfig.getPassword() to all players.
 
 			// TODO if timedout
 			// this.teeworldsServerHandler.freeServer(queue.getServer());
 			// queue.setQueueState(QueueState.WAITING_PLAYERS);
+			// this.websocketHandler.gameAborted(queue);
 			// queue.setServer(null);
 			// TODO remove the leavers
 			// LOGGER.debug(String.format("Queue '%s' has terminated. Players were not ready.", queue.getName()));
-			return;
+			break;
 		case WAITING_SERVER:
 			// FIXME Thread-Safe ?
 			if (this.teeworldsServerHandler.hasServerAvailable()) {
 				final TeeworldsServer server = this.teeworldsServerHandler.createAndBorrowServer(queue.makeConfig());
 				queue.setServer(server);
 				queue.setQueueState(QueueState.WAITING_READY);
+				this.websocketHandler.gameReady(queue);
 				LOGGER.debug(String.format("Queue '%s' has found a server.", queue.getName()));
 			}
-			return;
+			break;
 		case GAME_OVER:
 			if (queue.isPermanent()) {
 				LOGGER.debug(String.format("Queue '%s' has terminated and has been reset.", queue.getName()));
@@ -173,6 +184,8 @@ public class MatchmakingImpl implements Matchmaking {
 				LOGGER.debug(String.format("Queue '%s' has terminated.", queue.getName()));
 				this.removeQueue(queue);
 			}
+			break;
 		}
+		this.websocketHandler.queueUpdated(queue);
 	}
 }
