@@ -113,7 +113,7 @@ var askPassword = function(queueName) {
 
 var playerReady = function(isReady) {
 	$('#gameReadyModal').modal('hide');
-	var posting = $.post("queue/playerReady?queueName=" + readyQueueName + "&isReady" + isReady);
+	var posting = $.post("queue/playerReady?queueName=" + readyQueueName + "&isReady=" + isReady);
 
 	posting.done(function() {
 	});
