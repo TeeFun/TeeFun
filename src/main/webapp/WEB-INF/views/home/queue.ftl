@@ -26,7 +26,7 @@
 			</tr>
 		</table>
 		">${queue.getName()}</span>
-		<#if (queue.server.config.password)?? && queue.server.config.password?has_content>
+		<#if queue.containsPlayer(currentPlayer) && queue.containsPlayer(currentPlayer)(queue.server.config.password)?? && queue.server.config.password?has_content>
 			<span class="input-group-addon text-overflow queue-name">${queue.server.config.password}</span>
 		</#if>
 	<span class="input-group-addon queue-progress">
