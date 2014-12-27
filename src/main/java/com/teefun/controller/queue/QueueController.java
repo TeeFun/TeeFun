@@ -64,14 +64,14 @@ public class QueueController extends AbstractController {
 	 * @param queue the queue name
 	 */
 	@RequestMapping(value = "/joinQueue", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void joinQueue(@RequestBody @Valid final String queueName, final BindingResult bindingResult) {
+	public void joinQueue(@RequestBody @Valid final String queueId, final BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors()) {
-			throw new JsonErrorException("Invalid name", bindingResult);
+			throw new JsonErrorException("Invalid queue id", bindingResult);
 		}
 
 		final Player player = this.userContext.getPlayer();
-		final Queue queue = this.matchmaking.getQueueByName(queueName);
+		final Queue queue = this.matchmaking.getQueueByName(queueId);
 
 		if (queue == null) {
 			throw new JsonErrorException("Queue does not exist", bindingResult);
@@ -95,14 +95,14 @@ public class QueueController extends AbstractController {
 	 * @param queue the queue name
 	 */
 	@RequestMapping(value = "/quitQueue", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void quitQueue(@RequestBody @Valid final String queueName, final BindingResult bindingResult) {
+	public void quitQueue(@RequestBody @Valid final String queueId, final BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors()) {
-			throw new JsonErrorException("Invalid name", bindingResult);
+			throw new JsonErrorException("Invalid queue id", bindingResult);
 		}
 
 		final Player player = this.userContext.getPlayer();
-		final Queue queue = this.matchmaking.getQueueByName(queueName);
+		final Queue queue = this.matchmaking.getQueueByName(queueId);
 
 		if (queue == null) {
 			throw new JsonErrorException("Queue does not exist", bindingResult);
@@ -137,15 +137,11 @@ public class QueueController extends AbstractController {
 	public void createQueue(@RequestBody @Valid final CreateQueueRequest createQueueRequest, final BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors()) {
-			throw new JsonErrorException("Invalid name", bindingResult);
+			throw new JsonErrorException("Invalid request", bindingResult);
 		}
 
 		final Queue queue = new Queue(createQueueRequest.getName(), createQueueRequest.getMaxSize(), createQueueRequest.getMap(), createQueueRequest.getGametype(), createQueueRequest.getScoreLimit(),
 				createQueueRequest.getTimeLimit(), createQueueRequest.getPermanent());
-
-		if (this.matchmaking.getQueues().contains(queue)) {
-			throw new JsonErrorException("Queue already exist", bindingResult);
-		}
 
 		this.matchmaking.addQueue(queue);
 	}
@@ -155,13 +151,13 @@ public class QueueController extends AbstractController {
 	 */
 	// @PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value = "/deleteQueue", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void deleteQueue(@RequestBody @Valid final String queueName, final BindingResult bindingResult) {
+	public void deleteQueue(@RequestBody @Valid final String queueId, final BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors()) {
-			throw new JsonErrorException("Invalid name", bindingResult);
+			throw new JsonErrorException("Invalid queue id", bindingResult);
 		}
 
-		final Queue queue = this.matchmaking.getQueueByName(queueName);
+		final Queue queue = this.matchmaking.getQueueByName(queueId);
 
 		if (queue == null) {
 			throw new JsonErrorException("Queue does not exist", bindingResult);
@@ -172,13 +168,13 @@ public class QueueController extends AbstractController {
 
 	@RequestMapping(value = "/askPassword", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public String askPassword(@RequestBody @Valid final String queueName, final BindingResult bindingResult) {
+	public String askPassword(@RequestBody @Valid final String queueId, final BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors()) {
-			throw new JsonErrorException("Invalid name", bindingResult);
+			throw new JsonErrorException("Invalid queue id", bindingResult);
 		}
 
-		final Queue queue = this.matchmaking.getQueueByName(queueName);
+		final Queue queue = this.matchmaking.getQueueByName(queueId);
 
 		if (queue == null) {
 			throw new JsonErrorException("Queue does not exist", bindingResult);
@@ -197,10 +193,10 @@ public class QueueController extends AbstractController {
 	public void playerReady(@RequestBody @Valid final PlayerReadyRequest playerReadyRequest, final BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors()) {
-			throw new JsonErrorException("Invalid name", bindingResult);
+			throw new JsonErrorException("Invalid request", bindingResult);
 		}
 
-		final Queue queue = this.matchmaking.getQueueByName(playerReadyRequest.getQueueName());
+		final Queue queue = this.matchmaking.getQueueByName(playerReadyRequest.getQueueId());
 
 		if (queue == null) {
 			throw new JsonErrorException("Queue does not exist", bindingResult);

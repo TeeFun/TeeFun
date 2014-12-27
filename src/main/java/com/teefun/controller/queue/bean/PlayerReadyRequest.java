@@ -16,22 +16,22 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 public class PlayerReadyRequest {
 
 	@JsonProperty
-	private final String queueName;
+	private final String queueId;
 
 	@JsonProperty
 	private final Boolean ready;
 
-	public PlayerReadyRequest(final String queueName, final Boolean ready) {
+	public PlayerReadyRequest(final String queueId, final Boolean ready) {
 		super();
-		this.queueName = queueName;
+		this.queueId = queueId;
 		this.ready = ready;
 	}
 
 	/**
-	 * @return the {@link #queueName}
+	 * @return the {@link #queueId}
 	 */
-	public String getQueueName() {
-		return this.queueName;
+	public String getQueueId() {
+		return this.queueId;
 	}
 
 	/**
