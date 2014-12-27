@@ -52,6 +52,7 @@ public class PlayerController extends AbstractController {
 	 * @param name the new name
 	 */
 	@RequestMapping(value = "/changeName", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
 	public String changeName(@RequestBody @Valid final String name, final BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors()) {

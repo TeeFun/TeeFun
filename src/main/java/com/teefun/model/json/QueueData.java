@@ -23,10 +23,25 @@ public class QueueData implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@JsonProperty("name")
+	/**
+	 * Queue id.
+	 */
+	@JsonProperty
+	private final Integer id;
+
+	/**
+	 * Queue name.
+	 */
+	@JsonProperty
 	private final String name;
 
+	/**
+	 * Default constructor from a queue.
+	 *
+	 * @param queue the queue
+	 */
 	public QueueData(final Queue queue) {
+		this.id = queue.getId();
 		this.name = queue.getName();
 	}
 

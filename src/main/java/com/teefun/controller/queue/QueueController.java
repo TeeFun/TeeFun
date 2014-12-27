@@ -69,7 +69,9 @@ public class QueueController extends AbstractController {
 	/**
 	 * Join a queue.
 	 *
-	 * @param queue the queue name
+	 * @param queueId the queue id
+	 * @param bindingResult the binding result
+	 * @return an empty json
 	 */
 	@RequestMapping(value = "/joinQueue", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
@@ -103,7 +105,9 @@ public class QueueController extends AbstractController {
 	/**
 	 * Quit a queue.
 	 *
-	 * @param queue the queue name
+	 * @param queueId the queue id
+	 * @param bindingResult the binding result
+	 * @return an empty json
 	 */
 	@RequestMapping(value = "/quitQueue", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
@@ -136,6 +140,8 @@ public class QueueController extends AbstractController {
 
 	/**
 	 * Quit all queues.
+	 *
+	 * @return an empty json
 	 */
 	@RequestMapping(value = "/quitAllQueues", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
@@ -148,6 +154,10 @@ public class QueueController extends AbstractController {
 
 	/**
 	 * Create a queue.
+	 *
+	 * @param createQueueRequest the request
+	 * @param bindingResult the binding result
+	 * @return an empty json
 	 */
 	// @PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value = "/createQueue", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -173,6 +183,10 @@ public class QueueController extends AbstractController {
 
 	/**
 	 * Delete a queue.
+	 *
+	 * @param queueId the queue id
+	 * @param bindingResult the binding result
+	 * @return an empty json
 	 */
 	// @PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value = "/deleteQueue", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -194,6 +208,13 @@ public class QueueController extends AbstractController {
 		return EMPTY_JSON;
 	}
 
+	/**
+	 * Player is ready/notready.
+	 *
+	 * @param queueId the queue id
+	 * @param bindingResult the binding result
+	 * @return the password
+	 */
 	@RequestMapping(value = "/askPassword", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public String askPassword(@RequestBody @Valid final Integer queueId, final BindingResult bindingResult) {
@@ -217,6 +238,13 @@ public class QueueController extends AbstractController {
 		return queue.getServer().getConfig().getPassword();
 	}
 
+	/**
+	 * Player is ready/notready.
+	 *
+	 * @param playerReadyRequest the request
+	 * @param bindingResult the binding result
+	 * @return an empty json
+	 */
 	@RequestMapping(value = "/playerReady", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public String playerReady(@RequestBody @Valid final PlayerReadyRequest playerReadyRequest, final BindingResult bindingResult) {

@@ -1,5 +1,5 @@
 // TODO refactor this
-var readyQueueName;
+var readyQueueId;
 
 var socket = new SockJS(sockJSUrl);
 stompClient = Stomp.over(socket);
@@ -19,7 +19,7 @@ stompClient.connect({}, function(frame) {
 	});
 	stompClient.subscribe("/topic/gameReady", function(data){
 		console.log("gameReady: " + data);
-		readyQueueName = JSON.parse(data.body).name;
+		var readyQueueName = JSON.parse(data.body).name;
 		showReadyPanel(readyQueueName);
 	});
 	stompClient.subscribe("/topic/gameStarted", function(data){
@@ -54,10 +54,8 @@ setInterval(function() {
 
 var changeName = function() {
 	var newName = $("#changeNameForm").find("input[name='nickname']").val();
-	var posting = $.post("player/changeName?name=" + newName);
-
-	posting.done(function() {
-		console.log("Name changed to: " + newName);
+	var posting = $.postjson("player/changeName", newName, function() {
+		console.log("Changed name to : " + newName);
 	});
 };
 
@@ -76,43 +74,40 @@ var expandQueue = function(queueName) {
 };
 
 var joinQueue = function(queueId) {
-	var posting = $.postjson("queue/joinQueue", queueId, function() {
+	var posting = $.postjson("player/joinQueue", queueId, function() {
 		inQueue++;
 		console.log("Joined queue: " + queueId);
 	});
 };
 
 var quitQueue = function(queueId) {
-	var posting = $.post("queue/quitQueue?queueId=" + queueId);
-
-	posting.done(function() {
+	var posting = $.postjson("player/quitQueue", queueId, function() {
 		inQueue--;
 		console.log("Quited queue: " + queueId);
 	});
 };
 
 var quitAllQueues = function() {
-	var posting = $.post("queue/quitAllQueues");
-
-	posting.done(function() {
+	var posting = $.postjson("player/quitAllQueues", null, function() {
 		inQueue = 0;
 		console.log("Left all queues");
 	});
 };
 
-var askPassword = function(queueName) {
-	var posting = $.post("queue/askPassword?queueName=" + queueId);
-
-	posting.done(function(data) {
-		console.log("Password is: " + data);
+var askPassword = function(queueId) {
+	var posting = $.postjson("player/askPassword", queueId, function(data) {
+		alert("The password is : '" + data +"'");
 	});
 };
 
 var playerReady = function(isReady) {
 	$('#gameReadyModal').modal("hide");
-	var posting = $.post("queue/playerReady?queueName=" + readyQueueName + "&isReady=" + isReady);
-
-	posting.done(function() {
+	var input = {
+			queueId : 		readyQueueId,
+			isReady :		isReady
+	};
+	var posting = $.postjson("player/playerReady", input, function(data) {
+		console.log("Player is : " + isReady);
 	});
 };
 
