@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -24,6 +25,16 @@ public class Queue {
 	 * Time in millis before the ready request timeout.
 	 */
 	private static final Long READY_TIMEOUT = TimeUnit.SECONDS.toMillis(30);
+
+	/**
+	 * Queue counter to generate id.
+	 */
+	private static final AtomicInteger QUEUE_COUNTER = new AtomicInteger();
+
+	/**
+	 * Queue id.
+	 */
+	private final Integer id;
 
 	/**
 	 * Queue name.
@@ -97,6 +108,7 @@ public class Queue {
 	 * @param maxSize queue capacity
 	 */
 	public Queue(final String name, final int maxSize, final String map, final String gametype, final int scoreLimit, final int timeLimit, final boolean permanent) {
+		this.id = QUEUE_COUNTER.getAndAdd(1);
 		this.name = name;
 		this.maxSize = maxSize;
 		this.map = map;
@@ -119,6 +131,13 @@ public class Queue {
 		config.setVariable("sv_timelimit", this.timeLimit);
 		config.setVariable("sv_gametype", this.gametype);
 		return config;
+	}
+
+	/**
+	 * @return the {@link #id}
+	 */
+	public Integer getId() {
+		return this.id;
 	}
 
 	/**
@@ -215,14 +234,14 @@ public class Queue {
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().append(this.name).toHashCode();
+		return new HashCodeBuilder().append(this.name).append(this.id).toHashCode();
 	}
 
 	@Override
 	public boolean equals(final Object obj) {
 		if (obj instanceof Queue) {
 			final Queue other = (Queue) obj;
-			return new EqualsBuilder().append(this.name, other.name).isEquals();
+			return new EqualsBuilder().append(this.name, other.name).append(this.id, other.id).isEquals();
 		} else {
 			return false;
 		}
@@ -343,7 +362,18 @@ public class Queue {
 	 * @return true if the ready check has timed out
 	 */
 	public boolean hasTimedOut() {
+		if (this.readyStartTime == null) {
+			return true;
+		}
 		return System.currentTimeMillis() - this.readyStartTime > READY_TIMEOUT;
+	}
+
+	/**
+	 * Start the ready timer.
+	 */
+	public void startTimer() {
+		this.readyStartTime = System.currentTimeMillis();
+		// TODO Create a timer. When timer exectued throw event.
 	}
 
 }
