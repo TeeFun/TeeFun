@@ -123,3 +123,42 @@ var showReadyPanel = function(queueName) {
 	$('#gameReadyModal').modal('show');
 }
 
+
+
+function QueueController($scope, $http) {
+    $scope.queues = [];
+    $scope.addQueue = function(data) {
+		$scope.queues.push(data);
+    };
+    $scope.findQueue = function(queueId) {
+		for(var i = 0; i < arrayLength; i++) {
+			if($scope.queues[i] == queueId)
+				return i;
+		}
+		return -1;
+    };
+    $scope.removeQueue = function(queueId) {
+		var index = findQueue(queueId);
+		if(index != -1)
+			$scope.queues.remove(index);
+    };
+    $scope.updateQueue = function(queueId, data) {
+		var index = findQueue(queueId);
+		if(index != -1)
+			$scope.queues[index] = data;
+    };
+
+	$scope.addQueue(
+		{
+			id: 1,
+			name: "Peter",
+			map: "Jhons",
+			gametype: "Jhons",
+			scorelimit: "Jhons",
+			timelimit: "Jhons",
+			containsPlayer: true
+		}
+	);
+}
+
+var app = angular.module('myApp', []);

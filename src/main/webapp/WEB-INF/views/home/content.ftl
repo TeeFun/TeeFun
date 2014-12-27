@@ -24,7 +24,7 @@
 		<div class="panel panel-default panel-last">
 			<div class="panel-heading">Available queues</div>
 			<div class="panel-body">
-				<div id="queues">
+				<div id="queues" ng-app="myApp" ng-controller="QueueController">
 					<#include "queues.ftl"/>
 				</div>
 			</div>
