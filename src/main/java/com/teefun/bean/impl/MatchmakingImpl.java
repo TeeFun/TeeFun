@@ -130,6 +130,7 @@ public class MatchmakingImpl implements Matchmaking {
 	 *
 	 * @param queue the queue
 	 */
+	@Override
 	public void checkQueue(final Queue queue) {
 		switch (queue.getQueueState()) {
 		case SUSPENDED:
@@ -142,40 +143,45 @@ public class MatchmakingImpl implements Matchmaking {
 				LOGGER.debug(String.format("Queue '%s' is waiting for a server'.", queue.getName()));
 				// FIXME factor this method. How to autocheck queue ? Task ? Event ?
 				if (this.teeworldsServerHandler.hasServerAvailable()) {
+					LOGGER.debug(String.format("Queue '%s' has found a server.", queue.getName()));
 					final TeeworldsServer server = this.teeworldsServerHandler.createAndBorrowServer(queue.makeConfig());
 					queue.setServer(server);
 					queue.setQueueState(QueueState.WAITING_READY);
 					this.websocketHandler.gameReady(queue);
-					LOGGER.debug(String.format("Queue '%s' has found a server.", queue.getName()));
+					LOGGER.debug(String.format("Queue '%s' has borrow a server.", queue.getName()));
 				}
 			}
 			break;
 		case WAITING_READY:
 			// TODO check if all ready or ready timed out
 			// TODO if all ready
-			this.teeworldsServerHandler.startServer(queue.getServer());
-			queue.setQueueState(QueueState.IN_GAME);
-			queue.getServer().getConfig().getPassword();
-			this.websocketHandler.gameStarted(queue);
-			LOGGER.debug(String.format("Queue '%s' has started its game.", queue.getName()));
-			// TODO send serverConfig.getPassword() to all players.
+			if (queue.isEveryoneReady()) {
+				this.teeworldsServerHandler.startServer(queue.getServer());
+				queue.setQueueState(QueueState.IN_GAME);
+				queue.getServer().getConfig().getPassword();
+				this.websocketHandler.gameStarted(queue);
+				LOGGER.debug(String.format("Queue '%s' has started its game.", queue.getName()));
+			}
 
 			// TODO if timedout
-			// this.teeworldsServerHandler.freeServer(queue.getServer());
-			// queue.setQueueState(QueueState.WAITING_PLAYERS);
-			// this.websocketHandler.gameAborted(queue);
-			// queue.setServer(null);
-			// TODO remove the leavers
-			// LOGGER.debug(String.format("Queue '%s' has terminated. Players were not ready.", queue.getName()));
+			if (queue.hasEveryResponse() && !queue.isEveryoneReady() || queue.hasTimedOut()) {
+				this.teeworldsServerHandler.freeServer(queue.getServer());
+				queue.setQueueState(QueueState.WAITING_PLAYERS);
+				this.websocketHandler.gameAborted(queue);
+				queue.setServer(null);
+				queue.removeLeavers();
+				LOGGER.debug(String.format("Queue '%s' has terminated. Players were not ready.", queue.getName()));
+			}
 			break;
 		case WAITING_SERVER:
 			// FIXME Thread-Safe ?
 			if (this.teeworldsServerHandler.hasServerAvailable()) {
+				LOGGER.debug(String.format("Queue '%s' has found a server.", queue.getName()));
 				final TeeworldsServer server = this.teeworldsServerHandler.createAndBorrowServer(queue.makeConfig());
 				queue.setServer(server);
 				queue.setQueueState(QueueState.WAITING_READY);
 				this.websocketHandler.gameReady(queue);
-				LOGGER.debug(String.format("Queue '%s' has found a server.", queue.getName()));
+				LOGGER.debug(String.format("Queue '%s' has borrow a server.", queue.getName()));
 			}
 			break;
 		case GAME_OVER:

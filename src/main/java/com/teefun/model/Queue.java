@@ -1,5 +1,6 @@
 package com.teefun.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
@@ -77,12 +78,12 @@ public class Queue {
 	/**
 	 * List of player ready.
 	 */
-	private List<Player> playersReady;
+	private final List<Player> playersReady = new ArrayList<Player>();
 
 	/**
 	 * List of player not ready.
 	 */
-	private List<Player> playersNotReady;
+	private final List<Player> playersNotReady = new ArrayList<Player>();
 
 	/**
 	 * Ready start time in millis.
@@ -323,6 +324,26 @@ public class Queue {
 	 */
 	public boolean isEveryoneReady() {
 		return this.playersReady.size() == this.players.size();
+	}
+
+	/**
+	 * Remove leavers from queue.
+	 */
+	public void removeLeavers() {
+		for (final Player player : this.players) {
+			if (!this.playersReady.contains(player)) {
+				this.players.remove(player);
+			}
+		}
+		this.playersNotReady.clear();
+		this.playersReady.clear();
+	}
+
+	/**
+	 * @return true if the ready check has timed out
+	 */
+	public boolean hasTimedOut() {
+		return System.currentTimeMillis() - this.readyStartTime > READY_TIMEOUT;
 	}
 
 }
