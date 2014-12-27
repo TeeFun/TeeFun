@@ -151,8 +151,8 @@ public class QueueController extends AbstractController {
 	 */
 	// @PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value = "/deleteQueue", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ModelAndView deleteQueue(@RequestParam final String queueName) {
-		final Queue queue = this.matchmaking.getQueueByName(queueName);
+	public ModelAndView deleteQueue(@RequestParam final int queueId) {
+		final Queue queue = this.matchmaking.getQueueById(queueId);
 
 		if (queue == null) {
 			// TODO "queue doesnt exist"

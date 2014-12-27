@@ -17,10 +17,10 @@ var createQueue = function() {
 };
 
 var deleteQueue = function() {
-	var queueName = $("#deleteQueueName").val();
-	var posting = $.post("deleteQueue?queueName=" + queueName );
+	var queueId = $("#deleteQueueId").val();
+	var posting = $.post("deleteQueue?queueId=" + queueId);
 
 	posting.done(function() {
-		console.log("Deleted queue: " + queueName);
+		console.log("Deleted queue: " + queueId);
 	});
 };

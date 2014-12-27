@@ -33,7 +33,7 @@
 					<div class="checkbox">
 						<div class="checkbox">
 							<label>
-								<input type="checkbox" id="createQueuePermanent" placeholder="false">Is queue permanent ?
+								<input type="checkbox" id="createQueuePermanent" placeholder="false"/>Is queue permanent ?
 							</label>
 						</div>
 					</div>
@@ -49,9 +49,13 @@
 			<div class="panel-heading">Delete a queue</div>
 			<div class="panel-body">
 				<form id="deleteQueueForm">
-					<div class="input-group">
-						<span class="input-group-addon" style="width: 100px;">Name</span>
-						<input type="text" id="deleteQueueName" class="form-control" placeholder="ctf5">
+					<div class="input-group" style="width: 200px; margin-left: auto; margin-right: auto;">
+						<span class="input-group-addon">Queue</span>
+						<select class="form-control" id="deleteQueueId">
+							<#list queues as queue>
+								<option value="${queue.getId()}">${queue.getName()}</option>
+							</#list>
+						</select>
 					</div>
 					<div style="text-align: center;">
 						<button class="btn btn-default" type="submit" onClick="deleteQueue(); return false;">Delete</button>
