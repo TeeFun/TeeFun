@@ -6,7 +6,7 @@
 			<button class="btn btn-success" type="button" onClick="joinQueue('${queue.getName()}');">Join</button>
 		</#if>
 	</span>
-	<span class="input-group-addon text-overflow queue-name">${queue.getQueueState()}</span>
+	<span class="input-group-addon text-overflow queue-name">${queue.getState()}</span>
 	<span class="input-group-addon text-overflow queue-name" data-toggle="tooltip" data-placement="top" data-html="true" title="
 		<table>
 			<tr>
