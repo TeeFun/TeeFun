@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.teefun.bean.Matchmaking;
 import com.teefun.bean.UserContext;
@@ -64,6 +65,7 @@ public class PlayerController extends AbstractController {
 	 * @return the view
 	 */
 	@RequestMapping(value = "/keepAlive", method = RequestMethod.GET)
+	@ResponseBody
 	public void keepAlive() {
 		this.userContext.getPlayer().keepAlive();
 	}
