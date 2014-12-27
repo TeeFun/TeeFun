@@ -148,7 +148,7 @@ public class MatchmakingImpl implements Matchmaking {
 					queue.setServer(server);
 					queue.setQueueState(QueueState.WAITING_READY);
 					this.websocketHandler.gameReady(queue);
-					LOGGER.debug(String.format("Queue '%s' has borrow a server.", queue.getName()));
+					LOGGER.debug(String.format("Queue '%s' has borrowed a server.", queue.getName()));
 				}
 			}
 			break;
@@ -164,7 +164,7 @@ public class MatchmakingImpl implements Matchmaking {
 			}
 
 			// TODO if timedout
-			if (queue.hasEveryResponse() && !queue.isEveryoneReady() || queue.hasTimedOut()) {
+			if (queue.isSomeoneNotReady() || queue.hasTimedOut()) {
 				this.teeworldsServerHandler.freeServer(queue.getServer());
 				queue.setQueueState(QueueState.WAITING_PLAYERS);
 				this.websocketHandler.gameAborted(queue);
@@ -181,7 +181,7 @@ public class MatchmakingImpl implements Matchmaking {
 				queue.setServer(server);
 				queue.setQueueState(QueueState.WAITING_READY);
 				this.websocketHandler.gameReady(queue);
-				LOGGER.debug(String.format("Queue '%s' has borrow a server.", queue.getName()));
+				LOGGER.debug(String.format("Queue '%s' has borrowed a server.", queue.getName()));
 			}
 			break;
 		case GAME_OVER:

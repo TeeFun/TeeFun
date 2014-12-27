@@ -327,6 +327,13 @@ public class Queue {
 	}
 
 	/**
+	 * @return true if one or more players are not ready
+	 */
+	public boolean isSomeoneNotReady() {
+		return this.playersNotReady.size() > 0;
+	}
+
+	/**
 	 * Remove leavers from queue.
 	 */
 	public void removeLeavers() {
