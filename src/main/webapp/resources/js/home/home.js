@@ -74,28 +74,28 @@ var expandQueue = function(queueName) {
 };
 
 var joinQueue = function(queueId) {
-	var posting = $.postjson("player/joinQueue", queueId, function() {
+	var posting = $.postjson("queue/joinQueue", queueId, function() {
 		inQueue++;
 		console.log("Joined queue: " + queueId);
 	});
 };
 
 var quitQueue = function(queueId) {
-	var posting = $.postjson("player/quitQueue", queueId, function() {
+	var posting = $.postjson("queue/quitQueue", queueId, function() {
 		inQueue--;
 		console.log("Quited queue: " + queueId);
 	});
 };
 
 var quitAllQueues = function() {
-	var posting = $.postjson("player/quitAllQueues", null, function() {
+	var posting = $.postjson("queue/quitAllQueues", null, function() {
 		inQueue = 0;
 		console.log("Left all queues");
 	});
 };
 
 var askPassword = function(queueId) {
-	var posting = $.postjson("player/askPassword", queueId, function(data) {
+	var posting = $.postjson("queue/askPassword", queueId, function(data) {
 		alert("The password is : '" + data +"'");
 	});
 };
@@ -106,7 +106,7 @@ var playerReady = function(isReady) {
 			queueId : 		readyQueueId,
 			isReady :		isReady
 	};
-	var posting = $.postjson("player/playerReady", input, function(data) {
+	var posting = $.postjson("queue/playerReady", input, function(data) {
 		console.log("Player is : " + isReady);
 	});
 };
