@@ -74,7 +74,7 @@ public class QueueController extends AbstractController {
 			// TODO "Queue already contains this player"
 			return new ModelAndView("json/empty.json");
 		}
-		if (queue.getQueueState() != QueueState.WAITING_PLAYERS) {
+		if (queue.getState() != QueueState.WAITING_PLAYERS) {
 			// TODO incorrect state
 			return new ModelAndView("json/empty.json");
 		}
@@ -103,7 +103,7 @@ public class QueueController extends AbstractController {
 			// TODO "Player not in queue"
 			return new ModelAndView("json/empty.json");
 		}
-		if (queue.getQueueState() != QueueState.WAITING_PLAYERS) {
+		if (queue.getState() != QueueState.WAITING_PLAYERS) {
 			// TODO incorrect state
 			return new ModelAndView("json/empty.json");
 		}
@@ -177,7 +177,7 @@ public class QueueController extends AbstractController {
 			return new ModelAndView("json/empty.json");
 		}
 
-		if (queue.getQueueState() == QueueState.IN_GAME) {
+		if (queue.getState() == QueueState.IN_GAME) {
 			// TODO return pass
 		}
 
@@ -198,7 +198,7 @@ public class QueueController extends AbstractController {
 			return new ModelAndView("json/empty.json");
 		}
 
-		if (queue.getQueueState() == QueueState.WAITING_READY) {
+		if (queue.getState() == QueueState.WAITING_READY) {
 			queue.setPlayerReady(this.userContext.getPlayer(), isReady);
 			// TODO event ...
 			this.matchmaking.checkQueue(queue);

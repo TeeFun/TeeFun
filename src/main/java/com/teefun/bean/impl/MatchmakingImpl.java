@@ -73,7 +73,7 @@ public class MatchmakingImpl implements Matchmaking {
 
 	@Override
 	public void quitQueue(final Player player, final Queue queue) {
-		if (QueueState.WAITING_PLAYERS == queue.getQueueState()) {
+		if (QueueState.WAITING_PLAYERS == queue.getState()) {
 			LOGGER.debug(String.format("Remove player '%s' from queue '%s'.", player.getName(), queue.getName()));
 			queue.removePlayer(player);
 		}
@@ -132,21 +132,21 @@ public class MatchmakingImpl implements Matchmaking {
 	 */
 	@Override
 	public void checkQueue(final Queue queue) {
-		switch (queue.getQueueState()) {
+		switch (queue.getState()) {
 		case SUSPENDED:
 			break;
 		case IN_GAME:
 			break;
 		case WAITING_PLAYERS:
 			if (queue.isFull()) {
-				queue.setQueueState(QueueState.WAITING_SERVER);
+				queue.setState(QueueState.WAITING_SERVER);
 				LOGGER.debug(String.format("Queue '%s' is waiting for a server'.", queue.getName()));
 				// FIXME factor this method. How to autocheck queue ? Task ? Event ?
 				if (this.teeworldsServerHandler.hasServerAvailable()) {
 					LOGGER.debug(String.format("Queue '%s' has found a server.", queue.getName()));
 					final TeeworldsServer server = this.teeworldsServerHandler.createAndBorrowServer(queue.makeConfig());
 					queue.setServer(server);
-					queue.setQueueState(QueueState.WAITING_READY);
+					queue.setState(QueueState.WAITING_READY);
 					queue.startTimer();
 					this.websocketHandler.gameReady(queue);
 					LOGGER.debug(String.format("Queue '%s' has borrowed a server.", queue.getName()));
@@ -158,7 +158,7 @@ public class MatchmakingImpl implements Matchmaking {
 			// TODO if all ready
 			if (queue.isEveryoneReady()) {
 				this.teeworldsServerHandler.startServer(queue.getServer());
-				queue.setQueueState(QueueState.IN_GAME);
+				queue.setState(QueueState.IN_GAME);
 				queue.getServer().getConfig().getPassword();
 				this.websocketHandler.gameStarted(queue);
 				LOGGER.debug(String.format("Queue '%s' has started its game.", queue.getName()));
@@ -167,7 +167,7 @@ public class MatchmakingImpl implements Matchmaking {
 			// TODO if timedout
 			if (queue.hasEveryResponse() && !queue.isEveryoneReady() || queue.hasTimedOut()) {
 				this.teeworldsServerHandler.freeServer(queue.getServer());
-				queue.setQueueState(QueueState.WAITING_PLAYERS);
+				queue.setState(QueueState.WAITING_PLAYERS);
 				this.websocketHandler.gameAborted(queue);
 				queue.setServer(null);
 				queue.removeLeavers();
@@ -180,7 +180,7 @@ public class MatchmakingImpl implements Matchmaking {
 				LOGGER.debug(String.format("Queue '%s' has found a server.", queue.getName()));
 				final TeeworldsServer server = this.teeworldsServerHandler.createAndBorrowServer(queue.makeConfig());
 				queue.setServer(server);
-				queue.setQueueState(QueueState.WAITING_READY);
+				queue.setState(QueueState.WAITING_READY);
 				this.websocketHandler.gameReady(queue);
 				LOGGER.debug(String.format("Queue '%s' has borrowed a server.", queue.getName()));
 			}
@@ -203,7 +203,7 @@ public class MatchmakingImpl implements Matchmaking {
 		// TODO use an event system -_-
 		for (final Queue queue : this.availableQueues) {
 			if (queue.getServer() == server) {
-				queue.setQueueState(QueueState.GAME_OVER);
+				queue.setState(QueueState.GAME_OVER);
 			}
 			this.checkQueue(queue);
 		}
