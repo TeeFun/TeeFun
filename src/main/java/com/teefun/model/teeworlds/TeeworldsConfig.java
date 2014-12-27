@@ -67,7 +67,7 @@ public class TeeworldsConfig {
 	}
 
 	public String getPassword() {
-		return this.variables.get("password");
+		return this.variables.get("password").replaceAll("\"", "");
 	}
 
 	/**
