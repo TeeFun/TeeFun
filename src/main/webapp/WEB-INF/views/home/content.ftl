@@ -47,21 +47,25 @@
 </div>
 
 <!-- Highlights -->
-<div class="panel panel-success big">
-	<div class="panel-body">
-		<!-- Highlight box (status 1) -->
-		<div class="panel panel-success panel-last">
-			<div class="panel-heading">Queue status</div>
-			<div class="panel-body panel-highlight">
-				Match found for queue <span class="queue">ctf5</span>!<br/>
+<div class="modal fade" id="gameReadyModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Queue status</h4>
+			</div>
+			<div class="modal-body">
+				Match found for queue <span class="queue"></span>!<br/>
 				Please accept or decline the game.<br/>
-				<button type="button" class="btn btn-success">Accept</button>
-				<button type="button" class="btn btn-danger">Decline</button><br/>
 				<div class="progress" style="margin-top: 5px;">
 					<span class="progress-value">Players ready: 8/10</span>
 					<div class="progress-bar progress-bar-info progress-bar-striped" style="width: 80%;"></div>
 				</div>
 			</div>
+			<div class="modal-footer">
+				<button type="button" data-dismiss="modal" class="btn btn-success" onClick="playerReady(true)">Accept</button>
+				<button type="button" data-dismiss="modal" class="btn btn-danger" onClick="playerReady(false)">Decline</button><br/>
+			</div>
 		</div>
 	</div>
-</div>
+</div>			

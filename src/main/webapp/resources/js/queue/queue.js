@@ -11,7 +11,7 @@ var createQueue = function() {
 							+ "&scoreLimit=" + queueScoreLimit + "&timeLimit=" + queueTimeLimit + "&permanent=" + queuePermanent);
 
 	posting.done(function() {
-		alert('Created queue : ' + queueName);
+		console.log('Created queue : ' + queueName);
 	});
 };
 
@@ -20,6 +20,6 @@ var deleteQueue = function() {
 	var posting = $.post("deleteQueue?queueName=" + queueName );
 
 	posting.done(function() {
-		alert('Deleted queue : ' + queueName);
+		console.log('Deleted queue : ' + queueName);
 	});
 };

@@ -1,27 +1,33 @@
+// TODO refactor this
+var readyQueueName;
+
 var socket = new SockJS(sockJSUrl);
 stompClient = Stomp.over(socket);
 stompClient.debug = null;
 stompClient.connect({}, function(frame) {
 	stompClient.subscribe("/topic/queueUpdated", function(data){
-		alert("queueUpdated: " + data);
+		console.log("queueUpdated: " + data);
 		refreshQueues();
 	});
 	stompClient.subscribe("/topic/queueCreated", function(data){
-		alert("queueCreated: " + data);
+		console.log("queueCreated: " + data);
 		refreshQueues();
 	});
 	stompClient.subscribe("/topic/queueDeleted", function(data){
-		alert("queueDeleted: " + data);
+		console.log("queueDeleted: " + data);
 		refreshQueues();
 	});
 	stompClient.subscribe("/topic/gameReady", function(data){
-		alert("gameReady: " + data);
+		console.log("gameReady: " + data);
+		readyQueueName = JSON.parse(data.body).name;
+		showReadyPanel(readyQueueName);
 	});
 	stompClient.subscribe("/topic/gameStarted", function(data){
-		alert("gameStarted: " + data);
+		console.log("gameStarted: " + data);
+		askPassword(JSON.parse(data.body).name);
 	});
 	stompClient.subscribe("/topic/gameAborted", function(data){
-		alert("gameAborted: " + data);
+		console.log("gameAborted: " + data);
 	});
 });
 
@@ -52,7 +58,7 @@ var changeName = function() {
 	var posting = $.post("player/changeName?name=" + newName);
 
 	posting.done(function() {
-		alert('Name changed to ' + newName);
+		console.log('Name changed to ' + newName);
 	});
 };
 
@@ -75,7 +81,7 @@ var joinQueue = function(queueName) {
 
 	posting.done(function() {
 		inQueue++;
-		alert('Joined queue : ' + queueName);
+		console.log('Joined queue : ' + queueName);
 	});
 };
 
@@ -84,7 +90,7 @@ var quitQueue = function(queueName) {
 
 	posting.done(function() {
 		inQueue--;
-		alert('Quited queue : ' +  queueName);
+		console.log('Quited queue : ' +  queueName);
 	});
 };
 
@@ -93,7 +99,7 @@ var quitAllQueues = function() {
 
 	posting.done(function() {
 		inQueue = 0;
-		alert('Left all queue');
+		console.log('Left all queue');
 	});
 };
 
@@ -101,14 +107,19 @@ var askPassword = function(queueName) {
 	var posting = $.post("queue/askPassword?queueName=" + queueName);
 
 	posting.done(function(data) {
-		alert("Password is : " + data);
+		console.log("Password is : " + data);
 	});
 };
 
-var playerReady = function(queueName, isReady) {
-	var posting = $.post("queue/playerReady?queueName=" +queueName + "&isReady" + isReady);
+var playerReady = function(isReady) {
+	$('#gameReadyModal').modal('hide');
+	var posting = $.post("queue/playerReady?queueName=" + readyQueueName + "&isReady" + isReady);
 
 	posting.done(function() {
 	});
 };
+
+var showReadyPanel = function(queueName) {
+	$('#gameReadyModal').modal('show');
+}
 
