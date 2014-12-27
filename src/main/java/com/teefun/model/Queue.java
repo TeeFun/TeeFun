@@ -79,7 +79,7 @@ public class Queue {
 	/**
 	 * Queue state.
 	 */
-	private QueueState queueState = QueueState.WAITING_PLAYERS;
+	private QueueState state = QueueState.WAITING_PLAYERS;
 
 	/**
 	 * Is the queue permanent ?. If true it will automatically reset after the game as finised.
@@ -195,7 +195,7 @@ public class Queue {
 	 * @param player the player to be added
 	 */
 	public void addPlayer(final Player player) {
-		if (QueueState.WAITING_PLAYERS != this.queueState) {
+		if (QueueState.WAITING_PLAYERS != this.state) {
 			return;
 		}
 		if (this.players.size() < this.maxSize && !this.players.contains(player)) {
@@ -209,7 +209,7 @@ public class Queue {
 	 * @param player the player to be removed
 	 */
 	public boolean removePlayer(final Player player) {
-		if (QueueState.WAITING_PLAYERS != this.queueState) {
+		if (QueueState.WAITING_PLAYERS != this.state) {
 			return false;
 		}
 		return this.players.remove(player);
@@ -269,17 +269,17 @@ public class Queue {
 	}
 
 	/**
-	 * @return the {@link #queueState}
+	 * @return the {@link #state}
 	 */
-	public QueueState getQueueState() {
-		return this.queueState;
+	public QueueState getState() {
+		return this.state;
 	}
 
 	/**
-	 * @param queueState the {@link #queueState} to set
+	 * @param queueState the {@link #state} to set
 	 */
-	public void setQueueState(final QueueState queueState) {
-		this.queueState = queueState;
+	public void setState(final QueueState queueState) {
+		this.state = queueState;
 	}
 
 	/**
@@ -300,7 +300,7 @@ public class Queue {
 	 * Reset the queue to waiting player state.
 	 */
 	public void reset() {
-		this.queueState = QueueState.WAITING_PLAYERS;
+		this.state = QueueState.WAITING_PLAYERS;
 		// Shall we make sure the server is shutdown ?
 		this.server = null;
 		this.players.clear();
