@@ -16,6 +16,7 @@ import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.SocketUtils;
 
@@ -41,39 +42,52 @@ public class TeeworldsServerHandlerImpl implements TeeworldsServerHandler {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TeeworldsServerHandlerImpl.class);
 
 	/**
+	 * Default server ttl.
+	 */
+	@Value("${teeworlds.server.ttl}")
+	private Long SERVER_TTL;
+
+	/**
 	 * Start server script.
 	 */
-	private static final String TEEWORLDS_SERVER_PATH = "/opt/teeworlds/teeworlds_srv";
+	@Value("${teeworlds.server.serverPath}")
+	private String TEEWORLDS_SERVER_PATH;
 
 	/**
 	 * Pattern for config filename generation.
 	 */
-	private static final String CONFIG_FILENAME_PATTERN = "/opt/teeworlds/configs/server-%s.cfg";
+	@Value("${teeworlds.server.configFilenamePattern}")
+	private String CONFIG_FILENAME_PATTERN;
 
 	/**
 	 * Pattern for log filename generation.
 	 */
-	private static final String LOG_FILENAME_PATTERN = "/opt/teeworlds/logs/log-%s.cfg";
+	@Value("${teeworlds.server.logFilenamePattern}")
+	private String LOG_FILENAME_PATTERN;
 
 	/**
 	 * Min port available.
 	 */
-	private static final int TEEWORLDS_MIN_PORT = 27015;
+	@Value("${teeworlds.server.minPort}")
+	private Integer TEEWORLDS_MIN_PORT;
 
 	/**
 	 * Max port available.
 	 */
-	private static final int TEEWORLDS_MAX_PORT = 27020;
+	@Value("${teeworlds.server.maxPort}")
+	private Integer TEEWORLDS_MAX_PORT;
 
 	/**
 	 * Start server script.
 	 */
-	private static final String TEEWORLDS_CLEANUP_SERVERS_SCRIPT = "/opt/teeworlds/cleanup_servers.sh";
+	@Value("${teeworlds.server.cleanUpScriptPath}")
+	private String TEEWORLDS_CLEANUP_SERVERS_SCRIPT;
 
 	/**
 	 * Number of maximum running servers.
 	 */
-	private static final Integer MAX_SERVER_AVAILABLE = 2;
+	@Value("${teeworlds.server.nbServerSlot}")
+	private Integer MAX_SERVER_AVAILABLE;
 
 	/**
 	 * List of currently borrowed servers.
@@ -96,7 +110,7 @@ public class TeeworldsServerHandlerImpl implements TeeworldsServerHandler {
 	public void cleanupServers() throws IOException {
 		try {
 			LOGGER.debug("Cleaning zombie servers.");
-			new ProcessBuilder(TEEWORLDS_CLEANUP_SERVERS_SCRIPT).start();
+			new ProcessBuilder(this.TEEWORLDS_CLEANUP_SERVERS_SCRIPT).start();
 		} catch (final Exception exception) {
 			LOGGER.error("Error while cleaning zombie servers.", exception);
 		}
@@ -104,26 +118,26 @@ public class TeeworldsServerHandlerImpl implements TeeworldsServerHandler {
 
 	@Override
 	public TeeworldsServer createAndBorrowServer(final TeeworldsConfig configuration) {
-		if (this.borrowedServers.size() >= MAX_SERVER_AVAILABLE) {
+		if (this.borrowedServers.size() >= this.MAX_SERVER_AVAILABLE) {
 			throw new TeeFunRuntimeException("Maximum server size reached.");
 		}
 
 		final String serverId = this.generateUUID();
 		try {
-			final Integer port = SocketUtils.findAvailableUdpPort(TEEWORLDS_MIN_PORT, TEEWORLDS_MAX_PORT);
+			final Integer port = SocketUtils.findAvailableUdpPort(this.TEEWORLDS_MIN_PORT, this.TEEWORLDS_MAX_PORT);
 			configuration.setVariable("sv_port", port);
 		} catch (final IllegalStateException exception) {
 			LOGGER.error("Could not find any port.", exception);
 			throw new TeeFunRuntimeException("Could not find any port.", exception);
 		}
-		configuration.setVariable("logfile", String.format(LOG_FILENAME_PATTERN, serverId));
+		configuration.setVariable("logfile", String.format(this.LOG_FILENAME_PATTERN, serverId));
 		configuration.generatePassword();
 
-		final TeeworldsServer server = new TeeworldsServer(configuration, System.currentTimeMillis(), serverId);
+		final TeeworldsServer server = new TeeworldsServer(configuration, serverId, System.currentTimeMillis(), this.SERVER_TTL);
 
 		this.borrowedServers.add(server);
 
-		LOGGER.debug("Created server : " + server.getServerId() + ". " + this.getNbFreeServers() + "/" + MAX_SERVER_AVAILABLE + " .");
+		LOGGER.debug("Created server : " + server.getServerId() + ". " + this.getNbFreeServers() + "/" + this.MAX_SERVER_AVAILABLE + " .");
 		return server;
 	}
 
@@ -141,9 +155,9 @@ public class TeeworldsServerHandlerImpl implements TeeworldsServerHandler {
 			throw new TeeFunRuntimeException(msg);
 		}
 		try {
-			final Path configPath = Paths.get(String.format(CONFIG_FILENAME_PATTERN, server.getServerId()));
+			final Path configPath = Paths.get(String.format(this.CONFIG_FILENAME_PATTERN, server.getServerId()));
 			server.getConfig().generateConfigFile(configPath);
-			final Process process = new ProcessBuilder(TEEWORLDS_SERVER_PATH, "-f", configPath.toAbsolutePath().toString()).start();
+			final Process process = new ProcessBuilder(this.TEEWORLDS_SERVER_PATH, "-f", configPath.toAbsolutePath().toString()).start();
 			server.setProcess(process);
 
 			LOGGER.debug("Server : " + server.getServerId() + " started.");
@@ -169,12 +183,12 @@ public class TeeworldsServerHandlerImpl implements TeeworldsServerHandler {
 
 	@Override
 	public boolean hasServerAvailable() {
-		return this.borrowedServers.size() < MAX_SERVER_AVAILABLE;
+		return this.borrowedServers.size() < this.MAX_SERVER_AVAILABLE;
 	}
 
 	@Override
 	public Integer getNbFreeServers() {
-		return MAX_SERVER_AVAILABLE - this.borrowedServers.size();
+		return this.MAX_SERVER_AVAILABLE - this.borrowedServers.size();
 	}
 
 }
