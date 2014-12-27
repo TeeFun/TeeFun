@@ -103,6 +103,7 @@ public class MatchmakingImpl implements Matchmaking {
 	public void addQueue(final Queue queue) {
 		if (!this.availableQueues.contains(queue)) {
 			this.availableQueues.add(queue);
+			this.websocketHandler.queueCreated(queue);
 		}
 	}
 
@@ -110,6 +111,7 @@ public class MatchmakingImpl implements Matchmaking {
 	public void removeQueue(final Queue queue) {
 		if (this.availableQueues.contains(queue)) {
 			this.availableQueues.remove(queue);
+			this.websocketHandler.queueDeleted(queue);
 		}
 	}
 
@@ -189,6 +191,7 @@ public class MatchmakingImpl implements Matchmaking {
 		this.websocketHandler.queueUpdated(queue);
 	}
 
+	@Override
 	public void onServerFree(final TeeworldsServer server) {
 		// TODO use an event system -_-
 		for (final Queue queue : this.availableQueues) {

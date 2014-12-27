@@ -41,6 +41,18 @@ public class WebSocketHandlerImpl implements WebSocketHandler {
 	}
 
 	@Override
+	public void queueCreated(final Queue queue) {
+		LOGGER.debug("Queue created event for : " + queue.getName());
+		this.template.convertAndSend("/topic/queueCreated", new QueueData());
+	}
+
+	@Override
+	public void queueDeleted(final Queue queue) {
+		LOGGER.debug("Queue deleted event for : " + queue.getName());
+		this.template.convertAndSend("/topic/queueDeleted", new QueueData());
+	}
+
+	@Override
 	public void gameReady(final Queue queue) {
 		LOGGER.debug("Game ready event for : " + queue.getName());
 		this.template.convertAndSend("/topic/gameReady", new QueueData());

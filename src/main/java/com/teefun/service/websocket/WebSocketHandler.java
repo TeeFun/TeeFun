@@ -21,6 +21,20 @@ public interface WebSocketHandler {
 	public void queueUpdated(Queue queue);
 
 	/**
+	 * A queue has been created.
+	 *
+	 * @param queue the queue
+	 */
+	public void queueCreated(Queue queue);
+
+	/**
+	 * A queue has been deleted.
+	 *
+	 * @param queue the queue
+	 */
+	public void queueDeleted(Queue queue);
+
+	/**
 	 * A queue is ready and waiting for players to be ready.
 	 *
 	 * @param queue the queue

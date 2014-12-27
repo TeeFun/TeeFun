@@ -44,7 +44,7 @@ public class FreemarkerIncludeDirective implements TemplateDirectiveModel {
 				final Template template = env.getTemplateForImporting(templateName);
 				env.include(template);
 			} catch (final FileNotFoundException e) {
-				LOGGER.debug(templateName + "not found!");
+				LOGGER.debug(templateName + " not found!");
 			}
 		}
 	}
