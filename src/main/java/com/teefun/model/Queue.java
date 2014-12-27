@@ -175,6 +175,9 @@ public class Queue {
 	 * @param player the player to be added
 	 */
 	public void addPlayer(final Player player) {
+		if (QueueState.WAITING_PLAYERS != this.queueState) {
+			return;
+		}
 		if (this.players.size() < this.maxSize && !this.players.contains(player)) {
 			this.players.add(player);
 		}
@@ -186,6 +189,9 @@ public class Queue {
 	 * @param player the player to be removed
 	 */
 	public boolean removePlayer(final Player player) {
+		if (QueueState.WAITING_PLAYERS != this.queueState) {
+			return false;
+		}
 		return this.players.remove(player);
 	}
 

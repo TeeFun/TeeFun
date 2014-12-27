@@ -74,6 +74,10 @@ public class QueueController extends AbstractController {
 			// TODO "Queue already contains this player"
 			return new ModelAndView("json/empty.json");
 		}
+		if (queue.getQueueState() != QueueState.WAITING_PLAYERS) {
+			// TODO incorrect state
+			return new ModelAndView("json/empty.json");
+		}
 
 		this.matchmaking.joinQueue(player, queue);
 
@@ -97,6 +101,10 @@ public class QueueController extends AbstractController {
 		}
 		if (!queue.containsPlayer(player)) {
 			// TODO "Player not in queue"
+			return new ModelAndView("json/empty.json");
+		}
+		if (queue.getQueueState() != QueueState.WAITING_PLAYERS) {
+			// TODO incorrect state
 			return new ModelAndView("json/empty.json");
 		}
 

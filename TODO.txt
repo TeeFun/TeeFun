@@ -6,3 +6,4 @@ validators
 eventBus when server available
 Modifications threadsafe ?
 fix memory leak
+check queueState && queue timeout ready
