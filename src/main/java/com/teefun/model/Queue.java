@@ -362,7 +362,18 @@ public class Queue {
 	 * @return true if the ready check has timed out
 	 */
 	public boolean hasTimedOut() {
+		if (this.readyStartTime == null) {
+			return true;
+		}
 		return System.currentTimeMillis() - this.readyStartTime > READY_TIMEOUT;
+	}
+
+	/**
+	 * Start the ready timer.
+	 */
+	public void startTimer() {
+		this.readyStartTime = System.currentTimeMillis();
+		// TODO Create a timer. When timer exectued throw event.
 	}
 
 }
