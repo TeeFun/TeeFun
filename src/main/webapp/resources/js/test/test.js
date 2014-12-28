@@ -110,6 +110,20 @@ app.controller('mainController', function($scope, stompClient) {
 			$.get(contextPathUrl + "/player/keepAlive");
 		}
 	}, 5000);
+	
+	//Ask if the player really wants to leave if he is in queue
+	$(document).ready(function(){
+		$(window).bind('beforeunload', function(){
+			if (isInAnyQueue($scope.queues, $scope.player)) {
+			  return "You are currently in a queue. Leaving the page will removing you from all queues. Are you sure you want to leave ?";
+			}
+		});
+		$(window).bind('unload', function(){
+			// Try to quit all queues on unload
+			// TODO a little bit buggy. Need to interrupt request in order to use this or the client will be blocked on further connection
+			// quitAllQueues();
+		});
+	});
 });
 
 // ---------------------
@@ -154,20 +168,6 @@ var isInAnyQueue  = function(queues, player) {
 };
 
 // -----------------
-
-//Ask if the player really wants to leave if he is in queue
-$(document).ready(function(){
-	$(window).bind('beforeunload', function(){
-		if (inQueue > 0) {
-		  return "You are currently in a queue. Leaving the page will removing you from all queues. Are you sure you want to leave ?";
-		}
-	});
-	$(window).bind('unload', function(){
-		// Try to quit all queues on unload
-		// TODO a little bit buggy. Need to interrupt request in order to use this or the client will be blocked on further connection
-		// quitAllQueues();
-	});
-});
 
 // ----- Bootstrap -----
 
