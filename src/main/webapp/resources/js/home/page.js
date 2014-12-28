@@ -63,13 +63,16 @@ app.controller('mainController', function($scope, stompClient) {
 		});
 		stompClient.subscribe("/topic/gameReady", function(data){
 			var queue = JSON.parse(data.body);
-			readyQueue = JSON.parse(data.body);
+			readyQueue = queue;
 			if (isInQueue(queue, $scope.player)) {
 				showReadyModal(queue);
 			}
 		});
 		stompClient.subscribe("/topic/gameStarted", function(data){
-			askPassword(JSON.parse(data.body).id);
+			var queue = JSON.parse(data.body);
+			if (isInQueue(queue, $scope.player)) {
+				askPassword(queue.id);
+			}
 		});
 		stompClient.subscribe("/topic/gameAborted", function(data){
 		});
