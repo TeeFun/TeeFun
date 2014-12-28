@@ -164,8 +164,8 @@ var showReadyModal = function(queueInfo) {
 }
 
 var showStartedModal = function(info) {
-	$("#gameStartedServerName").text(queueInfo.serverName);
-	$("#gameStartedPassword").text(queueInfo.password);
+	$("#gameStartedServerName").text(info.serverName);
+	$("#gameStartedPassword").text(info.password);
 	$("#gameStartedModal").modal("show");
 }
 
