@@ -25,7 +25,7 @@ stompClient.connect({}, function(frame) {
 	});
 	stompClient.subscribe("/topic/gameStarted", function(data){
 		console.log("gameStarted: " + data);
-		askPassword(JSON.parse(data.body).name);
+		askPassword(JSON.parse(data.body).id);
 	});
 	stompClient.subscribe("/topic/gameAborted", function(data){
 		console.log("gameAborted: " + data);
