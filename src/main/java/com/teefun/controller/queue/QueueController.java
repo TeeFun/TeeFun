@@ -17,6 +17,7 @@ import com.google.common.eventbus.EventBus;
 import com.teefun.bean.matchmaking.Matchmaking;
 import com.teefun.bean.usercontext.UserContext;
 import com.teefun.controller.AbstractController;
+import com.teefun.controller.queue.bean.AskPasswordResponse;
 import com.teefun.controller.queue.bean.CreateQueueRequest;
 import com.teefun.controller.queue.bean.PlayerReadyRequest;
 import com.teefun.events.event.PlayerReadyEvent;
