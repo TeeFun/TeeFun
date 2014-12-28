@@ -1,36 +1,29 @@
-// TODO refactor this
-var readyQueueInfo = null;
-var connected = false;
+var wsConnected = false;
 
 var socket = new SockJS(sockJSUrl);
 stompClient = Stomp.over(socket);
 stompClient.debug = null;
 stompClient.connect({}, function(frame) {
 	stompClient.subscribe("/topic/queueUpdated", function(data){
-		console.log("queueUpdated: " + data);
 		refreshQueues();
 	});
 	stompClient.subscribe("/topic/queueCreated", function(data){
-		console.log("queueCreated: " + data);
 		refreshQueues();
 	});
 	stompClient.subscribe("/topic/queueDeleted", function(data){
-		console.log("queueDeleted: " + data);
 		refreshQueues();
 	});
 	stompClient.subscribe("/topic/gameReady", function(data){
-		console.log("gameReady: " + data);
 		readyQueueInfo = JSON.parse(data.body);
 		showReadyPanel(readyQueueInfo);
 	});
 	stompClient.subscribe("/topic/gameStarted", function(data){
-		console.log("gameStarted: " + data);
 		askPassword(JSON.parse(data.body).id);
 	});
 	stompClient.subscribe("/topic/gameAborted", function(data){
-		console.log("gameAborted: " + data);
 	});
 	connected = true;
+	loadingDone();
 });
 
 var refreshQueues = function() {

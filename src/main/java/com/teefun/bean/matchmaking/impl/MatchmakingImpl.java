@@ -304,4 +304,11 @@ public class MatchmakingImpl implements Matchmaking {
 		this.eventBus.post(new QueueModifiedEvent(playerReadyEvent.getQueue()));
 	}
 
+	@Override
+	public void setPlayerReady(final Player player, final Queue queue, final Boolean isReady) {
+		if (queue.setPlayerReady(player, isReady)) {
+			LOGGER.debug("Player " + player + " is ready(" + isReady + ") on queue : " + queue);
+		}
+	}
+
 }

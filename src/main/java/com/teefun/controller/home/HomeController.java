@@ -61,15 +61,15 @@ public class HomeController extends AbstractController {
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	public ModelAndView test(final Model model) {
 		model.addAttribute("queues", this.matchmaking.getQueues());
-		return new ModelAndView("test");
+		return new ModelAndView("homeOld");
 	}
 
 	/**
 	 * Test json.
 	 */
-	@RequestMapping(value = "/testJson", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/appData", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public AppData testJson() {
+	public AppData appData() {
 		return new AppData(this.matchmaking.getQueues(), this.userContext.getPlayer());
 	}
 
