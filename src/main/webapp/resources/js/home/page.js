@@ -65,16 +65,13 @@ app.controller('mainController', function($scope, stompClient) {
 			var queue = JSON.parse(data.body);
 			readyQueueId = JSON.parse(data.body);
 			if (isInQueue(queue, $scope.player)) {
-				showReadyPanel(true);
+				showReadyModal(queue);
 			}
 		});
 		stompClient.subscribe("/topic/gameStarted", function(data){
 			askPassword(JSON.parse(data.body).id);
 		});
 		stompClient.subscribe("/topic/gameAborted", function(data){
-			if (isInQueue(queue, $scope.player)) {
-				showReadyPanel(false);
-			}
 		});
 		wsConnected = true;
 		loadingDone();
@@ -210,12 +207,17 @@ var isInAnyQueue  = function(queues, player) {
 
 // ----- Bootstrap -----
 
-var showReadyPanel = function(show) {
-	if (show) {
-		$('#gameReadyModal').modal("show");
-	} else {
-		$('#gameReadyModal').modal("hide");
-	}
+var showReadyModal = function(queueInfo) {
+	$("#gameReadyQueueName").text(queueInfo.name);
+	$("#gameReadyProgressValue").text(queueInfo.size+"/"+queueInfo.maxSize);
+	$("#gameReadyProgressBar").css("width", (100*queueInfo.size/queueInfo.maxSize)+"%");
+	$("#gameReadyModal").modal("show");
+}
+
+var showStartedModal = function(info) {
+	$("#gameStartedServerName").text(info.serverName);
+	$("#gameStartedPassword").text(info.password);
+	$("#gameStartedModal").modal("show");
 }
 
 var isExpand = function(queueId) {
@@ -292,7 +294,7 @@ var askPassword = function(queueId) {
 		return;
 	}
 	var posting = $.postjson(contextPathUrl + "/queue/askPassword", queueId, function(data) {
-		alert("The password is : '" + data +"'");
+		showStartedModal(data);
 	});
 };
 

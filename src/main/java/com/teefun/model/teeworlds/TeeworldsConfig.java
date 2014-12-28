@@ -57,6 +57,13 @@ public class TeeworldsConfig {
 	}
 
 	/**
+	 * Gets a variable as a string value.
+	 */
+	public String getVariableAsString(final String name) {
+		return this.variables.get(name).replaceAll("\"", "");
+	}
+
+	/**
 	 * Generate a random password.
 	 */
 	public String generatePassword() {
@@ -64,10 +71,6 @@ public class TeeworldsConfig {
 		LOGGER.trace("Generated password : " + password);
 		this.setVariable("password", password);
 		return password;
-	}
-
-	public String getPassword() {
-		return this.variables.get("password").replaceAll("\"", "");
 	}
 
 	/**

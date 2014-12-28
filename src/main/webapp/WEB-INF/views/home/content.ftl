@@ -44,20 +44,20 @@
 	</div>
 </div>
 
-<!-- Highlights -->
+<!-- Game Ready Modal -->
 <div class="modal fade" id="gameReadyModal">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title">Queue status</h4>
+				<h4 class="modal-title">Match found</h4>
 			</div>
 			<div class="modal-body">
-				Match found for queue <span class="queue" id="modalQueueName"></span>!<br/>
+				Match found for queue <span class="queue" id="gameReadyQueueName"></span>!<br/>
 				Please accept or decline the game.<br/>
 				<div class="progress" style="margin-top: 5px;">
-					<span class="progress-value" id="modalQueueProgressValue"></span>
-					<div class="progress-bar progress-bar-info progress-bar-striped" id="modalQueueProgressBar"></div>
+					<span class="progress-value" id="gameReadyProgressValue"></span>
+					<div class="progress-bar progress-bar-info progress-bar-striped" id="gameReadyProgressBar"></div>
 				</div>
 			</div>
 			<div class="modal-footer">
@@ -67,3 +67,23 @@
 		</div>
 	</div>
 </div>			
+
+<!-- Game Started Modal -->
+<div class="modal fade" id="gameStartedModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Match started</h4>
+			</div>
+			<div class="modal-body">
+				Your match has started!<br/>
+				Please look for server <span class="highlight" id="gameStartedServerName"></span> in Teeworlds.<br/>
+				Password: <span class="highlight" id="gameStartedPassword"></span>
+			</div>
+			<div class="modal-footer">
+				<button type="button" data-dismiss="modal" class="btn btn-success">Close</button>
+			</div>
+		</div>
+	</div>
+</div>

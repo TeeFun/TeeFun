@@ -114,6 +114,7 @@ public class Queue {
 	 */
 	public TeeworldsConfig makeConfig() {
 		final TeeworldsConfig config = TeeworldsConfigUtil.getDefaultConfig();
+		config.setVariable("sv_name", String.format("TeeFun #%d", this.id));
 		config.setVariable("sv_map", this.map);
 		config.setVariable("sv_max_clients", this.maxSize);
 		config.setVariable("sv_scorelimit", this.scoreLimit);

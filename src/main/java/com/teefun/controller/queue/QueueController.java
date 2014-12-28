@@ -17,6 +17,7 @@ import com.google.common.eventbus.EventBus;
 import com.teefun.bean.matchmaking.Matchmaking;
 import com.teefun.bean.usercontext.UserContext;
 import com.teefun.controller.AbstractController;
+import com.teefun.controller.queue.bean.AskPasswordResponse;
 import com.teefun.controller.queue.bean.CreateQueueRequest;
 import com.teefun.controller.queue.bean.PlayerReadyRequest;
 import com.teefun.events.event.PlayerReadyEvent;
@@ -217,7 +218,7 @@ public class QueueController extends AbstractController {
 	 */
 	@RequestMapping(value = "/askPassword", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public String askPassword(@RequestBody @Valid final Integer queueId, final BindingResult bindingResult) {
+	public AskPasswordResponse askPassword(@RequestBody @Valid final Integer queueId, final BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors()) {
 			throw new JsonErrorException("Request validation failed", bindingResult);
@@ -235,7 +236,9 @@ public class QueueController extends AbstractController {
 			throw new JsonErrorException("Game not ready", bindingResult);
 		}
 
-		return queue.getServer().getConfig().getPassword();
+		final TeeworldsConfig config = queue.getServer().getConfig();
+		return new AskPasswordResponse(config.getVariableAsString("sv_name"),
+										config.getVariableAsString("sv_password"));
 	}
 
 	/**
