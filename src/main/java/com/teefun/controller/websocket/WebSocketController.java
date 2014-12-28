@@ -169,7 +169,7 @@ public class WebSocketController extends AbstractController {
 			throw new JsonErrorException("Game not ready");
 		}
 
-		return queue.getServer().getConfig().getPassword();
+		return queue.getServer().getConfig().getVariableAsString("password");
 	}
 
 	/**
