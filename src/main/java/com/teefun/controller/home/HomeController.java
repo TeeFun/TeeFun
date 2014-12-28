@@ -7,11 +7,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.teefun.bean.matchmaking.Matchmaking;
 import com.teefun.bean.usercontext.UserContext;
 import com.teefun.controller.AbstractController;
+import com.teefun.model.json.AppData;
 
 /**
  * Homepage controller.
@@ -51,7 +53,7 @@ public class HomeController extends AbstractController {
 	}
 
 	/**
-	 * Home page.
+	 * Test page.
 	 *
 	 * @param model the model
 	 * @return the view
@@ -60,6 +62,15 @@ public class HomeController extends AbstractController {
 	public ModelAndView test(final Model model) {
 		model.addAttribute("queues", this.matchmaking.getQueues());
 		return new ModelAndView("test");
+	}
+
+	/**
+	 * Test json.
+	 */
+	@RequestMapping(value = "/testJson", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public AppData testJson() {
+		return new AppData(this.matchmaking.getQueues(), this.userContext.getPlayer());
 	}
 
 	/**

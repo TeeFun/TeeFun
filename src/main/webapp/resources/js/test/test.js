@@ -1,64 +1,101 @@
-// TODO refactor this
-var readyQueueId;
-var connected = false;
+// ----- AngularJS -----
 
-var socket = new SockJS(sockJSUrl);
-stompClient = Stomp.over(socket);
-stompClient.debug = null;
-stompClient.connect({}, function(frame) {
-	stompClient.subscribe("/topic/queueUpdated", function(data){
-		console.log("queueUpdated: " + data);
-		refreshQueues();
-	});
-	stompClient.subscribe("/topic/queueCreated", function(data){
-		console.log("queueCreated: " + data);
-		refreshQueues();
-	});
-	stompClient.subscribe("/topic/queueDeleted", function(data){
-		console.log("queueDeleted: " + data);
-		refreshQueues();
-	});
-	stompClient.subscribe("/topic/gameReady", function(data){
-		console.log("gameReady: " + data);
-		var readyQueueName = JSON.parse(data.body).name;
-		showReadyPanel(readyQueueName);
-	});
-	stompClient.subscribe("/topic/gameStarted", function(data){
-		console.log("gameStarted: " + data);
-		askPassword(JSON.parse(data.body).name);
-	});
-	stompClient.subscribe("/topic/gameAborted", function(data){
-		console.log("gameAborted: " + data);
-	});
-	connected = true;
-});
-
-var refreshQueues = function() {
-	$.get("refreshQueues", function(data) {
-		$("#queues").html(data);
-		$("[data-toggle='tooltip']").tooltip()
-	});
+var app = angular.module('teefun', []);
+var data = {
+		queues : {
+			queue : {
+				id : '1',
+				name : 'name',
+				state : "STATE",
+				map : "map",
+				gameType : "gt",
+				scoreLimit : 3,
+				timeLimit : 2,
+				size : 10,
+				maxSize : 10,
+				players : {
+					player : {
+						id : '2',
+						name : 'player'
+					}
+				}
+			}
+		},
+		player : {
+			name : 'nameless',
+			id : 2
+		}
 };
 
-$(function() {
-	$("[data-toggle='tooltip']").tooltip()
+
+
+app.factory('stompClient', function() {
+	var socket = new SockJS(sockJSUrl);
+	var stompClient = Stomp.over(socket);
+	stompClient.debug = null;
+	return stompClient;
 })
 
-// Keep alive (keep the player active)
-var inQueue = 0;
-if(isInQueue) {
-	inQueue = nbOfQueuesAtLoad;
-	// Immedia keep alive 
-	$.get("player/keepAlive");
-}
 
-setInterval(function() {
-	if(inQueue > 0) {
-		$.get("player/keepAlive");
-	}
-}, 5000);
+app.controller('mainController', function($scope, stompClient) {
+	
+	$scope.queues = [];
+	$scope.player = null;
+	$scope.isInQueue = false;
+	
+	$.postjson("testJson", null, function(data) {
+		$scope.queues = data.queues;
+		$scope.player = data.player;
+		updateButtons(data);
+		$scope.$apply();
+		// TODO finish loading
+	});
+	
+	stompClient.connect({}, function(frame) {
+		stompClient.subscribe("/topic/queueUpdated", function(data){
+			console.log("Queue Updated: " + data);
+			//var index = findQueue(data.id);
+			//if(index != -1)
+			//	$scope.queues[index] = data;
+			$scope.$apply();
+		});
+		stompClient.subscribe("/topic/queueCreated", function(data){
+			console.log("Queue Created: " + data);
+			$scope.queues.push(data);
+			$scope.$apply();
+		});
+		stompClient.subscribe("/topic/queueDeleted", function(data){
+			console.log("Queue Deleted: " + data);
+			//var index = findQueue(data.id);
+			//if(index != -1)
+			//	$scope.queues.remove(index);
+			$scope.$apply();
+		});
+		stompClient.subscribe("/topic/gameReady", function(data){
+			console.log("gameReady: " + data);
+			//var readyQueueName = JSON.parse(data.body).name;
+			//showReadyPanel(readyQueueName);
+			$scope.$apply();
+		});
+		stompClient.subscribe("/topic/gameStarted", function(data){
+			console.log("gameStarted: " + data);
+			//askPassword(JSON.parse(data.body).name);
+			$scope.$apply();
+		});
+		stompClient.subscribe("/topic/gameAborted", function(data){
+			console.log("gameAborted: " + data);
+		});
+	});
+	
+	$scope.expandQueue = expandQueue;
+	$scope.joinQueue = joinQueue;
+	$scope.quitQueue = quitQueue;
+	$scope.quitAllQueues = quitAllQueues;
+});
 
-// Ask if the player really wants to leave if he is in queue
+// ---------------------
+
+//Ask if the player really wants to leave if he is in queue
 $(document).ready(function(){
 	$(window).bind('beforeunload', function(){
 		if (inQueue > 0) {
@@ -72,16 +109,28 @@ $(document).ready(function(){
 	});
 });
 
-var changeName = function() {
-	if (!connected) {
-		alert("Please wait for websocket to connect");
-		return;
+// ----- Bootstrap -----
+var updateButtons = function(data) {
+	var isInAnyQueue = false;
+	for (i = 0; i < data.queues.length; i++) {
+		var isInQueue = false;
+		var queue = data.queues[i];
+		for (j = 0; j < queue.players.length; j++) {
+			var player = queue.players[j];
+			if (player.id == data.player.id) {
+				isInQueue = true;
+				isInAnyQueue = true;
+				break;
+			}
+		}
+		updateQuitJoinButton(queue.id, isInQueue);
 	}
-	var newName = $("#changeNameForm").find("input[name='nickname']").val();
-	var posting = $.postjson("player/changeName", newName, function() {
-		console.log("Changed name to : " + newName);
-	});
-};
+	updateQuitAllQueuesButton(isInAnyQueue);
+}
+
+var showReadyPanel = function(queueName) {
+	$('#gameReadyModal').modal("show");
+}
 
 var expandQueue = function(queueName) {
 	var button = $("#expand-" + queueName + "-button");
@@ -96,6 +145,28 @@ var expandQueue = function(queueName) {
 		content.css("display", "block");
 	}
 };
+
+var updateQuitJoinButton = function(queueId, isInQueue) {
+	if (isInQueue) {
+		$("#quit-"+queueId+"-button").show;
+		$("#join-"+queueId+"-button").hide;
+	} else {
+		$("#quit-"+queueId+"-button").hide;
+		$("#join-"+queueId+"-button").show;
+	}
+}
+
+var updateQuitAllQueuesButton = function(isInQueue) {
+	if (isInQueue) {
+		$("#quitAllQueuesButton").enabled;
+	} else {
+		$("#quitAllQueuesButton").disabled;
+	}
+}
+
+// ---------------------
+
+// ----- Requests -----
 
 var joinQueue = function(queueId) {
 	if (!connected) {
@@ -130,71 +201,4 @@ var quitAllQueues = function() {
 	});
 };
 
-var askPassword = function(queueId) {
-	if (!connected) {
-		alert("Please wait for websocket to connect");
-		return;
-	}
-	var posting = $.postjson("queue/askPassword", queueId, function(data) {
-		alert("The password is : '" + data +"'");
-	});
-};
-
-var playerReady = function(isReady) {
-	if (!connected) {
-		alert("Please wait for websocket to connect");
-		return;
-	}
-	$('#gameReadyModal').modal("hide");
-	var input = {
-			queueId : 		readyQueueId,
-			isReady :		isReady
-	};
-	var posting = $.postjson("queue/playerReady", input, function(data) {
-		console.log("Player is : " + isReady);
-	});
-};
-
-var showReadyPanel = function(queueName) {
-	$('#gameReadyModal').modal("show");
-}
-
-
-
-function QueueController($scope, $http) {
-    $scope.queues = [];
-    $scope.addQueue = function(data) {
-		$scope.queues.push(data);
-    };
-    $scope.findQueue = function(queueId) {
-		for(var i = 0; i < arrayLength; i++) {
-			if($scope.queues[i] == queueId)
-				return i;
-		}
-		return -1;
-    };
-    $scope.removeQueue = function(queueId) {
-		var index = findQueue(queueId);
-		if(index != -1)
-			$scope.queues.remove(index);
-    };
-    $scope.updateQueue = function(queueId, data) {
-		var index = findQueue(queueId);
-		if(index != -1)
-			$scope.queues[index] = data;
-    };
-
-	$scope.addQueue(
-		{
-			id: 1,
-			name: "Peter",
-			map: "Jhons",
-			gametype: "Jhons",
-			scorelimit: "Jhons",
-			timelimit: "Jhons",
-			containsPlayer: true
-		}
-	);
-}
-
-var app = angular.module('myApp', []);
+// --------------------

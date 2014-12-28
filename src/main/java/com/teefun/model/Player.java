@@ -1,6 +1,7 @@
 package com.teefun.model;
 
 import java.io.Serializable;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -26,9 +27,19 @@ public class Player implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * Player counter to generate id.
+	 */
+	private static final AtomicInteger PLAYER_COUNTER = new AtomicInteger();
+
+	/**
 	 * Time in ms before the player becomes inactive.
 	 */
 	private static final int INACTIVE_TIME_LIMIT = 11000;
+
+	/**
+	 * Player id.
+	 */
+	private final Integer id;
 
 	/**
 	 * Player name.
@@ -44,6 +55,7 @@ public class Player implements Serializable {
 	 * Constructor.
 	 */
 	public Player(final String name) {
+		this.id = PLAYER_COUNTER.getAndAdd(1);
 		this.name = name;
 	}
 
@@ -77,16 +89,23 @@ public class Player implements Serializable {
 		this.name = name;
 	}
 
+	/**
+	 * @return the {@link #id}
+	 */
+	public Integer getId() {
+		return this.id;
+	}
+
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().append(this.name).toHashCode();
+		return new HashCodeBuilder().append(this.name).append(this.id).toHashCode();
 	}
 
 	@Override
 	public boolean equals(final Object obj) {
 		if (obj instanceof Player) {
 			final Player other = (Player) obj;
-			return new EqualsBuilder().append(this.name, other.name).isEquals();
+			return new EqualsBuilder().append(this.name, other.name).append(this.id, other.id).isEquals();
 		} else {
 			return false;
 		}
