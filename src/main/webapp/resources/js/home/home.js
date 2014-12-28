@@ -21,7 +21,7 @@ stompClient.connect({}, function(frame) {
 	stompClient.subscribe("/topic/gameReady", function(data){
 		console.log("gameReady: " + data);
 		readyQueueInfo = JSON.parse(data.body);
-		showReadyPanel(readyQueueInfo);
+		showReadyModal(readyQueueInfo);
 	});
 	stompClient.subscribe("/topic/gameStarted", function(data){
 		console.log("gameStarted: " + data);
@@ -136,7 +136,7 @@ var askPassword = function(queueId) {
 		return;
 	}
 	var posting = $.postjson("queue/askPassword", queueId, function(data) {
-		alert("Password: " + data);
+		showStartedModal(data);
 	});
 };
 
@@ -156,14 +156,18 @@ var playerReady = function(isReady) {
 	});
 };
 
-var showReadyPanel = function(queueInfo) {
-	$("#modalQueueName").text(queueInfo.name);
-	$("#modalQueueProgressValue").text(queueInfo.size+"/"+queueInfo.maxSize);
-	$("#modalQueueProgressBar").css("width", (100*queueInfo.size/queueInfo.maxSize)+"%");
+var showReadyModal = function(queueInfo) {
+	$("#gameReadyQueueName").text(queueInfo.name);
+	$("#gameReadyProgressValue").text(queueInfo.size+"/"+queueInfo.maxSize);
+	$("#gameReadyProgressBar").css("width", (100*queueInfo.size/queueInfo.maxSize)+"%");
 	$("#gameReadyModal").modal("show");
 }
 
-
+var showStartedModal = function(info) {
+	$("#gameStartedServerName").text(queueInfo.serverName);
+	$("#gameStartedPassword").text(queueInfo.password);
+	$("#gameStartedModal").modal("show");
+}
 
 function QueueController($scope, $http) {
     $scope.queues = [];

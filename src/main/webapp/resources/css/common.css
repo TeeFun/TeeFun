@@ -2,6 +2,11 @@ body {
 	overflow-y: scroll;
 }
 
+span.highlight {
+	font-weight: bold;
+	color: #DD4444;
+}
+
 div.website-header {
 	text-align: center;
 	height: 247px;
