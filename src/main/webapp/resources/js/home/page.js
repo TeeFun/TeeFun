@@ -163,19 +163,7 @@ app.controller('mainController', function($scope, stompClient) {
 	});
 	
 	$('#nicknameInput').bind('input', function() {
-	    if ($(this).val() == playerName) {
-	    	$(this).parent().removeClass("has-warning");
-	    	$(this).parent().addClass("has-success");
-	    	$(this).parent().find('.glyphicon').removeClass("glyphicon-warning-sign");
-	    	$(this).parent().find('.glyphicon').addClass("glyphicon-ok");
-	    	$("#changeNameButton").prop('disabled', true);
-	    } else {
-	    	$(this).parent().removeClass("has-success");
-	    	$(this).parent().addClass("has-warning");
-	    	$(this).parent().find('.glyphicon').removeClass("glyphicon-ok");
-	    	$(this).parent().find('.glyphicon').addClass("glyphicon-warning-sign");
-	    	$("#changeNameButton").prop('disabled', false);
-	    }
+		updateNickNameButton();
 	});
 });
 
@@ -231,6 +219,23 @@ function progress(timeleft, timetotal, $element) {
     }
 };
 
+var updateNickNameButton = function() {
+	var $elem = $('#nicknameInput');
+	if ($elem.val() == playerName) {
+		$elem.parent().removeClass("has-warning");
+		$elem.parent().addClass("has-success");
+		$elem.parent().find('.glyphicon').removeClass("glyphicon-warning-sign");
+		$elem.parent().find('.glyphicon').addClass("glyphicon-ok");
+		$("#changeNameButton").prop('disabled', true);
+	} else {
+		$elem.parent().removeClass("has-success");
+		$elem.parent().addClass("has-warning");
+		$elem.parent().find('.glyphicon').removeClass("glyphicon-ok");
+		$elem.parent().find('.glyphicon').addClass("glyphicon-warning-sign");
+		$("#changeNameButton").prop('disabled', false);
+	}
+}
+
 // -----------------
 
 // ----- Bootstrap -----
@@ -285,6 +290,7 @@ var changeName = function(newName) {
 	var posting = $.postjson(contextPathUrl + "player/changeName", { name : newName }, function() {
 		console.log("Changed name to : " + newName);
 		playerName = newName;
+		updateNickNameButton();
 	});
 };
 
