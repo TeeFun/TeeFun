@@ -69,6 +69,7 @@ app.controller('mainController', function($scope, stompClient) {
 			}
 		});
 		wsConnected = true;
+		loadingDone();
 	});
 	
 	$scope.expandQueue = expandQueue;
