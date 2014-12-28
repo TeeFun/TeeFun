@@ -303,14 +303,15 @@ public class Queue {
 	 *
 	 * @param player the player
 	 * @param isReady is the player ready
+	 * @return true if applied
 	 */
-	public void setPlayerReady(final Player player, final Boolean isReady) {
+	public boolean setPlayerReady(final Player player, final Boolean isReady) {
 		if (!this.containsPlayer(player)) {
-			return;
+			return false;
 		}
 
 		if (this.playersReady.contains(player) || this.playersNotReady.contains(player)) {
-			return;
+			return false;
 		}
 
 		if (isReady) {
@@ -318,7 +319,7 @@ public class Queue {
 		} else {
 			this.playersNotReady.add(player);
 		}
-
+		return true;
 	}
 
 	/**

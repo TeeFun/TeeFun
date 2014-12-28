@@ -1,2 +1,2 @@
-<#assign pageName="test"/>
+<#assign pageName="homeOld"/>
 <#include "/template/defaultTemplate.ftl" />

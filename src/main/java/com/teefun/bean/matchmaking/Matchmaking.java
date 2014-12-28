@@ -86,4 +86,13 @@ public interface Matchmaking {
 	 */
 	boolean isInQueue(Player player);
 
+	/**
+	 * Set a player ready state.
+	 *
+	 * @param player the player
+	 * @param queue the queue
+	 * @param isReady the ready response
+	 */
+	void setPlayerReady(Player player, Queue queue, Boolean isReady);
+
 }

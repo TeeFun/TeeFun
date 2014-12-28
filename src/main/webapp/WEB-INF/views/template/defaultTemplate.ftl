@@ -11,7 +11,7 @@
 		<!-- Common -->
 		<link rel="stylesheet" type="text/css" href="<@spring.url "/resources/css/common.css" />" >
 		<!-- Custom -->
-		<link rel="stylesheet" type="text/css" href="<@spring.url "/resources/css/" + pageName + "/" + pageName + ".css" />" > 
+		<link rel="stylesheet" type="text/css" href="<@spring.url "/resources/css/" + pageName + "/page.css" />" > 
 
 		<!-- Bootstrap -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
@@ -39,6 +39,6 @@
 		<!-- Common -->
 		<script src="<@spring.url "/resources/js/common.js"/>" ></script>
 		<!-- Custom -->
-		<script src="<@spring.url "/resources/js/" + pageName + "/" + pageName + ".js" />" ></script>
+		<script src="<@spring.url "/resources/js/" + pageName + "/page.js" />" ></script>
 	</body>
 </html> 

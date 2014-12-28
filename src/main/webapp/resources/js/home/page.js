@@ -19,10 +19,14 @@ app.controller('mainController', function($scope, stompClient) {
 	$scope.queues = [];
 	$scope.player = {};
 	
-	$.postjson("testJson", null, function(data) {
+	$.postjson("appData", null, function(data) {
 		$scope.queues = data.queues;
 		$scope.player = data.player;
+		for (var i = 0; i < $scope.queues.length; i++) {
+			$scope.setQueueTable($scope.queues[i]);
+		}
 		$scope.$apply();
+		$("[data-toggle='tooltip']").tooltip();
 		pageLoaded = true;
 		loadingDone();
 	});
@@ -34,7 +38,9 @@ app.controller('mainController', function($scope, stompClient) {
 			if(index != -1) {
 				var wasExpand = isExpand(queue.id);
 				$scope.queues[index] = queue;
+				$scope.setQueueTable(queue);
 				$scope.$apply();
+				$("[data-toggle='tooltip']").tooltip();
 				if (wasExpand) {
 					expandQueue(queue.id);
 				}
@@ -43,7 +49,9 @@ app.controller('mainController', function($scope, stompClient) {
 		stompClient.subscribe("/topic/queueCreated", function(data){
 			var queue = JSON.parse(data.body);
 			$scope.queues.push(queue);
+			$scope.setQueueTable(queue);
 			$scope.$apply();
+			$("[data-toggle='tooltip']").tooltip();
 		});
 		stompClient.subscribe("/topic/queueDeleted", function(data){
 			var queue = JSON.parse(data.body);
@@ -57,16 +65,13 @@ app.controller('mainController', function($scope, stompClient) {
 			var queue = JSON.parse(data.body);
 			readyQueueId = JSON.parse(data.body);
 			if (isInQueue(queue, $scope.player)) {
-				showReadyPanel(true);
+				showReadyModal(queue);
 			}
 		});
 		stompClient.subscribe("/topic/gameStarted", function(data){
 			askPassword(JSON.parse(data.body).id);
 		});
 		stompClient.subscribe("/topic/gameAborted", function(data){
-			if (isInQueue(queue, $scope.player)) {
-				showReadyPanel(false);
-			}
 		});
 		wsConnected = true;
 		loadingDone();
@@ -95,7 +100,7 @@ app.controller('mainController', function($scope, stompClient) {
 	};
 	$scope.isInAnyQueue  = function() {
 		return isInAnyQueue($scope.queues, $scope.player);
-	}
+	};
 	
 	$scope.playerRead = function(ready) {
 		if (readyQueueId == -1) {
@@ -103,7 +108,38 @@ app.controller('mainController', function($scope, stompClient) {
 			return;
 		}
 		playerReady(queueId, ready);
-	}
+	};
+	
+	$scope.setQueueTable = function(queue) {
+		var qTable = {};
+		var rows = [];
+		var nbCols = 4;
+		var nbRows = Math.floor((queue.maxSize+nbCols-1) / nbCols);
+		for (var i = 0; i < nbRows; i++) {
+			var cols = [];
+			for (var j = 0; j < nbCols; j++) {
+				var index = i*j+j;
+				var cell = {
+						name: null,
+						cssclass: null,
+				};
+				if (index >= queue.players.length) {
+					if (index >= queue.maxSize) {
+						cell.cssclass = "disabled";
+					}
+				} else {
+					if (queue.players[index].id == $scope.player.id) {
+						cell.cssclass = "user";
+					}
+					cell.name = queue.players[index].name;
+				}
+				cols.push(cell);
+			}
+			rows.push(cols);
+		}
+		qTable.rows = rows;
+		queue.table = qTable;
+	};
 	
 	setInterval(function() {
 		if (isInAnyQueue($scope.queues, $scope.player)) {
@@ -171,12 +207,17 @@ var isInAnyQueue  = function(queues, player) {
 
 // ----- Bootstrap -----
 
-var showReadyPanel = function(show) {
-	if (show) {
-		$('#gameReadyModal').modal("show");
-	} else {
-		$('#gameReadyModal').modal("hide");
-	}
+var showReadyModal = function(queueInfo) {
+	$("#gameReadyQueueName").text(queueInfo.name);
+	$("#gameReadyProgressValue").text(queueInfo.size+"/"+queueInfo.maxSize);
+	$("#gameReadyProgressBar").css("width", (100*queueInfo.size/queueInfo.maxSize)+"%");
+	$("#gameReadyModal").modal("show");
+}
+
+var showStartedModal = function(info) {
+	$("#gameStartedServerName").text(info.serverName);
+	$("#gameStartedPassword").text(info.password);
+	$("#gameStartedModal").modal("show");
 }
 
 var isExpand = function(queueId) {
@@ -253,7 +294,7 @@ var askPassword = function(queueId) {
 		return;
 	}
 	var posting = $.postjson(contextPathUrl + "/queue/askPassword", queueId, function(data) {
-		alert("The password is : '" + data +"'");
+		showStartedModal(data);
 	});
 };
 
