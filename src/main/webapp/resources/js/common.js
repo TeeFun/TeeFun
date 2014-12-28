@@ -1,5 +1,5 @@
 $.postjson = function(url, data, successCallback, errorCallback) {
-	if (typeof(errorCallback) == 'undefined') {
+	if (typeof(errorCallback) == "undefined") {
 		errorCallback = function(data) {
 			if (data.status == 200) {
 				alert("Could not parse JSON");
@@ -24,13 +24,12 @@ $.postjson = function(url, data, successCallback, errorCallback) {
 	}
 	
 	$.ajax({
-		type: 'POST',
+		type: "POST",
 		url : url,
 		data : JSON.stringify(data),
 		contentType: "application/json",
-		dataType : 'json',
+		dataType : "json",
 	})
 	.done(successCallback)
 	.fail(errorCallback);
 }
-

@@ -7,7 +7,7 @@ var createQueue = function() {
 			gametype :		$("#createQueueGametype").val(),
 			scoreLimit :	$("#createQueueScoreLimit").val(),
 			timeLimit :		$("#createQueueTimeLimit").val(),
-			permanent : 	$("#createQueuePermanent").prop('checked'),
+			permanent : 	$("#createQueuePermanent").prop("checked"),
 	};
 
 	var posting = $.postjson("createQueue", input, function() {

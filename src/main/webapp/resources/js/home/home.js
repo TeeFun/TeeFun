@@ -1,5 +1,5 @@
 // TODO refactor this
-var readyQueueInfo;
+var readyQueueInfo = null;
 var connected = false;
 
 var socket = new SockJS(sockJSUrl);
@@ -60,12 +60,12 @@ setInterval(function() {
 
 // Ask if the player really wants to leave if he is in queue
 $(document).ready(function(){
-	$(window).bind('beforeunload', function(){
+	$(window).bind("beforeunload", function(){
 		if (inQueue > 0) {
 		  return "You are currently in a queue. Leaving the page will removing you from all queues. Are you sure you want to leave ?";
 		}
 	});
-	$(window).bind('unload', function(){
+	$(window).bind("unload", function(){
 		// Try to quit all queues on unload
 		// TODO a little bit buggy. Need to interrupt request in order to use this or the client will be blocked on further connection
 		// quitAllQueues();
@@ -136,7 +136,7 @@ var askPassword = function(queueId) {
 		return;
 	}
 	var posting = $.postjson("queue/askPassword", queueId, function(data) {
-		alert("The password is : '" + data +"'");
+		alert("Password: " + data);
 	});
 };
 
@@ -145,22 +145,22 @@ var playerReady = function(isReady) {
 		alert("Please wait for websocket to connect");
 		return;
 	}
-	$('#gameReadyModal').modal("hide");
+	$("#gameReadyModal").modal("hide");
 	var input = {
 			queueId : 		readyQueueInfo.id,
 			isReady :		isReady
 	};
 	readyQueueInfo = null;
 	var posting = $.postjson("queue/playerReady", input, function(data) {
-		console.log("Player is : " + isReady);
+		console.log("Player ready: " + isReady);
 	});
 };
 
 var showReadyPanel = function(queueInfo) {
-	$('#modalQueueName').text(queueInfo.name);
-	$('#modalQueueProgressValue').text(queueInfo.size+"/"+queueInfo.maxSize);
-	$('#modalQueueProgressBar').css("width", (100*queueInfo.size/queueInfo.maxSize)+"%");
-	$('#gameReadyModal').modal("show");
+	$("#modalQueueName").text(queueInfo.name);
+	$("#modalQueueProgressValue").text(queueInfo.size+"/"+queueInfo.maxSize);
+	$("#modalQueueProgressBar").css("width", (100*queueInfo.size/queueInfo.maxSize)+"%");
+	$("#gameReadyModal").modal("show");
 }
 
 
@@ -201,4 +201,4 @@ function QueueController($scope, $http) {
 	);
 }
 
-var app = angular.module('myApp', []);
+var app = angular.module("myApp", []);
