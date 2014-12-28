@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.teefun.bean;
+package com.teefun.bean.websocket;
 
 import javax.annotation.Resource;
 

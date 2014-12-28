@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.teefun.bean.Matchmaking;
+import com.teefun.bean.matchmaking.Matchmaking;
 import com.teefun.model.Player;
 import com.teefun.model.Queue;
 

@@ -26,6 +26,16 @@ public class JsonErrorException extends RuntimeException {
 	 * Default constructor.
 	 *
 	 * @param message the global message
+	 */
+	public JsonErrorException(final String message) {
+		super(message);
+		this.errors = null;
+	}
+
+	/**
+	 * Default constructor with errors.
+	 *
+	 * @param message the global message
 	 * @param errors the errors
 	 */
 	public JsonErrorException(final String message, final Errors errors) {

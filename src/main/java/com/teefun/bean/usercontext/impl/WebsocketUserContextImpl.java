@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.teefun.bean.impl;
+package com.teefun.bean.usercontext.impl;
 
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -11,9 +11,9 @@ import javax.annotation.PostConstruct;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.WebApplicationContext;
 
-import com.teefun.bean.UserContext;
+import com.teefun.bean.usercontext.UserContext;
+import com.teefun.bean.usercontext.WebsocketUserContext;
 import com.teefun.model.Player;
 
 /**
@@ -23,8 +23,8 @@ import com.teefun.model.Player;
  *
  */
 @Component
-@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
-public class UserContextImpl implements UserContext, Serializable {
+@Scope(value = "websocket", proxyMode = ScopedProxyMode.TARGET_CLASS)
+public class WebsocketUserContextImpl implements WebsocketUserContext, Serializable {
 
 	/**
 	 * SUID.

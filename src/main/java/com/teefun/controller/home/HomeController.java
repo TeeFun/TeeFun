@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.teefun.bean.Matchmaking;
-import com.teefun.bean.UserContext;
+import com.teefun.bean.matchmaking.Matchmaking;
+import com.teefun.bean.usercontext.UserContext;
 import com.teefun.controller.AbstractController;
 
 /**
@@ -48,6 +48,18 @@ public class HomeController extends AbstractController {
 		model.addAttribute("currentPlayer", this.userContext.getPlayer());
 		model.addAttribute("isInQueue", this.matchmaking.isInQueue(this.userContext.getPlayer()));
 		return new ModelAndView("home");
+	}
+
+	/**
+	 * Home page.
+	 *
+	 * @param model the model
+	 * @return the view
+	 */
+	@RequestMapping(value = "/test", method = RequestMethod.GET)
+	public ModelAndView test(final Model model) {
+		model.addAttribute("queues", this.matchmaking.getQueues());
+		return new ModelAndView("test");
 	}
 
 	/**

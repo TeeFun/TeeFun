@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.common.eventbus.EventBus;
-import com.teefun.bean.Matchmaking;
-import com.teefun.bean.UserContext;
+import com.teefun.bean.matchmaking.Matchmaking;
+import com.teefun.bean.usercontext.UserContext;
 import com.teefun.controller.AbstractController;
 import com.teefun.events.event.PlayerModifiedEvent;
 import com.teefun.exception.JsonErrorException;

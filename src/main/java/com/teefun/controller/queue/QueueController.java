@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.common.eventbus.EventBus;
-import com.teefun.bean.Matchmaking;
-import com.teefun.bean.UserContext;
+import com.teefun.bean.matchmaking.Matchmaking;
+import com.teefun.bean.usercontext.UserContext;
 import com.teefun.controller.AbstractController;
 import com.teefun.controller.queue.bean.CreateQueueRequest;
 import com.teefun.controller.queue.bean.PlayerReadyRequest;

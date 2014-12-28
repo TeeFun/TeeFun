@@ -1,4 +1,4 @@
-package com.teefun.bean;
+package com.teefun.bean.matchmaking;
 
 import java.util.List;
 

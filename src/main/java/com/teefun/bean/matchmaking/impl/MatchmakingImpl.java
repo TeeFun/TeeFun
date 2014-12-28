@@ -1,4 +1,4 @@
-package com.teefun.bean.impl;
+package com.teefun.bean.matchmaking.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import com.teefun.bean.Matchmaking;
+import com.teefun.bean.matchmaking.Matchmaking;
 import com.teefun.events.event.GameAbortedEvent;
 import com.teefun.events.event.GameReadyEvent;
 import com.teefun.events.event.GameStartedEvent;
