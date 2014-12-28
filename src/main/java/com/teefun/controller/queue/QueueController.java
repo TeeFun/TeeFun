@@ -235,7 +235,8 @@ public class QueueController extends AbstractController {
 			throw new JsonErrorException("Game not ready", bindingResult);
 		}
 
-		return queue.getServer().getConfig().getPassword();
+		final String password = queue.getServer().getConfig().getPassword();
+		return new AskPasswordResponse(queue.getId(), password);
 	}
 
 	/**
