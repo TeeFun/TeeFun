@@ -218,7 +218,7 @@ public class QueueController extends AbstractController {
 	 */
 	@RequestMapping(value = "/askPassword", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public String askPassword(@RequestBody @Valid final Integer queueId, final BindingResult bindingResult) {
+	public AskPasswordResponse askPassword(@RequestBody @Valid final Integer queueId, final BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors()) {
 			throw new JsonErrorException("Request validation failed", bindingResult);
