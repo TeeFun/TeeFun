@@ -1,5 +1,6 @@
 // TODO refactor this
 var readyQueueId;
+var connected = false;
 
 var socket = new SockJS(sockJSUrl);
 stompClient = Stomp.over(socket);
@@ -29,6 +30,7 @@ stompClient.connect({}, function(frame) {
 	stompClient.subscribe("/topic/gameAborted", function(data){
 		console.log("gameAborted: " + data);
 	});
+	connected = true;
 });
 
 var refreshQueues = function() {
@@ -65,12 +67,16 @@ $(document).ready(function(){
 	});
 	$(window).bind('unload', function(){
 		// Try to quit all queues on unload
-		// TODO a little bit buggy
-		quitAllQueues();
+		// TODO a little bit buggy. Need to interrupt request in order to use this or the client will be blocked on further connection
+		// quitAllQueues();
 	});
 });
 
 var changeName = function() {
+	if (!connected) {
+		alert("Please wait for websocket to connect");
+		return;
+	}
 	var newName = $("#changeNameForm").find("input[name='nickname']").val();
 	var posting = $.postjson("player/changeName", newName, function() {
 		console.log("Changed name to : " + newName);
@@ -92,6 +98,10 @@ var expandQueue = function(queueName) {
 };
 
 var joinQueue = function(queueId) {
+	if (!connected) {
+		alert("Please wait for websocket to connect");
+		return;
+	}
 	var posting = $.postjson("queue/joinQueue", queueId, function() {
 		inQueue++;
 		console.log("Joined queue: " + queueId);
@@ -99,6 +109,10 @@ var joinQueue = function(queueId) {
 };
 
 var quitQueue = function(queueId) {
+	if (!connected) {
+		alert("Please wait for websocket to connect");
+		return;
+	}
 	var posting = $.postjson("queue/quitQueue", queueId, function() {
 		inQueue--;
 		console.log("Quited queue: " + queueId);
@@ -106,6 +120,10 @@ var quitQueue = function(queueId) {
 };
 
 var quitAllQueues = function() {
+	if (!connected) {
+		alert("Please wait for websocket to connect");
+		return;
+	}
 	var posting = $.postjson("queue/quitAllQueues", null, function() {
 		inQueue = 0;
 		console.log("Left all queues");
@@ -113,12 +131,20 @@ var quitAllQueues = function() {
 };
 
 var askPassword = function(queueId) {
+	if (!connected) {
+		alert("Please wait for websocket to connect");
+		return;
+	}
 	var posting = $.postjson("queue/askPassword", queueId, function(data) {
 		alert("The password is : '" + data +"'");
 	});
 };
 
 var playerReady = function(isReady) {
+	if (!connected) {
+		alert("Please wait for websocket to connect");
+		return;
+	}
 	$('#gameReadyModal').modal("hide");
 	var input = {
 			queueId : 		readyQueueId,
