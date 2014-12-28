@@ -14,12 +14,12 @@
 						<div class="input-group" style="width: 100%;">
 							<div class="input-group has-success has-feedback">
 								<span class="input-group-addon">Nickname</span>
-								<input type="text" name="nickname" class="form-control" ng-model="player.name">
+								<input id="nicknameInput" type="text" name="nickname" class="form-control" ng-model="player.name">
 								<span class="glyphicon glyphicon-ok form-control-feedback"></span>
 							</div>
 						</div>
 						<div style="text-align: center;">
-							<button class="btn btn-default" type="submit" ng-click="changeName(player.name)" onClick="return false;">Confirm</button>
+							<button id="changeNameButton" class="btn btn-default" type="submit" ng-click="changeName(player.name)" onClick="return false;" disabled >Confirm</button>
 						</div>
 					</form>
 				</div>
