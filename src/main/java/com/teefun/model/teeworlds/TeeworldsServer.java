@@ -5,6 +5,9 @@ package com.teefun.model.teeworlds;
 
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.teefun.util.ProcessUtil;
 
 /**
@@ -14,6 +17,11 @@ import com.teefun.util.ProcessUtil;
  *
  */
 public class TeeworldsServer {
+
+	/**
+	 * Class logger.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(TeeworldsServer.class);
 
 	/**
 	 * Server time to live in minutes.
@@ -95,7 +103,9 @@ public class TeeworldsServer {
 	 * @return true if the server has stopped
 	 */
 	public boolean hasStopped() {
-		return ProcessUtil.isRunning(this.process);
+		// FIXME
+		LOGGER.debug("Server running : " + ProcessUtil.isRunning(this.process));
+		return false;
 	}
 
 	/**

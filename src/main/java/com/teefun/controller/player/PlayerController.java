@@ -71,6 +71,10 @@ public class PlayerController extends AbstractController {
 
 		final String name = changeNameRequest.getName();
 
+		if (name == this.userContext.getPlayer().getName()) {
+			throw new JsonErrorException("The new name is the same than the old one.", bindingResult);
+		}
+
 		final Map<String, UserContext> userContexts = this.appContext.getBeansOfType(UserContext.class);
 		for (final UserContext otherUserContext : userContexts.values()) {
 			if (otherUserContext.getPlayer().getName().equals(name)) {

@@ -71,6 +71,8 @@ public class QueueController extends AbstractController {
 	@ResponseBody
 	public String joinQueue(@RequestBody @Valid final Integer queueId, final BindingResult bindingResult) {
 
+		this.userContext.getPlayer().keepAlive();
+
 		if (bindingResult.hasErrors()) {
 			throw new JsonErrorException("Request validation failed", bindingResult);
 		}
@@ -107,6 +109,8 @@ public class QueueController extends AbstractController {
 	@ResponseBody
 	public String quitQueue(@RequestBody @Valid final Integer queueId, final BindingResult bindingResult) {
 
+		this.userContext.getPlayer().keepAlive();
+
 		if (bindingResult.hasErrors()) {
 			throw new JsonErrorException("Request validation failed", bindingResult);
 		}
@@ -137,6 +141,9 @@ public class QueueController extends AbstractController {
 	@RequestMapping(value = "/quitAllQueues", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public String quitAllQueues() {
+
+		this.userContext.getPlayer().keepAlive();
+
 		final Player player = this.userContext.getPlayer();
 		this.matchmaking.quitAllQueues(player);
 

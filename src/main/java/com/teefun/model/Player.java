@@ -70,7 +70,6 @@ public class Player implements Serializable {
 	 * @return true if the player is still active
 	 */
 	public boolean isActive() {
-		LOGGER.trace(String.format("Player '%s' %d - %d", this.name, System.currentTimeMillis(), this.lastActiveTime));
 		return System.currentTimeMillis() - this.lastActiveTime < INACTIVE_TIME_LIMIT;
 	}
 
