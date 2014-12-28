@@ -46,7 +46,7 @@ public class TeeworldsConfig {
 	 * Sets a variable to a string value.
 	 */
 	public void setVariable(final String name, final String value) {
-		this.variables.put(name, String.format("\"%s\"", value));
+		this.variables.put(name, value);
 	}
 
 	/**
@@ -60,7 +60,7 @@ public class TeeworldsConfig {
 	 * Gets a variable as a string value.
 	 */
 	public String getVariableAsString(final String name) {
-		return this.variables.get(name).replaceAll("\"", "");
+		return this.variables.get(name);
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class TeeworldsConfig {
 		try {
 			final BufferedWriter writer = Files.newBufferedWriter(filepath, Charset.defaultCharset());
 			for (final Entry<String, String> entry : this.variables.entrySet()) {
-				writer.append(String.format("%s %s", entry.getKey(), entry.getValue()));
+				writer.append(String.format("%s \"%s\"", entry.getKey(), entry.getValue()));
 				writer.newLine();
 			}
 			writer.flush();
