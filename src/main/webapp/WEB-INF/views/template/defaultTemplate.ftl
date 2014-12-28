@@ -16,7 +16,19 @@
 	</head>
 
 	<body>
+		<!-- Header -->
+		<div class="website-header">
+			<h1>TeeFun</h1>
+		</div>
+
+		<!-- Page content -->
 		<#include "/" + pageName + "/content.ftl" />
+
+		<!-- Footer -->
+		<p class="website-footer">
+			TeeFun - Copyright (C) Rajh &amp; Choupom<br/>
+			Contact us on IRC (#teefun @ irc.quakenet.org)
+		</p>
 
 		<!-- Load js at end -->
 		<#include "/common/js.ftl" />

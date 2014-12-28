@@ -1,0 +1,21 @@
+div.website-header {
+	text-align: center;
+	height: 247px;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: 95px 247px;
+	background-image: url('https://www.teeworlds.com/images/splashtee6.png');
+}
+
+div.website-header > h1 {
+	font-variant: small-caps;
+	font-weight: bold;
+	color: #444444;
+	position: relative;
+	top: 208px;
+}
+
+p.website-footer {
+	text-align: center;
+	font-size: 13px;
+}
