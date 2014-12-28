@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<!-- Content type -->
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
 		<!-- Title -->
 		<title>Teeworlds Matchmaking System</title>
 
