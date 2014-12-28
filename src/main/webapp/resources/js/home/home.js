@@ -1,5 +1,5 @@
 // TODO refactor this
-var readyQueueId = -1;
+var readyQueueInfo;
 var connected = false;
 
 var socket = new SockJS(sockJSUrl);
@@ -20,8 +20,8 @@ stompClient.connect({}, function(frame) {
 	});
 	stompClient.subscribe("/topic/gameReady", function(data){
 		console.log("gameReady: " + data);
-		readyQueueId = JSON.parse(data.body).id;
-		showReadyPanel(readyQueueId);
+		readyQueueInfo = JSON.parse(data.body);
+		showReadyPanel(readyQueueInfo);
 	});
 	stompClient.subscribe("/topic/gameStarted", function(data){
 		console.log("gameStarted: " + data);
@@ -147,16 +147,19 @@ var playerReady = function(isReady) {
 	}
 	$('#gameReadyModal').modal("hide");
 	var input = {
-			queueId : 		readyQueueId,
+			queueId : 		readyQueueInfo.id,
 			isReady :		isReady
 	};
-	readyQueueId = -1;
+	readyQueueInfo = null;
 	var posting = $.postjson("queue/playerReady", input, function(data) {
 		console.log("Player is : " + isReady);
 	});
 };
 
-var showReadyPanel = function(queueName) {
+var showReadyPanel = function(queueInfo) {
+	$('#modalQueueName').text(queueInfo.name);
+	$('#modalQueueProgressValue').text(queueInfo.size+"/"+queueInfo.maxSize);
+	$('#modalQueueProgressBar').css("width", (100*queueInfo.size/queueInfo.maxSize)+"%");
 	$('#gameReadyModal').modal("show");
 }
 

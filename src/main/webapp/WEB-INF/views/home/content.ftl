@@ -41,11 +41,11 @@
 				<h4 class="modal-title">Queue status</h4>
 			</div>
 			<div class="modal-body">
-				Match found for queue <span class="queue"></span>!<br/>
+				Match found for queue <span class="queue" id="modalQueueName"></span>!<br/>
 				Please accept or decline the game.<br/>
 				<div class="progress" style="margin-top: 5px;">
-					<span class="progress-value">Players ready: 8/10</span>
-					<div class="progress-bar progress-bar-info progress-bar-striped" style="width: 80%;"></div>
+					<span class="progress-value" id="modalQueueProgressValue"></span>
+					<div class="progress-bar progress-bar-info progress-bar-striped" id="modalQueueProgressBar"></div>
 				</div>
 			</div>
 			<div class="modal-footer">
