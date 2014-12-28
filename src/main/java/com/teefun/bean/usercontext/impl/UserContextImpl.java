@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -15,6 +16,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.teefun.bean.usercontext.UserContext;
 import com.teefun.model.Player;
+import com.teefun.util.PlayerHolder;
 
 /**
  * Default impl for {@link UserContext}.
@@ -52,6 +54,15 @@ public class UserContextImpl implements UserContext, Serializable {
 	@PostConstruct
 	public void initDefaultPlayer() {
 		this.player = new Player(getUniqueName());
+		PlayerHolder.PLAYERS.add(this.player);
+	}
+
+	/**
+	 * Remove player from active list.
+	 */
+	@PreDestroy
+	public void destroyPlayer() {
+		PlayerHolder.PLAYERS.remove(this.player);
 	}
 
 	/**

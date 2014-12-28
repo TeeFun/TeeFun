@@ -1,7 +1,5 @@
 package com.teefun.controller.player;
 
-import java.util.Map;
-
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
@@ -21,6 +19,8 @@ import com.teefun.controller.AbstractController;
 import com.teefun.controller.player.bean.ChangeNameRequest;
 import com.teefun.events.event.PlayerModifiedEvent;
 import com.teefun.exception.JsonErrorException;
+import com.teefun.model.Player;
+import com.teefun.util.PlayerHolder;
 
 /**
  * Player controller.
@@ -75,9 +75,8 @@ public class PlayerController extends AbstractController {
 			throw new JsonErrorException("The new name is the same than the old one.", bindingResult);
 		}
 
-		final Map<String, UserContext> userContexts = this.appContext.getBeansOfType(UserContext.class);
-		for (final UserContext otherUserContext : userContexts.values()) {
-			if (otherUserContext.getPlayer().getName().equals(name)) {
+		for (final Player player : PlayerHolder.PLAYERS) {
+			if (player.getName().equals(name)) {
 				throw new JsonErrorException("Name already taken.", bindingResult);
 			}
 		}
