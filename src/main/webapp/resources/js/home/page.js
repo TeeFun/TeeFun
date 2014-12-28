@@ -102,14 +102,6 @@ app.controller('mainController', function($scope, stompClient) {
 		return isInAnyQueue($scope.queues, $scope.player);
 	};
 	
-	$scope.playerRead = function(ready) {
-		if (readyQueueId == -1) {
-			alert("No queue found.");
-			return;
-		}
-		playerReady(queueId, ready);
-	};
-	
 	$scope.setQueueTable = function(queue) {
 		var qTable = {};
 		var rows = [];
@@ -208,6 +200,7 @@ var isInAnyQueue  = function(queues, player) {
 // ----- Bootstrap -----
 
 var showReadyModal = function(queueInfo) {
+	$("#gameReadyQueueId").text(queueInfo.id);
 	$("#gameReadyQueueName").text(queueInfo.name);
 	$("#gameReadyProgressValue").text(queueInfo.size+"/"+queueInfo.maxSize);
 	$("#gameReadyProgressBar").css("width", (100*queueInfo.size/queueInfo.maxSize)+"%");
@@ -298,14 +291,18 @@ var askPassword = function(queueId) {
 	});
 };
 
-var playerReady = function(queueId, isReady) {
+var playerReady = function(isReady) {
 	if (!wsConnected) {
 		alert("Please wait for websocket to connect");
 		return;
 	}
+	if (readyQueueId == -1) {
+		alert("No queue found.");
+		return;
+	}
 	showReadyModal(false);
 	var input = {
-			queueId : 		queueId,
+			queueId : 		readyQueueId,
 			isReady :		isReady
 	};
 	readyQueueInfo = null;
