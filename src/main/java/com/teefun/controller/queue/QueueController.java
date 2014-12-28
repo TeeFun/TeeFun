@@ -236,8 +236,9 @@ public class QueueController extends AbstractController {
 			throw new JsonErrorException("Game not ready", bindingResult);
 		}
 
-		final String password = queue.getServer().getConfig().getPassword();
-		return new AskPasswordResponse(queue.getId(), password);
+		final TeeworldsConfig config = queue.getServer().getConfig();
+		return new AskPasswordResponse(config.getVariableAsString("sv_name"),
+										config.getVariableAsString("sv_password"));
 	}
 
 	/**

@@ -5,8 +5,6 @@ package com.teefun.controller.queue.bean;
 
 import java.io.Serializable;
 
-import javax.validation.constraints.NotNull;
-
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,8 +25,8 @@ public class AskPasswordResponse implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@JsonProperty
-	@NotNull
-	private Integer queueId;
+	@NotBlank
+	private String serverName;
 
 	@JsonProperty
 	@NotBlank
@@ -37,23 +35,23 @@ public class AskPasswordResponse implements Serializable {
 	/**
 	 * Constructor
 	 */
-	public AskPasswordResponse(final Integer queueId, final String password) {
-		this.queueId = queueId;
+	public AskPasswordResponse(final String serverName, final String password) {
+		this.serverName = serverName;
 		this.password = password;
 	}
 
 	/**
-	 * @return the {@link #queueId}
+	 * @return the {@link #serverName}
 	 */
-	public Integer getQueueId() {
-		return this.queueId;
+	public String getServerName() {
+		return this.serverName;
 	}
 
 	/**
-	 * @param queueId the {@link #queueId} to set
+	 * @param serverName the {@link #serverName} to set
 	 */
-	public void setQueueId(final Integer queueId) {
-		this.queueId = queueId;
+	public void setServerName(final String serverName) {
+		this.serverName = serverName;
 	}
 
 	/**

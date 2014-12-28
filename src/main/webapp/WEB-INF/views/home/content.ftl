@@ -66,8 +66,8 @@
 			</div>
 			<div class="modal-body">
 				Your match has started!<br/>
-				Please look for server <span class="bold" id="gameStartedServerName"></span> in Teeworlds.<br/>
-				Password: <span class="bold" id="gameStartedPassword"></span>
+				Please look for server <span class="highlight" id="gameStartedServerName"></span> in Teeworlds.<br/>
+				Password: <span class="highlight" id="gameStartedPassword"></span>
 			</div>
 			<div class="modal-footer">
 				<button type="button" data-dismiss="modal" class="btn btn-success">Close</button>
