@@ -1,6 +1,8 @@
 var wsConnected = false;
 var pageLoaded = false;
 
+var readyQueue = null;
+
 // ----- AngularJS -----
 
 var app = angular.module('teefun', []);
@@ -14,8 +16,6 @@ app.factory('stompClient', function() {
 
 
 app.controller('mainController', function($scope, stompClient) {
-	var readyQueueId = -1;
-	
 	$scope.queues = [];
 	$scope.player = {};
 	
@@ -63,7 +63,7 @@ app.controller('mainController', function($scope, stompClient) {
 		});
 		stompClient.subscribe("/topic/gameReady", function(data){
 			var queue = JSON.parse(data.body);
-			readyQueueId = JSON.parse(data.body);
+			readyQueue = JSON.parse(data.body);
 			if (isInQueue(queue, $scope.player)) {
 				showReadyModal(queue);
 			}
@@ -296,13 +296,12 @@ var playerReady = function(isReady) {
 		alert("Please wait for websocket to connect");
 		return;
 	}
-	if (readyQueueId == -1) {
+	if (typeof(readyQueue) == 'undefined' || readyQueue == null || readyQueue.id == -1) {
 		alert("No queue found.");
 		return;
 	}
-	showReadyModal(false);
 	var input = {
-			queueId : 		readyQueueId,
+			queueId : 		readyQueue.id,
 			isReady :		isReady
 	};
 	readyQueueInfo = null;

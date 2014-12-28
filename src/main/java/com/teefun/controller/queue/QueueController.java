@@ -125,9 +125,6 @@ public class QueueController extends AbstractController {
 		if (queue == null) {
 			throw new JsonErrorException("Queue does not exist", bindingResult);
 		}
-		if (queue.isFull()) {
-			throw new JsonErrorException("Queue is full", bindingResult);
-		}
 		if (!queue.containsPlayer(player)) {
 			throw new JsonErrorException("Player is not in this queue", bindingResult);
 		}

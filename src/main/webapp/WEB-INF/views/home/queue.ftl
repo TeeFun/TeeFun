@@ -1,8 +1,8 @@
 <div class="input-group">
-	<span class="input-group-btn" ng-show="isInQueue(queue)">
+	<span class="input-group-btn" ng-if="isInQueue(queue)">
 		<button id="quit-{{queue.id}}-button" class="btn btn-danger" type="button" ng-click="quitQueue(queue.id)">Quit</button>
 	</span>
-	<span class="input-group-btn" ng-show="!isInQueue(queue)">
+	<span class="input-group-btn" ng-if="!isInQueue(queue)">
 		<button id="join-{{queue.id}}-button"  class="btn btn-success" type="button" ng-click="joinQueue(queue.id);">Join</button>
 	</span>
 	<span class="input-group-addon text-overflow queue-name" data-toggle="tooltip" data-placement="top" data-html="true" title="
