@@ -1,4 +1,5 @@
 var wsConnected = false;
+var pageLoaded = false;
 
 // ----- AngularJS -----
 
@@ -22,9 +23,8 @@ app.controller('mainController', function($scope, stompClient) {
 		$scope.queues = data.queues;
 		$scope.player = data.player;
 		$scope.$apply();
-		
-		$("#loading").hide();
-		$("#main").show();
+		pageLoaded = true;
+		loadingDone();
 	});
 	
 	stompClient.connect({}, function(frame) {
@@ -114,6 +114,13 @@ app.controller('mainController', function($scope, stompClient) {
 // ---------------------
 
 // ----- Other -----
+var loadingDone = function () {
+	if (pageLoaded && wsConnected) {
+		$("#loading").hide();
+		$("#main").show();
+	}
+}
+
 var findQueue = function(queues, queueId) {
 	for(var i = 0; i < queues.length; i++) {
 		if(queues[i].id == queueId)
