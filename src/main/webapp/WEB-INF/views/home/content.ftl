@@ -33,20 +33,6 @@
 </div>
 
 <!-- Highlights -->
-<div class="panel panel-danger big">
-	<div class="panel-body">
-		<!-- Highlight box (status 0) -->
-		<div class="panel panel-danger panel-last">
-			<div class="panel-heading">Queue status</div>
-			<div class="panel-body panel-highlight">
-				Looking for match...<br/>
-				Please wait for other players...
-			</div>
-		</div>
-	</div>
-</div>
-
-<!-- Highlights -->
 <div class="modal fade" id="gameReadyModal">
 	<div class="modal-dialog">
 		<div class="modal-content">
