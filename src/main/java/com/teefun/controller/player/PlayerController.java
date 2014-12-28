@@ -1,9 +1,11 @@
 package com.teefun.controller.player;
 
+import java.util.Map;
+
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -49,6 +51,12 @@ public class PlayerController extends AbstractController {
 	private EventBus eventBus;
 
 	/**
+	 * Application context.
+	 */
+	@Resource
+	private ApplicationContext appContext;
+
+	/**
 	 * Change a player's name.
 	 *
 	 * @param name the new name
@@ -62,6 +70,13 @@ public class PlayerController extends AbstractController {
 		}
 
 		final String name = changeNameRequest.getName();
+
+		final Map<String, UserContext> userContexts = this.appContext.getBeansOfType(UserContext.class);
+		for (final UserContext otherUserContext : userContexts.values()) {
+			if (otherUserContext.getPlayer().getName().equals(name)) {
+				throw new JsonErrorException("Name already taken.", bindingResult);
+			}
+		}
 
 		this.userContext.getPlayer().setName(name);
 		this.eventBus.post(new PlayerModifiedEvent(this.userContext.getPlayer()));

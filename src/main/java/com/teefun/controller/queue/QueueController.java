@@ -13,14 +13,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.google.common.eventbus.EventBus;
 import com.teefun.bean.matchmaking.Matchmaking;
 import com.teefun.bean.usercontext.UserContext;
 import com.teefun.controller.AbstractController;
 import com.teefun.controller.queue.bean.AskPasswordResponse;
 import com.teefun.controller.queue.bean.CreateQueueRequest;
 import com.teefun.controller.queue.bean.PlayerReadyRequest;
-import com.teefun.events.event.PlayerReadyEvent;
 import com.teefun.exception.JsonErrorException;
 import com.teefun.model.Player;
 import com.teefun.model.Queue;
@@ -48,12 +46,6 @@ public class QueueController extends AbstractController {
 	 */
 	@Resource
 	private UserContext userContext;
-
-	/**
-	 * Event bus.
-	 */
-	@Resource
-	private EventBus eventBus;
 
 	/**
 	 * Queue modification home page.
@@ -266,7 +258,6 @@ public class QueueController extends AbstractController {
 		}
 
 		this.matchmaking.setPlayerReady(this.userContext.getPlayer(), queue, playerReadyRequest.getIsReady());
-		this.eventBus.post(new PlayerReadyEvent(this.userContext.getPlayer(), queue));
 
 		return EMPTY_JSON;
 	}

@@ -244,7 +244,7 @@ public class MatchmakingImpl implements Matchmaking {
 	public void onQueueReadyTimedout(final QueueReadyTimedOutEvent queueReadyTimedOutEvent) {
 		final Queue queue = queueReadyTimedOutEvent.getQueue();
 		this.cancelQueueReady(queue);
-		this.eventBus.post(new QueueModifiedEvent(queue));
+		this.eventBus.post(new GameAbortedEvent(queue));
 		LOGGER.debug(String.format("Queue '%s' has terminated. At least one player was not ready.", queue.getName()));
 		this.eventBus.post(new QueueModifiedEvent(queue));
 	}
@@ -308,6 +308,7 @@ public class MatchmakingImpl implements Matchmaking {
 	public void setPlayerReady(final Player player, final Queue queue, final Boolean isReady) {
 		if (queue.setPlayerReady(player, isReady)) {
 			LOGGER.debug("Player " + player + " is ready(" + isReady + ") on queue : " + queue);
+			this.eventBus.post(new PlayerReadyEvent(player, queue));
 		}
 	}
 

@@ -75,6 +75,10 @@ app.controller('mainController', function($scope, stompClient) {
 			}
 		});
 		stompClient.subscribe("/topic/gameAborted", function(data){
+			var queue = JSON.parse(data.body);
+			if (isInQueue(queue, $scope.player)) {
+				$("#gameReadyModal").modal("hide");
+			}
 		});
 		wsConnected = true;
 		loadingDone();
@@ -138,7 +142,7 @@ app.controller('mainController', function($scope, stompClient) {
 	
 	setInterval(function() {
 		if (isInAnyQueue($scope.queues, $scope.player)) {
-			$.get(contextPathUrl + "/player/keepAlive");
+			$.get(contextPathUrl + "player/keepAlive");
 		}
 	}, 5000);
 	
@@ -198,6 +202,18 @@ var isInAnyQueue  = function(queues, player) {
 	return false;
 };
 
+function progress(timeleft, timetotal, $element) {
+    var progressBarWidth = Math.floor(((timetotal - timeleft) * 100) / timetotal);
+    var widthValue = '' + progressBarWidth +'%';
+    $element.css("width", widthValue);
+    if(timeleft < timetotal) {
+        setTimeout(function() {
+            progress(timeleft + 1, timetotal, $element);
+        }, 1000);
+    }
+};
+
+
 // -----------------
 
 // ----- Bootstrap -----
@@ -205,9 +221,9 @@ var isInAnyQueue  = function(queues, player) {
 var showReadyModal = function(queueInfo) {
 	$("#gameReadyQueueId").text(queueInfo.id);
 	$("#gameReadyQueueName").text(queueInfo.name);
-	$("#gameReadyProgressValue").text(queueInfo.size+"/"+queueInfo.maxSize);
-	$("#gameReadyProgressBar").css("width", (100*queueInfo.size/queueInfo.maxSize)+"%");
 	$("#gameReadyModal").modal("show");
+	$("#gameReadyProgressBar").css("width", "100%");
+	progress(0, 30, $("#gameReadyProgressBar"));
 }
 
 var showStartedModal = function(info) {
@@ -249,7 +265,7 @@ var changeName = function(newName) {
 		alert("Please wait for websocket to connect");
 		return;
 	}
-	var posting = $.postjson(contextPathUrl + "/player/changeName", { name : newName }, function() {
+	var posting = $.postjson(contextPathUrl + "player/changeName", { name : newName }, function() {
 		console.log("Changed name to : " + newName);
 	});
 };
@@ -259,7 +275,7 @@ var joinQueue = function(queueId) {
 		alert("Please wait for websocket to connect");
 		return;
 	}
-	var posting = $.postjson(contextPathUrl + "/queue/joinQueue", queueId, function() {
+	var posting = $.postjson(contextPathUrl + "queue/joinQueue", queueId, function() {
 		console.log("Joined queue: " + queueId);
 	});
 };
@@ -269,7 +285,7 @@ var quitQueue = function(queueId) {
 		alert("Please wait for websocket to connect");
 		return;
 	}
-	var posting = $.postjson(contextPathUrl + "/queue/quitQueue", queueId, function() {
+	var posting = $.postjson(contextPathUrl + "queue/quitQueue", queueId, function() {
 		console.log("Quited queue: " + queueId);
 	});
 };
@@ -279,7 +295,7 @@ var quitAllQueues = function() {
 		alert("Please wait for websocket to connect");
 		return;
 	}
-	var posting = $.postjson(contextPathUrl + "/queue/quitAllQueues", null, function() {
+	var posting = $.postjson(contextPathUrl + "queue/quitAllQueues", null, function() {
 		console.log("Left all queues");
 	});
 };
@@ -289,7 +305,7 @@ var askPassword = function(queueId) {
 		alert("Please wait for websocket to connect");
 		return;
 	}
-	var posting = $.postjson(contextPathUrl + "/queue/askPassword", queueId, function(data) {
+	var posting = $.postjson(contextPathUrl + "queue/askPassword", queueId, function(data) {
 		showStartedModal(data);
 	});
 };
@@ -308,7 +324,7 @@ var playerReady = function(isReady) {
 			isReady :		isReady
 	};
 	readyQueueInfo = null;
-	var posting = $.postjson(contextPathUrl + "/queue/playerReady", input, function(data) {
+	var posting = $.postjson(contextPathUrl + "queue/playerReady", input, function(data) {
 		console.log("Player is : " + isReady);
 	});
 };
