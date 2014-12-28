@@ -265,7 +265,7 @@ public class QueueController extends AbstractController {
 			throw new JsonErrorException("Incorrect queue state", bindingResult);
 		}
 
-		queue.setPlayerReady(this.userContext.getPlayer(), playerReadyRequest.getReady());
+		queue.setPlayerReady(this.userContext.getPlayer(), playerReadyRequest.getIsReady());
 		this.eventBus.post(new PlayerReadyEvent(this.userContext.getPlayer(), queue));
 
 		return EMPTY_JSON;

@@ -1,5 +1,5 @@
 // TODO refactor this
-var readyQueueId;
+var readyQueueId = -1;
 var connected = false;
 
 var socket = new SockJS(sockJSUrl);
@@ -20,8 +20,8 @@ stompClient.connect({}, function(frame) {
 	});
 	stompClient.subscribe("/topic/gameReady", function(data){
 		console.log("gameReady: " + data);
-		var readyQueueName = JSON.parse(data.body).name;
-		showReadyPanel(readyQueueName);
+		readyQueueId = JSON.parse(data.body).id;
+		showReadyPanel(readyQueueId);
 	});
 	stompClient.subscribe("/topic/gameStarted", function(data){
 		console.log("gameStarted: " + data);
@@ -150,6 +150,7 @@ var playerReady = function(isReady) {
 			queueId : 		readyQueueId,
 			isReady :		isReady
 	};
+	readyQueueId = -1;
 	var posting = $.postjson("queue/playerReady", input, function(data) {
 		console.log("Player is : " + isReady);
 	});

@@ -63,8 +63,8 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-				<button type="button" data-dismiss="modal" class="btn btn-success" onClick="playerReady(true)">Accept</button>
-				<button type="button" data-dismiss="modal" class="btn btn-danger" onClick="playerReady(false)">Decline</button><br/>
+				<button type="button" data-dismiss="modal" class="btn btn-success" onClick="playerReady(true);">Accept</button>
+				<button type="button" data-dismiss="modal" class="btn btn-danger" onClick="playerReady(false);">Decline</button><br/>
 			</div>
 		</div>
 	</div>

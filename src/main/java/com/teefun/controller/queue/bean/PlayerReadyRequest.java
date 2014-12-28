@@ -30,7 +30,7 @@ public class PlayerReadyRequest implements Serializable {
 
 	@JsonProperty
 	@NotNull
-	private Boolean ready;
+	private Boolean isReady;
 
 	/**
 	 * @return the {@link #queueId}
@@ -47,17 +47,17 @@ public class PlayerReadyRequest implements Serializable {
 	}
 
 	/**
-	 * @return the {@link #ready}
+	 * @return the {@link #isReady}
 	 */
-	public Boolean getReady() {
-		return this.ready;
+	public Boolean getIsReady() {
+		return this.isReady;
 	}
 
 	/**
-	 * @param ready the {@link #ready} to set
+	 * @param isReady the {@link #isReady} to set
 	 */
-	public void setReady(final Boolean ready) {
-		this.ready = ready;
+	public void setIsReady(final Boolean isReady) {
+		this.isReady = isReady;
 	}
 
 }
