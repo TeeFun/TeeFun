@@ -6,4 +6,5 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 <script>
 var sockJSUrl = "<@spring.url "/websocket/teefun" />";
+var contextPathUrl = "<@spring.url "/" />";
 </script>

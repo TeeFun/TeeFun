@@ -1,33 +1,8 @@
+var wsConnected = false;
+
 // ----- AngularJS -----
 
 var app = angular.module('teefun', []);
-var data = {
-		queues : {
-			queue : {
-				id : '1',
-				name : 'name',
-				state : "STATE",
-				map : "map",
-				gameType : "gt",
-				scoreLimit : 3,
-				timeLimit : 2,
-				size : 10,
-				maxSize : 10,
-				players : {
-					player : {
-						id : '2',
-						name : 'player'
-					}
-				}
-			}
-		},
-		player : {
-			name : 'nameless',
-			id : 2
-		}
-};
-
-
 
 app.factory('stompClient', function() {
 	var socket = new SockJS(sockJSUrl);
@@ -38,62 +13,139 @@ app.factory('stompClient', function() {
 
 
 app.controller('mainController', function($scope, stompClient) {
+	var readyQueueId = -1;
 	
 	$scope.queues = [];
-	$scope.player = null;
-	$scope.isInQueue = false;
+	$scope.player = {};
 	
 	$.postjson("testJson", null, function(data) {
 		$scope.queues = data.queues;
 		$scope.player = data.player;
-		updateButtons(data);
 		$scope.$apply();
-		// TODO finish loading
+		
+		$("#loading").hide();
+		$("#main").show();
 	});
 	
 	stompClient.connect({}, function(frame) {
 		stompClient.subscribe("/topic/queueUpdated", function(data){
-			console.log("Queue Updated: " + data);
-			//var index = findQueue(data.id);
-			//if(index != -1)
-			//	$scope.queues[index] = data;
-			$scope.$apply();
+			var queue = JSON.parse(data.body);
+			var index = findQueue($scope.queues, queue.id);
+			if(index != -1) {
+				var wasExpand = isExpand(queue.id);
+				$scope.queues[index] = queue;
+				$scope.$apply();
+				if (wasExpand) {
+					expandQueue(queue.id);
+				}
+			}
 		});
 		stompClient.subscribe("/topic/queueCreated", function(data){
-			console.log("Queue Created: " + data);
-			$scope.queues.push(data);
+			var queue = JSON.parse(data.body);
+			$scope.queues.push(queue);
 			$scope.$apply();
 		});
 		stompClient.subscribe("/topic/queueDeleted", function(data){
-			console.log("Queue Deleted: " + data);
-			//var index = findQueue(data.id);
-			//if(index != -1)
-			//	$scope.queues.remove(index);
-			$scope.$apply();
+			var queue = JSON.parse(data.body);
+			var index = findQueue($scope.queues, queue.id);
+			if(index != -1) {
+				$scope.queues.remove(index);
+				$scope.$apply();
+			}
 		});
 		stompClient.subscribe("/topic/gameReady", function(data){
-			console.log("gameReady: " + data);
-			//var readyQueueName = JSON.parse(data.body).name;
-			//showReadyPanel(readyQueueName);
-			$scope.$apply();
+			var queue = JSON.parse(data.body);
+			readyQueueId = JSON.parse(data.body);
+			if (isInQueue(queue, $scope.player)) {
+				showReadyPanel(true);
+			}
 		});
 		stompClient.subscribe("/topic/gameStarted", function(data){
-			console.log("gameStarted: " + data);
-			//askPassword(JSON.parse(data.body).name);
-			$scope.$apply();
+			askPassword(JSON.parse(data.body).id);
 		});
 		stompClient.subscribe("/topic/gameAborted", function(data){
-			console.log("gameAborted: " + data);
+			if (isInQueue(queue, $scope.player)) {
+				showReadyPanel(false);
+			}
 		});
+		wsConnected = true;
 	});
 	
 	$scope.expandQueue = expandQueue;
-	$scope.joinQueue = joinQueue;
-	$scope.quitQueue = quitQueue;
-	$scope.quitAllQueues = quitAllQueues;
+	
+	$scope.changeName = function(newName) {
+		changeName(newName);
+	}
+	
+	$scope.joinQueue = function(queueId) {
+		joinQueue(queueId);
+	};
+
+	$scope.quitQueue = function(queueId) {
+		quitQueue(queueId);
+	};
+
+	$scope.quitAllQueues = function() {
+		quitAllQueues();
+	};
+	
+	$scope.isInQueue = function(queue) {
+		return isInQueue(queue, $scope.player);
+	};
+	$scope.isInAnyQueue  = function() {
+		return isInAnyQueue($scope.queues, $scope.player);
+	}
+	
+	$scope.playerRead = function(ready) {
+		if (readyQueueId == -1) {
+			alert("No queue found.");
+			return;
+		}
+		playerReady(queueId, ready);
+	}
+	
+	setInterval(function() {
+		if (isInAnyQueue($scope.queues, $scope.player)) {
+			$.get(contextPathUrl + "/player/keepAlive");
+		}
+	}, 5000);
 });
 
 // ---------------------
+
+// ----- Other -----
+var findQueue = function(queues, queueId) {
+	for(var i = 0; i < queues.length; i++) {
+		if(queues[i].id == queueId)
+			return i;
+	}
+	return -1;
+};
+
+var isInQueue = function(queue, player) {
+	for (var i = 0; i < queue.players.length; i++) {
+		var queuePlayer = queue.players[i];
+		if (queuePlayer.id == player.id) {
+			return true;
+		}
+	}
+	return false;
+};
+
+var isInAnyQueue  = function(queues, player) {
+	for (var i = 0; i < queues.length; i++) {
+		var queue = queues[i];
+		for (var j = 0; j < queue.players.length; j++) {
+			var queuePlayer = queue.players[j];
+			if (queuePlayer.id == player.id) {
+				return true;
+			}
+		}
+	}
+	return false;
+};
+
+// -----------------
 
 //Ask if the player really wants to leave if he is in queue
 $(document).ready(function(){
@@ -110,31 +162,28 @@ $(document).ready(function(){
 });
 
 // ----- Bootstrap -----
-var updateButtons = function(data) {
-	var isInAnyQueue = false;
-	for (i = 0; i < data.queues.length; i++) {
-		var isInQueue = false;
-		var queue = data.queues[i];
-		for (j = 0; j < queue.players.length; j++) {
-			var player = queue.players[j];
-			if (player.id == data.player.id) {
-				isInQueue = true;
-				isInAnyQueue = true;
-				break;
-			}
-		}
-		updateQuitJoinButton(queue.id, isInQueue);
+
+var showReadyPanel = function(show) {
+	if (show) {
+		$('#gameReadyModal').modal("show");
+	} else {
+		$('#gameReadyModal').modal("hide");
 	}
-	updateQuitAllQueuesButton(isInAnyQueue);
 }
 
-var showReadyPanel = function(queueName) {
-	$('#gameReadyModal').modal("show");
+var isExpand = function(queueId) {
+	var content = $("#expand-" + queueId + "-content");
+
+	if(content.css("display") == "block") {
+		return true;
+	} else {
+		return false;
+	}
 }
 
-var expandQueue = function(queueName) {
-	var button = $("#expand-" + queueName + "-button");
-	var content = $("#expand-" + queueName + "-content");
+var expandQueue = function(queueId) {
+	var button = $("#expand-" + queueId + "-button");
+	var content = $("#expand-" + queueId + "-content");
 
 	if(content.css("display") == "block") {
 		button.html("<span class=\"caret\"></span>");
@@ -146,58 +195,73 @@ var expandQueue = function(queueName) {
 	}
 };
 
-var updateQuitJoinButton = function(queueId, isInQueue) {
-	if (isInQueue) {
-		$("#quit-"+queueId+"-button").show;
-		$("#join-"+queueId+"-button").hide;
-	} else {
-		$("#quit-"+queueId+"-button").hide;
-		$("#join-"+queueId+"-button").show;
-	}
-}
-
-var updateQuitAllQueuesButton = function(isInQueue) {
-	if (isInQueue) {
-		$("#quitAllQueuesButton").enabled;
-	} else {
-		$("#quitAllQueuesButton").disabled;
-	}
-}
-
 // ---------------------
 
 // ----- Requests -----
 
-var joinQueue = function(queueId) {
-	if (!connected) {
+var changeName = function(newName) {
+	if (!wsConnected) {
 		alert("Please wait for websocket to connect");
 		return;
 	}
-	var posting = $.postjson("queue/joinQueue", queueId, function() {
-		inQueue++;
+	var posting = $.postjson(contextPathUrl + "/player/changeName", { name : newName }, function() {
+		console.log("Changed name to : " + newName);
+	});
+};
+
+var joinQueue = function(queueId) {
+	if (!wsConnected) {
+		alert("Please wait for websocket to connect");
+		return;
+	}
+	var posting = $.postjson(contextPathUrl + "/queue/joinQueue", queueId, function() {
 		console.log("Joined queue: " + queueId);
 	});
 };
 
 var quitQueue = function(queueId) {
-	if (!connected) {
+	if (!wsConnected) {
 		alert("Please wait for websocket to connect");
 		return;
 	}
-	var posting = $.postjson("queue/quitQueue", queueId, function() {
-		inQueue--;
+	var posting = $.postjson(contextPathUrl + "/queue/quitQueue", queueId, function() {
 		console.log("Quited queue: " + queueId);
 	});
 };
 
 var quitAllQueues = function() {
-	if (!connected) {
+	if (!wsConnected) {
 		alert("Please wait for websocket to connect");
 		return;
 	}
-	var posting = $.postjson("queue/quitAllQueues", null, function() {
-		inQueue = 0;
+	var posting = $.postjson(contextPathUrl + "/queue/quitAllQueues", null, function() {
 		console.log("Left all queues");
+	});
+};
+
+var askPassword = function(queueId) {
+	if (!wsConnected) {
+		alert("Please wait for websocket to connect");
+		return;
+	}
+	var posting = $.postjson(contextPathUrl + "/queue/askPassword", queueId, function(data) {
+		alert("The password is : '" + data +"'");
+	});
+};
+
+var playerReady = function(queueId, isReady) {
+	if (!wsConnected) {
+		alert("Please wait for websocket to connect");
+		return;
+	}
+	showReadyModal(false);
+	var input = {
+			queueId : 		queueId,
+			isReady :		isReady
+	};
+	readyQueueInfo = null;
+	var posting = $.postjson(contextPathUrl + "/queue/playerReady", input, function(data) {
+		console.log("Player is : " + isReady);
 	});
 };
 

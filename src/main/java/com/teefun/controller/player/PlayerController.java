@@ -15,6 +15,7 @@ import com.google.common.eventbus.EventBus;
 import com.teefun.bean.matchmaking.Matchmaking;
 import com.teefun.bean.usercontext.UserContext;
 import com.teefun.controller.AbstractController;
+import com.teefun.controller.player.bean.ChangeNameRequest;
 import com.teefun.events.event.PlayerModifiedEvent;
 import com.teefun.exception.JsonErrorException;
 
@@ -53,11 +54,13 @@ public class PlayerController extends AbstractController {
 	 */
 	@RequestMapping(value = "/changeName", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public String changeName(@RequestBody @Valid final String name, final BindingResult bindingResult) {
+	public String changeName(@RequestBody @Valid final ChangeNameRequest changeNameRequest, final BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors()) {
 			throw new JsonErrorException("Request validation failed", bindingResult);
 		}
+
+		final String name = changeNameRequest.getName();
 
 		this.userContext.getPlayer().setName(name);
 		this.eventBus.post(new PlayerModifiedEvent(this.userContext.getPlayer()));

@@ -1,7 +1,9 @@
-<div class="input-group" data="{{queue.id}}">
-	<span class="input-group-btn">
-		<button id="quit-{{queue.id}}-button" class="btn btn-danger hidden" type="button" ng-click="quitQueue(queue.id)">Quit</button>
-		<button id="join-{{queue.id}}-button"  class="btn btn-success hidden" type="button" ng-click="joinQueue(queue.id);">Join</button>
+<div class="input-group">
+	<span class="input-group-btn" ng-if="isInQueue(queue)">
+		<button id="quit-{{queue.id}}-button" class="btn btn-danger" type="button" ng-click="quitQueue(queue.id)">Quit</button>
+	</span>
+	<span class="input-group-btn" ng-if="!isInQueue(queue)">
+		<button id="join-{{queue.id}}-button"  class="btn btn-success" type="button" ng-click="joinQueue(queue.id);">Join</button>
 	</span>
 	<span class="input-group-addon text-overflow queue-name" data-toggle="tooltip" data-placement="top" data-html="true" title="
 		<table>
@@ -55,7 +57,4 @@
 	</div>
 </div>
 
-<div style="text-align: center; margin-top: 10px;">
-	<button id="quitAllQueuesButton" class="btn btn-danger" type="button" ng-click="quitAllQueues()">Quit all queues</button>
-</div>
 
