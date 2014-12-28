@@ -25,6 +25,7 @@ import com.teefun.exception.JsonErrorException;
 import com.teefun.model.Player;
 import com.teefun.model.Queue;
 import com.teefun.model.QueueState;
+import com.teefun.model.teeworlds.TeeworldsConfig;
 
 /**
  * Queue controller.
@@ -237,8 +238,7 @@ public class QueueController extends AbstractController {
 		}
 
 		final TeeworldsConfig config = queue.getServer().getConfig();
-		return new AskPasswordResponse(config.getVariableAsString("sv_name"),
-										config.getVariableAsString("sv_password"));
+		return new AskPasswordResponse(config.getVariableAsString("sv_name"), config.getVariableAsString("sv_password"));
 	}
 
 	/**
