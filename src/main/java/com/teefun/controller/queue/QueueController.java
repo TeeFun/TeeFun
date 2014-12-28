@@ -238,7 +238,7 @@ public class QueueController extends AbstractController {
 		}
 
 		final TeeworldsConfig config = queue.getServer().getConfig();
-		return new AskPasswordResponse(config.getVariableAsString("sv_name"), config.getVariableAsString("sv_password"));
+		return new AskPasswordResponse(config.getVariableAsString("sv_name"), config.getVariableAsString("password"));
 	}
 
 	/**
