@@ -13,12 +13,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.google.common.eventbus.Subscribe;
 import com.teefun.db.dao.QueueDAO;
 import com.teefun.db.entity.QueueEntity;
 import com.teefun.db.service.QueueService;
-import com.teefun.events.event.QueueCreatedEvent;
-import com.teefun.events.event.QueueDeletedEvent;
 import com.teefun.model.Queue;
 
 /**
@@ -102,26 +99,6 @@ public class QueueServiceImpl implements QueueService {
 				LOGGER.trace("Queue {} removed", new Object[] { queueEntity });
 			}
 		}
-	}
-
-	/**
-	 * Persist queue on queue created.
-	 *
-	 * @param queueCreatedEvent the event
-	 */
-	@Subscribe
-	public void onQueueCreated(final QueueCreatedEvent queueCreatedEvent) {
-		this.saveQueue(queueCreatedEvent.getQueue());
-	}
-
-	/**
-	 * Remove from DB queue on queue deleted.
-	 *
-	 * @param queueCreatedEvent the event
-	 */
-	@Subscribe
-	public void onQueueDeleted(final QueueDeletedEvent queueDeletedEvent) {
-		this.removeQueue(queueDeletedEvent.getQueue());
 	}
 
 }

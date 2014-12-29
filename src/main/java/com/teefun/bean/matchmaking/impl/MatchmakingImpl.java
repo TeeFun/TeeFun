@@ -151,8 +151,6 @@ public class MatchmakingImpl implements Matchmaking {
 	public void addQueue(final Queue queue) {
 		if (!this.availableQueues.contains(queue)) {
 			this.availableQueues.add(queue);
-			// FIXME Choupom fix event system plz
-			this.queueService.saveQueue(queue);
 			this.eventBus.post(new QueueCreatedEvent(queue));
 		}
 	}
@@ -161,8 +159,6 @@ public class MatchmakingImpl implements Matchmaking {
 	public void removeQueue(final Queue queue) {
 		if (this.availableQueues.contains(queue)) {
 			this.availableQueues.remove(queue);
-			// FIXME Choupom fix event system plz
-			this.queueService.removeQueue(queue);
 			this.eventBus.post(new QueueDeletedEvent(queue));
 		}
 	}
@@ -332,5 +328,4 @@ public class MatchmakingImpl implements Matchmaking {
 			this.eventBus.post(new PlayerReadyEvent(player, queue));
 		}
 	}
-
 }

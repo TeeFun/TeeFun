@@ -7,6 +7,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,10 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
 /**
- * EventBusPostProcessor registers Spring beans with EventBus. All beans containing Guava's @Subscribe annotation are registered.
+ * EventBusPostProcessor registers Spring beans with EventBus.<br/>
+ * All beans containing Guava's @Subscribe annotation are registered.<br/>
+ * If the bean is a Proxy, it wont access method not declared into interface.<br/>
+ * /!\ Using {@link Transactional} annotation create a bean proxy
  *
  * @author Rajh
  *
@@ -45,7 +49,7 @@ public class EventBusPostProcessor implements BeanPostProcessor {
 	@Override
 	public Object postProcessAfterInitialization(final Object bean, final String beanName) throws BeansException {
 		boolean registered = false;
-		final Method[] methods = org.springframework.aop.support.AopUtils.getTargetClass(bean).getMethods();
+		final Method[] methods = bean.getClass().getMethods();
 		for (final Method method : methods) {
 			final Annotation[] annotations = method.getAnnotations();
 			for (final Annotation annotation : annotations) {

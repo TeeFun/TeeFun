@@ -13,7 +13,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.persistence.metamodel.EntityType;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
@@ -67,9 +66,8 @@ public class QueueDAOImpl implements QueueDAO {
 	public QueueEntity getByName(final String name) {
 		final CriteriaQuery<QueueEntity> criteria = this.builder.createQuery(QueueEntity.class);
 		final Root<QueueEntity> queueRoot = criteria.from(QueueEntity.class);
-		final EntityType<QueueEntity> QueueEntity_ = this.entityManager.getMetamodel().entity(QueueEntity.class);
 		criteria.select(queueRoot);
-		final Predicate namePredicate = this.builder.like(queueRoot.<String> get(QueueEntity_.getName()), name);
+		final Predicate namePredicate = this.builder.like(queueRoot.<String> get("name"), name);
 		criteria.where(namePredicate);
 		try {
 			return this.entityManager.createQuery(criteria).getSingleResult();
