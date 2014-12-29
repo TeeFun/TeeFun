@@ -20,6 +20,7 @@ import com.teefun.controller.queue.bean.AskPasswordResponse;
 import com.teefun.controller.queue.bean.CreateQueueRequest;
 import com.teefun.controller.queue.bean.PlayerReadyRequest;
 import com.teefun.exception.JsonErrorException;
+import com.teefun.events.event.QueueModifiedEvent;
 import com.teefun.model.Player;
 import com.teefun.model.Queue;
 import com.teefun.model.QueueState;
@@ -46,6 +47,12 @@ public class QueueController extends AbstractController {
 	 */
 	@Resource
 	private UserContext userContext;
+
+	/**
+	 * Event bus.
+	 */
+	@Resource
+	private EventBus eventBus;
 
 	/**
 	 * Queue modification home page.
