@@ -166,16 +166,17 @@ public class QueueController extends AbstractController {
 			throw new JsonErrorException("Request validation failed", bindingResult);
 		}
 
-		final Queue existQueue = this.matchmaking.getQueueByName(createQueueRequest.getName());
-		if (existQueue != null) {
-			throw new JsonErrorException("A queue with that name already exist", bindingResult);
-		}
-
 		final Integer queueId = createQueueRequest.getId();
 		final Queue queue;
 		final boolean isNewQueue = (queueId == null || queueId == -1);
-		if(isNewQueue)
+
+		if(isNewQueue) {
+			final Queue existQueue = this.matchmaking.getQueueByName(createQueueRequest.getName());
+			if (existQueue != null) {
+				throw new JsonErrorException("A queue with that name already exist", bindingResult);
+			}
 			queue = new Queue();
+		}
 		else {
 			queue = this.matchmaking.getQueueById(queueId);
 			if(queue == null)
@@ -191,6 +192,8 @@ public class QueueController extends AbstractController {
 
 		if(isNewQueue)
 			this.matchmaking.addQueue(queue);
+		else
+			this.eventBus.post(new QueueModifiedEvent(queue));
 
 		return EMPTY_JSON;
 	}
