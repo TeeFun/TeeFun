@@ -303,8 +303,10 @@ var changeName = function(newName) {
 	var posting = $.postjson(contextPathUrl + "player/changeName", { name : newName }, function() {
 		console.log("Changed name to : " + newName);
 		playerName = newName;
+		updateNickNameButton(true);
+	}, function() {
+		updateNickNameButton(true);
 	});
-	updateNickNameButton(true);
 };
 
 var joinQueue = function(queueId) {
