@@ -5,6 +5,7 @@ package com.teefun.db.dao.impl;
 
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -35,7 +36,15 @@ public class QueueDAOImpl implements QueueDAO {
 	/**
 	 * Query builder.
 	 */
-	private final CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
+	private CriteriaBuilder builder;
+
+	/**
+	 * Create builder.
+	 */
+	@PostConstruct
+	public void initBuilder() {
+		this.builder = this.entityManager.getCriteriaBuilder();
+	}
 
 	@Override
 	@Transactional
