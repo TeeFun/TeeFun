@@ -59,7 +59,7 @@ public class DataBaseConfig {
 		final LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
 
 		factoryBean.setDataSource(this.defaultDataSource());
-		factoryBean.setPackagesToScan(new String[] { "com.teeworlds.teefun.db" });
+		factoryBean.setPackagesToScan(new String[] { "com.teefun.db" });
 
 		final HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 		vendorAdapter.setShowSql(true);
