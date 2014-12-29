@@ -1,6 +1,7 @@
 var createQueue = function() {
 	var queueName = $("#createQueueName").val();
 	var input = {
+			id : 			$("#createQueueId").val(),
 			name : 			queueName,
 			maxSize :		$("#createQueueMaxSize").val(),
 			map :			$("#createQueueMap").val(),
@@ -11,7 +12,7 @@ var createQueue = function() {
 	};
 
 	var posting = $.postjson("createQueue", input, function() {
-		alert("Created queue: " + queueName);
+		alert("Created/edited queue: " + queueName);
 	});
 };
 

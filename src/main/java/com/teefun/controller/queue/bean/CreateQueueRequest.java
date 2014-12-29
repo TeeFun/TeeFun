@@ -28,6 +28,9 @@ public class CreateQueueRequest implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@JsonProperty
+	private Integer id;
+
+	@JsonProperty
 	@NotBlank
 	private String name;
 
@@ -53,6 +56,20 @@ public class CreateQueueRequest implements Serializable {
 	@JsonProperty
 	@NotNull
 	private Boolean permanent;
+
+	/**
+	 * @return the {@link #id}
+	 */
+	public Integer getId() {
+		return this.id;
+	}
+
+	/**
+	 * @param id the {@link #id} to set
+	 */
+	public void setId(final Integer id) {
+		this.id = id;
+	}
 
 	/**
 	 * @return the {@link #name}

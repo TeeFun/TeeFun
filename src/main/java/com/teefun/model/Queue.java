@@ -92,19 +92,9 @@ public class Queue {
 
 	/**
 	 * Default constructor.
-	 *
-	 * @param name queue name
-	 * @param maxSize queue capacity
 	 */
-	public Queue(final String name, final int maxSize, final String map, final String gametype, final int scoreLimit, final int timeLimit, final boolean permanent) {
+	public Queue() {
 		this.id = QUEUE_COUNTER.getAndAdd(1);
-		this.name = name;
-		this.maxSize = maxSize;
-		this.map = map;
-		this.gametype = gametype;
-		this.scoreLimit = scoreLimit;
-		this.timeLimit = timeLimit;
-		this.permanent = permanent;
 	}
 
 	/**

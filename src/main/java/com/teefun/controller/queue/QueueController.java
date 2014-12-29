@@ -171,10 +171,23 @@ public class QueueController extends AbstractController {
 			throw new JsonErrorException("A queue with that name already exist", bindingResult);
 		}
 
-		final Queue queue = new Queue(createQueueRequest.getName(), createQueueRequest.getMaxSize(), createQueueRequest.getMap(), createQueueRequest.getGametype(), createQueueRequest.getScoreLimit(),
-				createQueueRequest.getTimeLimit(), createQueueRequest.getPermanent());
+		final Integer queueId = createQueueRequest.getId();
+		final Queue queue;
+		final boolean isNewQueue = (queueId == null || queueId == -1);
+		if(isNewQueue)
+			queue = new Queue();
+		else
+			queue = this.matchmaking.getQueueById(queueId);
 
-		this.matchmaking.addQueue(queue);
+		queue.setName(createQueueRequest.getName());
+		queue.setMaxSize(createQueueRequest.getMaxSize());
+		queue.setMap(createQueueRequest.getMap());
+		queue.setGametype(createQueueRequest.getGametype());
+		queue.setScoreLimit(createQueueRequest.getScoreLimit());
+		queue.setTimeLimit(createQueueRequest.getTimeLimit());
+
+		if(isNewQueue)
+			this.matchmaking.addQueue(queue);
 
 		return EMPTY_JSON;
 	}

@@ -3,9 +3,18 @@
 	<div class="panel-body">
 		<!-- Create queue -->
 		<div class="panel panel-info">
-			<div class="panel-heading">Create a queue</div>
+			<div class="panel-heading">Create/edit a queue</div>
 			<div class="panel-body">
 				<form id="createQueueForm">
+					<div class="input-group">
+						<span class="input-group-addon">Queue</span>
+						<select class="form-control" id="createQueueId">
+							<option value="-1">New Queue</option>
+							<#list queues as queue>
+								<option value="${queue.getId()}">${queue.getName()}</option>
+							</#list>
+						</select>
+					</div>
 					<div class="input-group">
 						<span class="input-group-addon" style="width: 100px;">Name</span>
 						<input type="text" id="createQueueName" class="form-control" placeholder="High-level ctf2">
