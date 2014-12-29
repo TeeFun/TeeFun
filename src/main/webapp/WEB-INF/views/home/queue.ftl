@@ -44,8 +44,8 @@
 	<div class="panel-body">
 		<table class="table table-bordered players">
 			<tbody>
-				<tr ng:repeat="row in queue.table.rows">
-					<td ng:repeat="col in row" class="{{col.cssclass}}">{{col.name}}</td>
+				<tr ng-repeat="row in queue.table.rows">
+					<td ng-repeat="col in row" class="{{col.cssclass}}">{{col.name}}</td>
 				</tr>
 			</tbody>
 		</table>
