@@ -163,7 +163,7 @@ app.controller('mainController', function($scope, stompClient) {
 	});
 	
 	$('#nicknameInput').bind('input', function() {
-		updateNickNameButton();
+		updateNickNameButton(false);
 	});
 });
 
@@ -219,20 +219,33 @@ function progress(timeleft, timetotal, $element) {
     }
 };
 
-var updateNickNameButton = function() {
-	var $elem = $('#nicknameInput');
-	if ($elem.val() == playerName) {
-		$elem.parent().removeClass("has-warning");
-		$elem.parent().addClass("has-success");
-		$elem.parent().find('.glyphicon').removeClass("glyphicon-warning-sign");
-		$elem.parent().find('.glyphicon').addClass("glyphicon-ok");
+var updateNickNameButton = function(confirmed) {
+	var $input = $('#nicknameInput');
+	var $div = $input.parent();
+	var $glyphicon = $div.find('.glyphicon');
+
+	$div.removeClass("has-success");
+	$div.removeClass("has-warning");
+	$div.removeClass("has-error");
+
+	$glyphicon.removeClass("glyphicon-ok");
+	$glyphicon.removeClass("glyphicon-warning-sign");
+	$glyphicon.removeClass("glyphicon-remove");
+
+	if($input.val() == playerName) {
+		$div.addClass("has-success");
+		$glyphicon.addClass("glyphicon-ok");
 		$("#changeNameButton").prop('disabled', true);
 	} else {
-		$elem.parent().removeClass("has-success");
-		$elem.parent().addClass("has-warning");
-		$elem.parent().find('.glyphicon').removeClass("glyphicon-ok");
-		$elem.parent().find('.glyphicon').addClass("glyphicon-warning-sign");
-		$("#changeNameButton").prop('disabled', false);
+		if(confirmed) {
+			$div.addClass("has-warning");
+			$glyphicon.addClass("glyphicon-warning-sign");
+			$("#changeNameButton").prop('disabled', false);
+		} else {
+			$div.addClass("has-error");
+			$glyphicon.addClass("glyphicon-remove");
+			$("#changeNameButton").prop('disabled', true);
+		}
 	}
 }
 
@@ -290,8 +303,8 @@ var changeName = function(newName) {
 	var posting = $.postjson(contextPathUrl + "player/changeName", { name : newName }, function() {
 		console.log("Changed name to : " + newName);
 		playerName = newName;
-		updateNickNameButton();
 	});
+	updateNickNameButton(true);
 };
 
 var joinQueue = function(queueId) {
