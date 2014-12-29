@@ -9,6 +9,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
+import org.springframework.stereotype.Repository;
+
 import com.teefun.db.dao.QueueDAO;
 import com.teefun.db.entity.QueueEntity;
 
@@ -18,6 +20,7 @@ import com.teefun.db.entity.QueueEntity;
  * @author Rajh
  *
  */
+@Repository
 public class QueueDAOImpl implements QueueDAO {
 
 	/**
