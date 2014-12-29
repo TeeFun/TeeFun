@@ -6,9 +6,9 @@ var playerName = null;
 
 // ----- AngularJS -----
 
-var app = angular.module('teefun', []);
+var app = angular.module("teefun", []);
 
-app.factory('stompClient', function() {
+app.factory("stompClient", function() {
 	var socket = new SockJS(sockJSUrl);
 	var stompClient = Stomp.over(socket);
 	stompClient.debug = null;
@@ -16,7 +16,7 @@ app.factory('stompClient', function() {
 })
 
 
-app.controller('mainController', function($scope, stompClient) {
+app.controller("mainController", function($scope, stompClient) {
 	$scope.queues = [];
 	$scope.player = {};
 	
@@ -150,19 +150,19 @@ app.controller('mainController', function($scope, stompClient) {
 	
 	//Ask if the player really wants to leave if he is in queue
 	$(document).ready(function(){
-		$(window).bind('beforeunload', function(){
+		$(window).bind("beforeunload", function(){
 			if (isInAnyQueue($scope.queues, $scope.player)) {
 			  return "You are currently in a queue. Leaving the page will removing you from all queues. Are you sure you want to leave ?";
 			}
 		});
-		$(window).bind('unload', function(){
+		$(window).bind("unload", function(){
 			// Try to quit all queues on unload
 			// TODO a little bit buggy. Need to interrupt request in order to use this or the client will be blocked on further connection
 			// quitAllQueues();
 		});
 	});
 	
-	$('#nicknameInput').bind('input', function() {
+	$("#nicknameInput").bind("input", function() {
 		updateNickNameButton(false);
 	});
 });
@@ -210,7 +210,7 @@ var isInAnyQueue  = function(queues, player) {
 
 function progress(timeleft, timetotal, $element) {
     var progressBarWidth = Math.floor(((timetotal - timeleft) * 100) / timetotal);
-    var widthValue = '' + progressBarWidth +'%';
+    var widthValue = "" + progressBarWidth +"%";
     $element.css("width", widthValue);
     if(timeleft < timetotal) {
         setTimeout(function() {
@@ -220,9 +220,9 @@ function progress(timeleft, timetotal, $element) {
 };
 
 var updateNickNameButton = function(confirmed) {
-	var $input = $('#nicknameInput');
+	var $input = $("#nicknameInput");
 	var $div = $input.parent();
-	var $glyphicon = $div.find('.glyphicon');
+	var $glyphicon = $div.find(".glyphicon");
 
 	$div.removeClass("has-success");
 	$div.removeClass("has-warning");
@@ -235,16 +235,16 @@ var updateNickNameButton = function(confirmed) {
 	if($input.val() == playerName) {
 		$div.addClass("has-success");
 		$glyphicon.addClass("glyphicon-ok");
-		$("#changeNameButton").prop('disabled', true);
+		$("#changeNameButton").prop("disabled", true);
 	} else {
 		if(confirmed) {
 			$div.addClass("has-error");
 			$glyphicon.addClass("glyphicon-remove");
-			$("#changeNameButton").prop('disabled', true);
+			$("#changeNameButton").prop("disabled", true);
 		} else {
 			$div.addClass("has-warning");
 			$glyphicon.addClass("glyphicon-warning-sign");
-			$("#changeNameButton").prop('disabled', false);
+			$("#changeNameButton").prop("disabled", false);
 		}
 	}
 }
@@ -357,7 +357,7 @@ var playerReady = function(isReady) {
 		alert("Please wait for websocket to connect");
 		return;
 	}
-	if (typeof(readyQueue) == 'undefined' || readyQueue == null || readyQueue.id == -1) {
+	if (typeof(readyQueue) == "undefined" || readyQueue == null || readyQueue.id == -1) {
 		alert("No queue found.");
 		return;
 	}

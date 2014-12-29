@@ -22,7 +22,7 @@
 							Error: <span id="nicknameErrorMessage"></span>
 						</div>
 						<div style="text-align: center;">
-							<button id="changeNameButton" class="btn btn-default" type="submit" ng-click="changeName(player.name)" onClick="return false;" disabled >Confirm</button>
+							<button id="changeNameButton" class="btn btn-default" type="submit" ng-click="changeName(player.name)" onClick="return false;" disabled="disabled">Confirm</button>
 						</div>
 					</form>
 				</div>
