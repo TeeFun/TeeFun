@@ -7,6 +7,9 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
@@ -29,6 +32,11 @@ public class QueueDAOImpl implements QueueDAO {
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	/**
+	 * Query builder.
+	 */
+	private final CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
+
 	@Override
 	@Transactional
 	public void save(final QueueEntity entity) {
@@ -37,6 +45,9 @@ public class QueueDAOImpl implements QueueDAO {
 
 	@Override
 	public List<QueueEntity> list() {
-		return null;
+		final CriteriaQuery<QueueEntity> criteria = this.builder.createQuery(QueueEntity.class);
+		final Root<QueueEntity> queue = criteria.from(QueueEntity.class);
+		criteria.select(queue);
+		return this.entityManager.createQuery(criteria).getResultList();
 	}
 }
