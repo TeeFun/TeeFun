@@ -7,7 +7,7 @@
 			<div class="panel-body">
 				<form id="createQueueForm">
 					<div class="input-group">
-						<span class="input-group-addon">Queue</span>
+						<span class="input-group-addon" style="width: 100px;">Queue</span>
 						<select class="form-control" id="createQueueId">
 							<option value="-1">New Queue</option>
 							<#list queues as queue>
