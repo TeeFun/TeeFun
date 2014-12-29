@@ -303,8 +303,11 @@ var changeName = function(newName) {
 	var posting = $.postjson(contextPathUrl + "player/changeName", { name : newName }, function() {
 		console.log("Changed name to : " + newName);
 		playerName = newName;
+		$("#nicknameErrorDiv").css("display", "none");
 		updateNickNameButton(true);
-	}, function() {
+	}, function(data) {
+		$("#nicknameErrorDiv").css("display", "block");
+		$("#nicknameErrorMessage").text(data.responseJSON.message);
 		updateNickNameButton(true);
 	});
 };

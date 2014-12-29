@@ -18,6 +18,9 @@
 								<span class="glyphicon glyphicon-ok form-control-feedback"></span>
 							</div>
 						</div>
+						<div class="alert alert-danger" style="display: none;" id="nicknameErrorDiv">
+							Error: <span id="nicknameErrorMessage"></span>
+						</div>
 						<div style="text-align: center;">
 							<button id="changeNameButton" class="btn btn-default" type="submit" ng-click="changeName(player.name)" onClick="return false;" disabled >Confirm</button>
 						</div>
