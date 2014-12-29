@@ -22,6 +22,9 @@
 		<tomcat.version>7.0.57</tomcat.version>
 		<hibernate-valid.version>4.2.0.Final</hibernate-valid.version>
 		<guava.version>18.0</guava.version>
+		<hibernate.version>4.3.7.Final</hibernate.version>
+		<mysql-connector.version>5.1.34</mysql-connector.version>
+		<common-dbcp.version>1.4</common-dbcp.version>
 	</properties>
 
 	<dependencies>
@@ -82,7 +85,20 @@
 			<artifactId>spring-messaging</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-		
+
+		<!-- DB -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
 		<!-- Jackson2 -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -147,20 +163,44 @@
 			<version>${tomcat.version}</version>
 			<scope>embedded</scope>
 		</dependency>
-		
+
 		<!-- Hibernate Validator -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
 			<version>${hibernate-valid.version}</version>
 		</dependency>
-		
+
 		<!-- Guava -->
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>${guava.version}</version>
 		</dependency>
+
+		<!-- JPA hibernate for bdd -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>${hibernate.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>${hibernate.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${mysql-connector.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>${common-dbcp.version}</version>
+		</dependency>
+
 
 	</dependencies>
 
