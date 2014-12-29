@@ -63,7 +63,7 @@ public class DataBaseConfig {
 
 		final HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 		vendorAdapter.setShowSql(true);
-		// vendorAdapter.setGenerateDdl(generateDdl)
+		vendorAdapter.setGenerateDdl(true);
 
 		factoryBean.setJpaVendorAdapter(vendorAdapter);
 
