@@ -238,13 +238,13 @@ var updateNickNameButton = function(confirmed) {
 		$("#changeNameButton").prop('disabled', true);
 	} else {
 		if(confirmed) {
-			$div.addClass("has-warning");
-			$glyphicon.addClass("glyphicon-warning-sign");
-			$("#changeNameButton").prop('disabled', false);
-		} else {
 			$div.addClass("has-error");
 			$glyphicon.addClass("glyphicon-remove");
 			$("#changeNameButton").prop('disabled', true);
+		} else {
+			$div.addClass("has-warning");
+			$glyphicon.addClass("glyphicon-warning-sign");
+			$("#changeNameButton").prop('disabled', false);
 		}
 	}
 }
