@@ -7,10 +7,13 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.EntityType;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
@@ -58,5 +61,26 @@ public class QueueDAOImpl implements QueueDAO {
 		final Root<QueueEntity> queue = criteria.from(QueueEntity.class);
 		criteria.select(queue);
 		return this.entityManager.createQuery(criteria).getResultList();
+	}
+
+	@Override
+	public QueueEntity getByName(final String name) {
+		final CriteriaQuery<QueueEntity> criteria = this.builder.createQuery(QueueEntity.class);
+		final Root<QueueEntity> queueRoot = criteria.from(QueueEntity.class);
+		final EntityType<QueueEntity> QueueEntity_ = this.entityManager.getMetamodel().entity(QueueEntity.class);
+		criteria.select(queueRoot);
+		final Predicate namePredicate = this.builder.like(queueRoot.<String> get(QueueEntity_.getName()), name);
+		criteria.where(namePredicate);
+		try {
+			return this.entityManager.createQuery(criteria).getSingleResult();
+		} catch (final NoResultException ex) {
+			return null;
+		}
+	}
+
+	@Override
+	@Transactional
+	public void remove(final QueueEntity entity) {
+		this.entityManager.remove(entity);
 	}
 }

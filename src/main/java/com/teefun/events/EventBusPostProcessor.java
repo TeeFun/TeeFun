@@ -44,19 +44,25 @@ public class EventBusPostProcessor implements BeanPostProcessor {
 
 	@Override
 	public Object postProcessAfterInitialization(final Object bean, final String beanName) throws BeansException {
-		final Method[] methods = bean.getClass().getMethods();
+		boolean registered = false;
+		final Method[] methods = org.springframework.aop.support.AopUtils.getTargetClass(bean).getMethods();
 		for (final Method method : methods) {
 			final Annotation[] annotations = method.getAnnotations();
 			for (final Annotation annotation : annotations) {
 				if (annotation.annotationType().equals(Subscribe.class)) {
-					this.eventBus.register(bean);
-					LOGGER.trace("Bean {} method {} subscribed to {}", new Object[] { beanName, method.getName(), EventBus.class.getCanonicalName() });
-					return bean;
+					if (!registered) {
+						this.eventBus.register(bean);
+						registered = true;
+					}
+					String paramType = "NONE";
+					if (method.getParameterTypes().length > 0) {
+						paramType = method.getParameterTypes()[0].getSimpleName();
+					}
+					LOGGER.trace("Bean {} method {} subscribed to {}", new Object[] { beanName, method.getName(), paramType });
 				}
 			}
 		}
 
 		return bean;
 	}
-
 }

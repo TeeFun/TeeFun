@@ -28,4 +28,19 @@ public interface QueueDAO {
 	 * @return the list of entities
 	 */
 	public List<QueueEntity> list();
+
+	/**
+	 * Get a queue entity by name
+	 *
+	 * @param name the name
+	 * @return the queue entity if exist
+	 */
+	public QueueEntity getByName(String name);
+
+	/**
+	 * Remove a queue entity.
+	 *
+	 * @param entity the entity
+	 */
+	public void remove(QueueEntity entity);
 }
