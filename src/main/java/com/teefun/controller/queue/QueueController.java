@@ -176,8 +176,11 @@ public class QueueController extends AbstractController {
 		final boolean isNewQueue = (queueId == null || queueId == -1);
 		if(isNewQueue)
 			queue = new Queue();
-		else
+		else {
 			queue = this.matchmaking.getQueueById(queueId);
+			if(queue == null)
+				throw new JsonErrorException("There is no queue with this id", bindingResult);
+		}
 
 		queue.setName(createQueueRequest.getName());
 		queue.setMaxSize(createQueueRequest.getMaxSize());

@@ -45,7 +45,15 @@ public class QueueServiceImpl implements QueueService {
 		for (final QueueEntity queueEntity : queuesEntities) {
 			if (queueEntity.isActive()) {
 				// FIXME mapping lib ?
-				queues.add(new Queue(queueEntity.getName(), queueEntity.getMaxSize(), queueEntity.getMap(), queueEntity.getGametype(), queueEntity.getScoreLimit(), queueEntity.getTimeLimit(), true));
+				final Queue queue = new Queue();
+				queue.setName(queueEntity.getName());
+				queue.setMaxSize(queueEntity.getMaxSize());
+				queue.setMap(queueEntity.getMap());
+				queue.setGametype(queueEntity.getGametype());
+				queue.setScoreLimit(queueEntity.getScoreLimit());
+				queue.setTimeLimit(queueEntity.getTimeLimit());
+				queue.setPermanent(true);
+				queues.add(queue);
 			}
 		}
 		return queues;
