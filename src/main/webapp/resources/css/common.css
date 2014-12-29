@@ -7,6 +7,10 @@ span.highlight {
 	color: #DD4444;
 }
 
+div.alert {
+	padding: 10px;
+}
+
 div.website-header {
 	text-align: center;
 	height: 247px;
