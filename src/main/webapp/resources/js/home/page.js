@@ -119,7 +119,7 @@ app.controller('mainController', function($scope, stompClient) {
 		for (var i = 0; i < nbRows; i++) {
 			var cols = [];
 			for (var j = 0; j < nbCols; j++) {
-				var index = i*j+j;
+				var index = i*nbCols+j;
 				var cell = {
 						name: null,
 						cssclass: null,

@@ -46,7 +46,7 @@
 			<tbody>
 				<tr ng:repeat="row in queue.table.rows">
 					<td ng:repeat="col in row" class="{{col.cssclass}}">{{col.name}}</td>
-				</tr ng-if="cell.endRow">
+				</tr>
 			</tbody>
 		</table>
 	</div>
