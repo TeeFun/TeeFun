@@ -92,10 +92,12 @@ public class PlayerController extends AbstractController {
 	 *
 	 * @return the view
 	 */
-	@RequestMapping(value = "/keepAlive", method = RequestMethod.GET)
+	@RequestMapping(value = "/keepAlive", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public void keepAlive() {
+	public String keepAlive() {
 		this.userContext.getPlayer().keepAlive();
+
+		return EMPTY_JSON;
 	}
 
 }
