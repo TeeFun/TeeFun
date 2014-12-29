@@ -33,37 +33,32 @@ public class Queue {
 	/**
 	 * Queue name.
 	 */
-	private final String name;
+	private String name;
 
 	/**
 	 * Queue capacity.
 	 */
-	private final int maxSize;
+	private int maxSize;
 
 	/**
 	 * Map.
 	 */
-	private final String map;
+	private String map;
 
 	/**
 	 * Game type.
 	 */
-	private final String gametype;
+	private String gametype;
 
 	/**
 	 * Score limit.
 	 */
-	private final int scoreLimit;
+	private int scoreLimit;
 
 	/**
 	 * Time limit.
 	 */
-	private final int timeLimit;
-
-	/**
-	 * List of players which joined the queue.
-	 */
-	private final List<Player> players = new CopyOnWriteArrayList<Player>();
+	private int timeLimit;
 
 	/**
 	 * Teeworlds server associated when the game is started.
@@ -79,6 +74,11 @@ public class Queue {
 	 * Is the queue permanent ?. If true it will automatically reset after the game as finised.
 	 */
 	private boolean permanent;
+
+	/**
+	 * List of players which joined the queue.
+	 */
+	private final List<Player> players = new CopyOnWriteArrayList<Player>();
 
 	/**
 	 * List of player ready.
@@ -267,6 +267,62 @@ public class Queue {
 	 */
 	public boolean isPermanent() {
 		return this.permanent;
+	}
+
+	/**
+	 * @return the {@link #playersReady}
+	 */
+	public List<Player> getPlayersReady() {
+		return this.playersReady;
+	}
+
+	/**
+	 * @return the {@link #playersNotReady}
+	 */
+	public List<Player> getPlayersNotReady() {
+		return this.playersNotReady;
+	}
+
+	/**
+	 * @param name the {@link #name} to set
+	 */
+	public void setName(final String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @param maxSize the {@link #maxSize} to set
+	 */
+	public void setMaxSize(final int maxSize) {
+		this.maxSize = maxSize;
+	}
+
+	/**
+	 * @param map the {@link #map} to set
+	 */
+	public void setMap(final String map) {
+		this.map = map;
+	}
+
+	/**
+	 * @param gametype the {@link #gametype} to set
+	 */
+	public void setGametype(final String gametype) {
+		this.gametype = gametype;
+	}
+
+	/**
+	 * @param scoreLimit the {@link #scoreLimit} to set
+	 */
+	public void setScoreLimit(final int scoreLimit) {
+		this.scoreLimit = scoreLimit;
+	}
+
+	/**
+	 * @param timeLimit the {@link #timeLimit} to set
+	 */
+	public void setTimeLimit(final int timeLimit) {
+		this.timeLimit = timeLimit;
 	}
 
 	/**
