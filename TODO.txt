@@ -1,9 +1,10 @@
 Authentication
 CSRF filter
-websocket errors
-json errors
+websocket errors apache2
 validators
-eventBus when server available
 Modifications threadsafe ?
 fix memory leak
 check queueState && queue timeout ready
+queue template error
+disable button when queue state != waiting_players
+gameready timeout dismiss modal
