@@ -7,6 +7,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
@@ -17,6 +19,8 @@ import org.springframework.stereotype.Component;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.teefun.bean.matchmaking.Matchmaking;
+import com.teefun.db.dao.QueueDAO;
+import com.teefun.db.entity.QueueEntity;
 import com.teefun.events.event.GameAbortedEvent;
 import com.teefun.events.event.GameReadyEvent;
 import com.teefun.events.event.GameStartedEvent;
@@ -65,9 +69,51 @@ public class MatchmakingImpl implements Matchmaking {
 	private EventBus eventBus;
 
 	/**
+	 * Queue dao.
+	 */
+	@Resource
+	private QueueDAO queueDAO;
+
+	/**
 	 * List of available queues.
 	 */
 	private final List<Queue> availableQueues = new CopyOnWriteArrayList<Queue>();
+
+	/**
+	 * Load queues at startup.
+	 */
+	@PostConstruct
+	public void loadQueues() {
+		final List<QueueEntity> queuesEntities = this.queueDAO.list();
+		for (final QueueEntity queueEntity : queuesEntities) {
+			if (queueEntity.isActive()) {
+				// FIXME mapping lib ?
+				this.availableQueues.add(new Queue(queueEntity.getName(), queueEntity.getMaxSize(), queueEntity.getMap(), queueEntity.getGametype(), queueEntity.getScoreLimit(), queueEntity
+						.getTimeLimit(), true));
+			}
+		}
+	}
+
+	/**
+	 * Persist queues at shutdown.
+	 */
+	@PreDestroy
+	public void saveQueues() {
+		for (final Queue queue : this.availableQueues) {
+			if (queue.isPermanent()) {
+				// FIXME mapping lib ?
+				final QueueEntity queueEntity = new QueueEntity();
+				queueEntity.setActive(true);
+				queueEntity.setGametype(queue.getGametype());
+				queueEntity.setMap(queue.getMap());
+				queueEntity.setMaxSize(queue.getMaxSize());
+				queueEntity.setName(queue.getName());
+				queueEntity.setScoreLimit(queue.getScoreLimit());
+				queueEntity.setTimeLimit(queue.getTimeLimit());
+				this.queueDAO.save(queueEntity);
+			}
+		}
+	}
 
 	@Override
 	public List<Queue> getQueues() {
