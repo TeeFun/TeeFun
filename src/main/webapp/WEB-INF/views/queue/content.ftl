@@ -12,10 +12,10 @@
 							<option value="-1">New Queue</option>
 							<#list queues as queue>
 								<option value="${queue.getId()}" onClick="fillCreateQueue(
-									${queue.getName()},
+									'${queue.getName()}',
 									${queue.getMaxSize()},
-									${queue.getMap()},
-									${queue.getGametype()},
+									'${queue.getMap()}',
+									'${queue.getGametype()}',
 									${queue.getScoreLimit()},
 									${queue.getTimeLimit()}
 								);">${queue.getName()}</option>
