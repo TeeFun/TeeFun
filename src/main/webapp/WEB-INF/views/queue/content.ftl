@@ -11,38 +11,45 @@
 						<select class="form-control" id="createQueueId">
 							<option value="-1">New Queue</option>
 							<#list queues as queue>
-								<option value="${queue.getId()}">${queue.getName()}</option>
+								<option value="${queue.getId()}" onClick="fillCreateQueue(
+									${queue.getName()},
+									${queue.getMaxSize()},
+									${queue.getMap()},
+									${queue.getGametype()},
+									${queue.getScoreLimit()},
+									${queue.getTimeLimit()}
+								);">${queue.getName()}</option>
 							</#list>
 						</select>
 					</div>
 					<div class="input-group">
 						<span class="input-group-addon" style="width: 100px;">Name</span>
-						<input type="text" id="createQueueName" class="form-control" placeholder="High-level ctf2">
+						<input type="text" id="createQueueName" class="form-control"/>
 					</div>
 					<div class="input-group">
 						<span class="input-group-addon" style="width: 100px;">Players</span>
-						<input type="text" id="createQueueMaxSize" class="form-control" placeholder="8">
+						<input type="text" id="createQueueMaxSize" class="form-control"/>
 					</div>
 					<div class="input-group">
 						<span class="input-group-addon" style="width: 100px;">Map</span>
-						<input type="text" id="createQueueMap" class="form-control" placeholder="ctf2">
+						<input type="text" id="createQueueMap" class="form-control"/>
 					</div>
 					<div class="input-group">
 						<span class="input-group-addon" style="width: 100px;">Gametype</span>
-						<input type="text" id="createQueueGametype" class="form-control" placeholder="ctf">
+						<input type="text" id="createQueueGametype" class="form-control"/>
 					</div>
 					<div class="input-group">
 						<span class="input-group-addon" style="width: 100px;">Score limit</span>
-						<input type="text" id="createQueueScoreLimit" class="form-control" placeholder="600">
+						<input type="text" id="createQueueScoreLimit" class="form-control"/>
 					</div>
 					<div class="input-group">
 						<span class="input-group-addon" style="width: 100px;">Time limit</span>
-						<input type="text" id="createQueueTimeLimit" class="form-control" placeholder="0">
+						<input type="text" id="createQueueTimeLimit" class="form-control"/>
 					</div>
 					<div class="checkbox">
 						<div class="checkbox">
 							<label>
-								<input type="checkbox" id="createQueuePermanent" placeholder="false"/>Is queue permanent ?
+								<input type="checkbox" id="createQueuePermanent"/>Is queue permanent ?
 							</label>
 						</div>
 					</div>
