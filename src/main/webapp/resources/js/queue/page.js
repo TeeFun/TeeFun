@@ -23,3 +23,12 @@ var deleteQueue = function() {
 		alert("Deleted queue: " + queueName);
 	});
 };
+
+var fillCreateQueue = function(name, maxSize, map, gametype, scoreLimit, timeLimit) {
+	$("#createQueueName").val(name);
+	$("#createQueueMaxSize").val(maxSize);
+	$("#createQueueMap").val(map);
+	$("#createQueueGametype").val(gametype);
+	$("#createQueueScoreLimit").val(scoreLimit);
+	$("#createQueueTimeLimit").val(timeLimit);
+};

@@ -249,15 +249,6 @@ var updateNickNameButton = function(confirmed) {
 	}
 }
 
-var fillCreateQueue = function(name, maxSize, map, gametype, scoreLimit, timeLimit) {
-	$("#createQueueName").val(name);
-	$("#createQueueMaxSize").val(maxSize);
-	$("#createQueueMap").val(map);
-	$("#createQueueGametype").val(gametype);
-	$("#createQueueScoreLimit").val(scoreLimit);
-	$("#createQueueTimeLimit").val(timeLimit);
-}
-
 // -----------------
 
 // ----- Bootstrap -----
